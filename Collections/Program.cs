@@ -8,10 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
-});
+bool IsDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+string connectionString = IsDevelopment ? builder.Configuration.GetConnectionString("Postgres") : Heroku.GetHerokuConnectionString();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -35,12 +35,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-var app = builder.Build();
+var app = builder.Build().MigrateDatabase<ApplicationDbContext>();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    app.UseDeveloperExceptionPage();
+    //app.UseExceptionHandler("/Home/Error");
+    //app.UseHsts();
 }
 
 app.UseRequestLocalization(new RequestLocalizationOptions
