@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mx-auto px-4">
+
+    <h2 class="text-blue-500 uppercase tracking-wide font-semibold">
+        Популярные аниме
+    </h2>
+
+    <div class="popular-anime text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-b border-gray-800 pb-16">
+            
+        <div class="anime mt-8">
+            <div class="relative inline-block">
+                <a asp-controller="Home" asp-action="Show" asp-route-id="1">
+                    <img 
+                        src="~/images/naruto.jpg" 
+                        alt="anime poster" 
+                        class="hover:opacity-75 transition ease-in-out duration-150 w-[170px] h-[250px]"
+                    />
+                </a>
+                <div id="" class="absolute bottom-[-20px] right-[-20px] w-16 h-16 bg-gray-800 rounded-full text-sm">
+                </div>
+            </div>
+        
+            <a href="#" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-8">
+                Naruto Shippuuden
+            </a>
+            <div class="text-gray-400 mt-1">TV</div>
+        </div>
+
+        <div class="anime mt-8">
+            <div class="relative inline-block">
+                <div class="bg-gray-800 w-[170px] h-[250px]"></div>
+            </div>
+
+            <div class="block text-transparent text-lg bg-gray-700 rounded leading-tight mt-4">
+                Title goes here
+            </div>
+            <div class="inline-block text-transparent bg-gray-700 rounded mt-3">
+                TV Movie Ova (type)
+            </div>
+        </div>
+            
+    </div>
+    
+</div>
