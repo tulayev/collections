@@ -1,0 +1,46 @@
+﻿@using Collections.Models.ViewModels
+@model LoginViewModel
+
+<div class="mx-auto w-1/2">
+    <form class="shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post">
+        <div class="text-red-500" asp-validation-summary="All"></div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Email"></label>
+            <input 
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                asp-for="Email" 
+                type="text" 
+            />
+            <span class="block text-red-500 text-xs italic" asp-validation-for="Email"></span>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Password"></label>
+            <input 
+                class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                asp-for="Password"
+                type="password" 
+            />
+            <span class="block text-red-500 text-xs italic" asp-validation-for="Password"></span>
+        </div>
+
+        <div class="mb-6">
+            <label class="text-gray-700 text-sm font-bold mr-2" asp-for="RememberMe"></label>
+            <input asp-for="RememberMe" class="mr-2 leading-tight" type="checkbox">
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <button 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+                type="submit"
+            >
+                Login
+            </button>
+            <div class="text-white">
+                Don't have account yet? Register -> 
+                <a asp-controller="Account" asp-action="Register" class="text-white font-bold">Register</a>
+            </div>
+        </div>
+    </form>
+</div>
