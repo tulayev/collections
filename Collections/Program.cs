@@ -6,6 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    int port = Int32.Parse(Environment.GetEnvironmentVariable("PORT"));
+    options.ListenAnyIP(port);
+});
+
 builder.Services.AddControllersWithViews();
 
 bool IsDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
