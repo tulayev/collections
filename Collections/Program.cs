@@ -6,12 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    int port = Int32.Parse(Environment.GetEnvironmentVariable("PORT"));
-    options.ListenAnyIP(port);
-});
-
 builder.Services.AddControllersWithViews();
 
 bool IsDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
@@ -46,6 +40,8 @@ var app = builder.Build().MigrateDatabase<ApplicationDbContext>();
 if (!app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    string port = Environment.GetEnvironmentVariable("PORT");
+    app.Urls.Add($"http://*:{port}");
     //app.UseExceptionHandler("/Home/Error");
     //app.UseHsts();
 }
