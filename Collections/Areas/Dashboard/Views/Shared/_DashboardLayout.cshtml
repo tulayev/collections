@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html lang="@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css//style.css" />
+</head>
+<body>
+    <div class="bg-gray-800 font-sans leading-normal tracking-normal mt-12">
+        
+        <partial name="_NavbarPartial" />
+
+        <main>
+            <div class="flex flex-col md:flex-row">
+                
+                <partial name="_SidebarPartial" />
+
+                <section class="w-full">
+                    <div id="main" class="main-content h-full bg-gray-100 mt-12 md:mt-2 pb-24 md:pb-5">  
+                        @RenderBody()
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleDD(myDropMenu) {
+            document.getElementById(myDropMenu).classList.toggle("invisible");
+        }
+
+        window.onclick = (e) => {
+            if (!e.target.matches('.drop-button') && !e.target.matches('.drop-search')) {
+                const dropdowns = document.getElementsByClassName("dropdownlist");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (!openDropdown.classList.contains('invisible')) {
+                        openDropdown.classList.add('invisible');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

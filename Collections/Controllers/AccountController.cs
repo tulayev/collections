@@ -1,18 +1,25 @@
-﻿using Collections.Models.ViewModels;
+﻿using Collections.Models;
+using Collections.Models.ViewModels;
+using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        
+        private readonly SignInManager<User> _signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -34,7 +41,7 @@ namespace Collections.Controllers
                 return View(model);
             }
 
-            var user = new IdentityUser
+            var user = new User
             {
                 UserName = model.Email,
                 Email = model.Email
@@ -44,6 +51,8 @@ namespace Collections.Controllers
 
             if (result.Succeeded)
             {
+                var userRole = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == Roles.RoleUser);
+                await _userManager.AddToRoleAsync(user, userRole.Name);
                 return RedirectToAction("Login");
             }
             else

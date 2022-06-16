@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Collections.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Collections.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Dashboard")]
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()

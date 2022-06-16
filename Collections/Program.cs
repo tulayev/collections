@@ -1,4 +1,5 @@
 using Collections.Data;
+using Collections.Models;
 using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -13,7 +14,7 @@ string connectionString = IsDevelopment ? builder.Configuration.GetConnectionStr
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 4;
     options.Password.RequireLowercase = false;
@@ -64,9 +65,9 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapAreaControllerRoute(
-        name: "AdminArea",
-        areaName: "Admin",
-        pattern: "admin/{controller=Admin}/{action=Index}/{id?}");
+        name: "Dashboard",
+        areaName: "Dashboard",
+        pattern: "dashboard/{controller=Home}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
         name: "default",
