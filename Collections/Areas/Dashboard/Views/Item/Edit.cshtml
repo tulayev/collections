@@ -1,1 +1,44 @@
-﻿
+﻿@model ItemEditViewModel
+
+<h1 class="font-bold pl-2">Добавить аниме</h1>
+
+<div class="w-full mt-4">
+	<form 
+		asp-action="Edit"
+		class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+		method="post"
+	>
+		<input asp-for="Id" type="hidden" />
+		<div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Name">
+				Name
+			</label>
+			<input
+				asp-for="Name"
+				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+				type="text" 
+			/>
+		</div>
+		
+		<div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Tags">
+				Tags
+			</label>
+			<input
+				asp-for="Tags"
+				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+				type="text" 
+				placeholder="Write some tags through commas..."
+			/>
+		</div>
+
+		<div class="flex items-center justify-between">
+			<button
+				class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+				type="submit"
+			>
+				Save
+			</button>
+		</div>
+	</form>
+</div>

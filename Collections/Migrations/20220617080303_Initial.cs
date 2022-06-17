@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Collections.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,7 +51,7 @@ namespace Collections.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tag",
+                name: "Tags",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -60,7 +60,7 @@ namespace Collections.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tag", x => x.Id);
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -225,9 +225,9 @@ namespace Collections.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ItemTag_Tag_TagsId",
+                        name: "FK_ItemTag_Tags_TagsId",
                         column: x => x.TagsId,
-                        principalTable: "Tag",
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -237,19 +237,19 @@ namespace Collections.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "aa990435-0b9e-4996-9d40-823b98f7bf7e", "aa990435-0b9e-4996-9d40-823b98f7bf7e", "user", "USER" },
-                    { "b80b7ec8-7a3f-44ed-9e30-76440f7143f5", "b80b7ec8-7a3f-44ed-9e30-76440f7143f5", "admin", "ADMIN" }
+                    { "ccff3019-4554-4aaa-a307-5a521cce0c4d", "ccff3019-4554-4aaa-a307-5a521cce0c4d", "user", "USER" },
+                    { "f377b4fa-c63e-4c55-85b5-2634fe08e7ff", "f377b4fa-c63e-4c55-85b5-2634fe08e7ff", "admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "d20644f9-3ae0-4ea8-971c-9aa5840cef86", 0, "fb9ce520-92da-4e26-a4da-2ce585ea69c4", "User", "admin@collections.com", false, false, null, "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEEGPLwGuRk6DDXu2K6iwFTMZRI0eTZJjq4o/MUUkJa3w476Gvb0IPxBQgbSVCYhs7w==", null, false, "194562E7-D289-4067-86D7-29E1C1C3AC2C", false, "admin@collections.com" });
+                values: new object[] { "f413b185-8402-4700-85ae-3f33d1f4d52e", 0, "80f9ef73-f753-498f-9484-5945db836735", "User", "admin@collections.com", false, false, null, "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAELKf7bScpc3HXjPoY7GUW5b11u+XrKGKkTCSs5Ctk/iyrdHIulMxGjprjuEBEvHM1w==", null, false, "16C720EB-FA80-40B5-A611-52C89D16552A", false, "admin@collections.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "b80b7ec8-7a3f-44ed-9e30-76440f7143f5", "d20644f9-3ae0-4ea8-971c-9aa5840cef86" });
+                values: new object[] { "f377b4fa-c63e-4c55-85b5-2634fe08e7ff", "f413b185-8402-4700-85ae-3f33d1f4d52e" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -331,7 +331,7 @@ namespace Collections.Migrations
                 name: "Items");
 
             migrationBuilder.DropTable(
-                name: "Tag");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Collections");

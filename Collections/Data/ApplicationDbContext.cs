@@ -23,5 +23,6 @@ namespace Collections.Data
         public DbSet<AppCollection> Collections { get; set; }
 
         public DbSet<Item> Items { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }

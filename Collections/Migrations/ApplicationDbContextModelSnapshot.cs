@@ -83,7 +83,7 @@ namespace Collections.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("ItemTag", b =>
@@ -129,15 +129,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b80b7ec8-7a3f-44ed-9e30-76440f7143f5",
-                            ConcurrencyStamp = "b80b7ec8-7a3f-44ed-9e30-76440f7143f5",
+                            Id = "f377b4fa-c63e-4c55-85b5-2634fe08e7ff",
+                            ConcurrencyStamp = "f377b4fa-c63e-4c55-85b5-2634fe08e7ff",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "aa990435-0b9e-4996-9d40-823b98f7bf7e",
-                            ConcurrencyStamp = "aa990435-0b9e-4996-9d40-823b98f7bf7e",
+                            Id = "ccff3019-4554-4aaa-a307-5a521cce0c4d",
+                            ConcurrencyStamp = "ccff3019-4554-4aaa-a307-5a521cce0c4d",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -302,8 +302,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "d20644f9-3ae0-4ea8-971c-9aa5840cef86",
-                            RoleId = "b80b7ec8-7a3f-44ed-9e30-76440f7143f5"
+                            UserId = "f413b185-8402-4700-85ae-3f33d1f4d52e",
+                            RoleId = "f377b4fa-c63e-4c55-85b5-2634fe08e7ff"
                         });
                 });
 
@@ -335,17 +335,17 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d20644f9-3ae0-4ea8-971c-9aa5840cef86",
+                            Id = "f413b185-8402-4700-85ae-3f33d1f4d52e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fb9ce520-92da-4e26-a4da-2ce585ea69c4",
+                            ConcurrencyStamp = "80f9ef73-f753-498f-9484-5945db836735",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEGPLwGuRk6DDXu2K6iwFTMZRI0eTZJjq4o/MUUkJa3w476Gvb0IPxBQgbSVCYhs7w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELKf7bScpc3HXjPoY7GUW5b11u+XrKGKkTCSs5Ctk/iyrdHIulMxGjprjuEBEvHM1w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "194562E7-D289-4067-86D7-29E1C1C3AC2C",
+                            SecurityStamp = "16C720EB-FA80-40B5-A611-52C89D16552A",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com"
                         });
