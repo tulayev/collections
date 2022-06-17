@@ -14,7 +14,7 @@
         {
             string ext = Path.GetExtension(file.FileName);
             string fileName = String.Concat(Path.GetRandomFileName(), ext);
-            string path = Path.Combine(_env.WebRootPath, fileName);
+            string path = Path.Combine(_env.WebRootPath, ImagePath, fileName);
 
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
@@ -28,16 +28,9 @@
         {
             string ext = Path.GetExtension(file.FileName);
             string fileName = String.Concat(Path.GetRandomFileName(), ext);
-            string path = Path.Combine(_env.WebRootPath, fileName);
+            string path = Path.Combine(_env.WebRootPath, ImagePath, fileName);
 
-            if (String.IsNullOrWhiteSpace(existingFilePath))
-            {
-                string oldImagePath = Path.Combine(GetImagesPath, existingFilePath);
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                }
-            }
+            Delete(existingFilePath);
 
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
@@ -45,6 +38,18 @@
             }
 
             return fileName;
+        }
+
+        public void Delete(string existingFilePath)
+        {
+            if (!String.IsNullOrWhiteSpace(existingFilePath))
+            {
+                string oldImagePath = Path.Combine(GetImagesPath, existingFilePath);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
         }
 
         public static string GetImagesPath => Path.Combine(_env.WebRootPath, ImagePath);

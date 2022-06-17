@@ -1,9 +1,11 @@
 ﻿using Collections.Models;
 using Collections.Models.ViewModels;
+using Collections.Services;
 using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Collections.Controllers
 {
@@ -15,11 +17,15 @@ namespace Collections.Controllers
 
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        private readonly IUploadHandler _uploadHandler;
+
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, 
+            RoleManager<IdentityRole> roleManager, IUploadHandler uploadHandler)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _uploadHandler = uploadHandler;
         }
 
         public IActionResult Index()
@@ -41,16 +47,31 @@ namespace Collections.Controllers
                 return View(model);
             }
 
+            string image = String.Empty;
+            Claim imageClaim = null;
+
+            if (model.Image != null)
+            {
+                image = await _uploadHandler.UploadAsync(model.Image);
+                imageClaim = new Claim("Image", image);
+            }
+
             var user = new User
             {
+                Name = model.Name,
                 UserName = model.Email,
-                Email = model.Email
+                Email = model.Email,
+                Image = image.Length > 0 ? image : null
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
+                if (imageClaim != null)
+                {
+                    await _userManager.AddClaimAsync(user, imageClaim);
+                }
                 var userRole = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == Roles.RoleUser);
                 await _userManager.AddToRoleAsync(user, userRole.Name);
                 return RedirectToAction("Login");

@@ -5,5 +5,7 @@
         Task<string> UploadAsync(IFormFile file);
 
         Task<string> UploadAsync(IFormFile file, string existingFilePath);
+
+        void Delete(string existingFilePath);
     }
 }

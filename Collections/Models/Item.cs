@@ -11,6 +11,12 @@ namespace Collections.Models
 
         public int CollectionId  { get; set; }
 
+#nullable enable
+        public string? Image { get; set; }
+#nullable disable
+
+        public DateTime CreatedAt { get; set; }
+
         public AppCollection Collection { get; set; }
 
         public List<Tag> Tags { get; set; }

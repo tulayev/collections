@@ -11,5 +11,9 @@ namespace Collections.Models.ViewModels
 
         [Required]
         public string Tags { get; set; }
+
+#nullable enable
+        public IFormFile? Image { get; set; }
+#nullable disable
     }
 }

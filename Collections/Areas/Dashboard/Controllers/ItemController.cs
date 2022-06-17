@@ -1,6 +1,7 @@
 ﻿using Collections.Data;
 using Collections.Models;
 using Collections.Models.ViewModels;
+using Collections.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,14 @@ namespace Collections.Areas.Dashboard.Controllers
         private readonly ApplicationDbContext _db;
 
         private readonly UserManager<User> _userManager;
+        
+        private readonly IUploadHandler _uploadHandler;
 
-        public ItemController(ApplicationDbContext db, UserManager<User> userManager)
+        public ItemController(ApplicationDbContext db, UserManager<User> userManager, IUploadHandler uploadHandler)
         {
             _db = db;
             _userManager = userManager;
+            _uploadHandler = uploadHandler;
         }
 
         public async Task<IActionResult> Index()
@@ -62,14 +66,21 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
             var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower() }).ToList();
+
+            string image = String.Empty;    
+
+            if (model.Image != null)
+            {
+                image = await _uploadHandler.UploadAsync(model.Image);
+            }
 
             var item = new Item
             {
                 Name = model.Name,
                 CollectionId = model.CollectionId,
-                Tags = tags
+                Tags = tags,
+                Image = image.Length > 0 ? image : null
             };
 
             await _db.Items.AddAsync(item);
@@ -115,11 +126,18 @@ namespace Collections.Areas.Dashboard.Controllers
             item.Tags.Clear();
 
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
             var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower() }).ToList();
+
+            string image = String.Empty;
+
+            if (model.Image != null)
+            {
+                image = await _uploadHandler.UploadAsync(model.Image, item.Image);
+            }
 
             item.Name = model.Name;
             item.Tags = tags;
+            item.Image = image.Length > 0 ? image : null;
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -133,6 +151,8 @@ namespace Collections.Areas.Dashboard.Controllers
             {
                 return NotFound();
             }
+
+            _uploadHandler.Delete(item.Image);
 
             _db.Tags.RemoveRange(item.Tags);
 

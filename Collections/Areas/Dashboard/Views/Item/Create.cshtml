@@ -7,28 +7,36 @@
 		asp-action="Create"
 		class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
 		method="post"
+		enctype="multipart/form-data"
 	>
 		<input asp-for="CollectionId" type="hidden" value="@(Context.Request.Query["collection"][0])" />
 		<div class="mb-4">
-			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Name">
-				Name
-			</label>
+			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Name"></label>
 			<input
 				asp-for="Name"
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
 				type="text" 
 			/>
+			<span class="block text-red-500 text-sm" asp-validation-for="Name"></span>
 		</div>
 		
 		<div class="mb-4">
-			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Tags">
-				Tags
-			</label>
+			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Tags"></label>
 			<input
 				asp-for="Tags"
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
 				type="text" 
 				placeholder="Write some tags through commas..."
+			/>
+			<span class="block text-red-500 text-sm" asp-validation-for="Tags"></span>
+		</div>
+
+		<div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Image"></label>
+			<input
+				asp-for="Image"
+				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+				type="file" 
 			/>
 		</div>
 

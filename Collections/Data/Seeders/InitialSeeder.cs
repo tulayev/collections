@@ -36,6 +36,7 @@ namespace Collections.Data.Seeders
             var superAdmin = new User
             {
                 Id = superAdminId,
+                Name = "Admin",
                 Email = adminLogin,
                 EmailConfirmed = false,
                 NormalizedEmail = adminLogin.ToUpper(),

@@ -1,0 +1,41 @@
+﻿<div class="relative">
+    <input
+        type="text"
+        class="bg-gray-800 text-sm rounded-full focus:outline-none focus:shadow-outline w-64 px-3 pl-8 py-1"
+        placeholder="Search..."
+    />
+                
+    <div class="absolute top-0 flex items-center h-full ml-2">
+        <img src="~/images/lupa.svg" alt="Lupa" class="w-4">
+    </div>
+                
+    <div class="absolute z-50 bg-gray-800 text-sm rounded w-64 mt-2">
+        <ul>
+            <li class="border-b border-gray-700">
+                <a href="#" class="block hover:bg-gray-700 flex items-center transition ease-in-out duration-150 px-3 py-3">
+                    <img src="https://cdn.myanimelist.net/images/anime/1079/109928.jpg?s=33c1c9c33504d732712ca3e1ebcafc7a" alt="cover" class="w-10">
+                    <span class="ml-4">Название аниме из поискового дропдовна</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="ml-6">
+    @if(User.Identity.IsAuthenticated && User.Claims.FirstOrDefault(c => c.Type == "Image") != null)
+    {
+        <img 
+            src="~/images/@User.Claims.FirstOrDefault(c => c.Type == "Image").Value" 
+            alt="avatar" 
+            class="rounded-full w-8"
+        />
+    }
+    else
+    {
+        <img 
+            src="~/images/avatar.png" 
+            alt="avatar" 
+            class="rounded-full w-8"
+        />
+    }
+</div>

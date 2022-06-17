@@ -56,6 +56,15 @@ namespace Collections.Migrations
                     b.Property<int>("CollectionId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValue(new DateTime(2022, 6, 17, 16, 30, 41, 813, DateTimeKind.Utc).AddTicks(8477));
+
+                    b.Property<string>("Image")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -129,15 +138,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f377b4fa-c63e-4c55-85b5-2634fe08e7ff",
-                            ConcurrencyStamp = "f377b4fa-c63e-4c55-85b5-2634fe08e7ff",
+                            Id = "da399803-f66d-4cf7-827c-eeb60a30bb50",
+                            ConcurrencyStamp = "da399803-f66d-4cf7-827c-eeb60a30bb50",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "ccff3019-4554-4aaa-a307-5a521cce0c4d",
-                            ConcurrencyStamp = "ccff3019-4554-4aaa-a307-5a521cce0c4d",
+                            Id = "c182ec86-ed6e-41fd-8ca4-fa2467d14d57",
+                            ConcurrencyStamp = "c182ec86-ed6e-41fd-8ca4-fa2467d14d57",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -302,8 +311,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "f413b185-8402-4700-85ae-3f33d1f4d52e",
-                            RoleId = "f377b4fa-c63e-4c55-85b5-2634fe08e7ff"
+                            UserId = "440d619e-65a9-4d4b-b71c-15f2a45a07fc",
+                            RoleId = "da399803-f66d-4cf7-827c-eeb60a30bb50"
                         });
                 });
 
@@ -330,24 +339,34 @@ namespace Collections.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Image")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            Id = "f413b185-8402-4700-85ae-3f33d1f4d52e",
+                            Id = "440d619e-65a9-4d4b-b71c-15f2a45a07fc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "80f9ef73-f753-498f-9484-5945db836735",
+                            ConcurrencyStamp = "30f23293-9895-47c5-b5c4-ddb91f7ef823",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELKf7bScpc3HXjPoY7GUW5b11u+XrKGKkTCSs5Ctk/iyrdHIulMxGjprjuEBEvHM1w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPuNwbIqR4uqGVuPMoZczPxpI/saLhq0FE72LOTiaMM10vUMT7Sxftpy0vqPc3lp1Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "16C720EB-FA80-40B5-A611-52C89D16552A",
+                            SecurityStamp = "B10B8024-C3D7-4415-886A-D5A8371DE10E",
                             TwoFactorEnabled = false,
-                            UserName = "admin@collections.com"
+                            UserName = "admin@collections.com",
+                            Name = "Admin"
                         });
                 });
 

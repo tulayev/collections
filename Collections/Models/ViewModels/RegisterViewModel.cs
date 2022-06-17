@@ -5,6 +5,9 @@ namespace Collections.Models.ViewModels
     public class RegisterViewModel
     {
         [Required]
+        public string Name { get; set; }
+
+        [Required]
         [EmailAddress(ErrorMessage = "Invalid Email address")]
         public string Email { get; set; }
 
@@ -16,5 +19,9 @@ namespace Collections.Models.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
+
+#nullable enable
+        public IFormFile? Image { get; set; }
+#nullable disable
     }
 }
