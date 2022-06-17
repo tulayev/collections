@@ -2,6 +2,7 @@
 using Collections.Models;
 using Collections.Models.ViewModels;
 using Collections.Services;
+using Collections.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +27,20 @@ namespace Collections.Areas.Dashboard.Controllers
             _uploadHandler = uploadHandler;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? userId)
         {
-            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User user;
+
+            if (userId == null)
+            {
+                user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            }
+            else
+            {
+                user = await _userManager.FindByIdAsync(userId);
+            }
 
             var userCollections = await _db.Collections.Where(c => c.UserId == user.Id).Select(c => c.Id).ToListAsync();
-
             var userItems = await _db.Items.Where(i => userCollections.Contains(i.CollectionId)).ToListAsync();
 
             return View(userItems);
@@ -40,6 +49,13 @@ namespace Collections.Areas.Dashboard.Controllers
         public async Task<IActionResult> Create(int? collection)
         {
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var adminUsers = await _userManager.GetUsersInRoleAsync(Roles.RoleAdmin);
+            var adminUsersList = new List<User>();
+
+            foreach (var admin in adminUsers)
+            {
+                adminUsersList.Add(admin);
+            }
 
             if (collection is null)
 			{
@@ -48,7 +64,8 @@ namespace Collections.Areas.Dashboard.Controllers
 
             var userCollection = await _db.Collections.FindAsync(collection);
 
-            if (userCollection != null && userCollection.UserId != user.Id)
+            if (userCollection == null || 
+                (userCollection.UserId != user.Id && !adminUsersList.Select(a => a.Id).Contains(user.Id)))
 			{
                 return NotFound();
             }
@@ -60,11 +77,6 @@ namespace Collections.Areas.Dashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ItemCreateViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
             var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower() }).ToList();
 
@@ -104,6 +116,7 @@ namespace Collections.Areas.Dashboard.Controllers
             {
                 Id = item.Id,
                 Name = item.Name,
+                ExistingImage = item.Image,
                 Tags = String.Join(", ", itemTags)
             };
 

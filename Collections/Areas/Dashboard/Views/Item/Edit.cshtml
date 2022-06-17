@@ -1,6 +1,6 @@
 ﻿@model ItemEditViewModel
 
-<h1 class="font-bold pl-2">Добавить аниме</h1>
+<h1 class="font-bold pl-2">Edit Item</h1>
 
 <div class="w-full mt-4">
 	<form 
@@ -29,6 +29,13 @@
 				placeholder="Write some tags through commas..."
 			/>
 			<span class="block text-red-500 text-sm" asp-validation-for="Tags"></span>
+		</div>
+
+		<div class="mb-4">
+			<img
+				src="~/images/@Model.ExistingImage"
+				class="w-full"
+			/>
 		</div>
 
 		<div class="mb-4">

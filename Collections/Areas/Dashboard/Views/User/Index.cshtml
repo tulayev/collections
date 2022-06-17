@@ -32,6 +32,24 @@
 								<td class="flex justify-end text-gray-900 px-6 py-4 whitespace-nowrap">
 									<a
 										asp-area="Dashboard"
+										asp-controller="Collection"
+										asp-action="Index" 
+										asp-route-userId="@user.Id"
+										class="ml-2 px-4 py-1 rounded bg-blue-500 text-white"
+									>
+										Collections
+									</a>
+									<a
+										asp-area="Dashboard"
+										asp-controller="Item"
+										asp-action="Index" 
+										asp-route-userId="@user.Id"
+										class="ml-2 px-4 py-1 rounded bg-purple-500 text-white"
+									>
+										Items
+									</a>
+									<a
+										asp-area="Dashboard"
 										asp-controller="Role"
 										asp-action="Edit" 
 										asp-route-userId="@user.Id"

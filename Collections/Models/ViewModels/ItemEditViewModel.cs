@@ -13,6 +13,8 @@ namespace Collections.Models.ViewModels
         public string Tags { get; set; }
 
 #nullable enable
+        public string? ExistingImage { get; set; }
+
         public IFormFile? Image { get; set; }
 #nullable disable
     }

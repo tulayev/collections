@@ -21,13 +21,21 @@ namespace Collections.Areas.Dashboard.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? userId)
         {
-            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            User user;
 
-            var collections = await _db.Collections
-                .Where(c => c.UserId == user.Id)
-                .ToListAsync();
+            if (userId == null)
+            {
+                user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            }
+            else
+            {
+                user = await _userManager.FindByIdAsync(userId);    
+            }
+
+            var collections = await _db.Collections.Where(c => c.UserId == user.Id).ToListAsync();
+            
             return View(collections);
         }
 

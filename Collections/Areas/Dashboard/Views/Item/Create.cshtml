@@ -1,6 +1,6 @@
 ﻿@model ItemCreateViewModel
 
-<h1 class="font-bold pl-2">Добавить аниме</h1>
+<h1 class="font-bold pl-2">Add Item</h1>
 
 <div class="w-full mt-4">
 	<form 
@@ -16,6 +16,7 @@
 				asp-for="Name"
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
 				type="text" 
+				required
 			/>
 			<span class="block text-red-500 text-sm" asp-validation-for="Name"></span>
 		</div>
@@ -27,6 +28,7 @@
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
 				type="text" 
 				placeholder="Write some tags through commas..."
+				required
 			/>
 			<span class="block text-red-500 text-sm" asp-validation-for="Tags"></span>
 		</div>
