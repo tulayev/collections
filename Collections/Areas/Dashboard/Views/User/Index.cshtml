@@ -1,0 +1,50 @@
+﻿@model IEnumerable<User>
+@{ int i = 0; }
+
+<div class="flex flex-col">
+	<div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+		<div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+			<div class="overflow-hidden">
+				<table class="min-w-full">
+				<thead class="border-b">
+					<tr>
+						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+							#
+						</th>
+						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+							Email
+						</th>
+						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-right">
+							Actions
+						</th>
+					</tr>
+				</thead>
+					<tbody>
+						@foreach (var user in Model)
+						{
+							<tr class="border-b">
+								<td class="px-6 py-4 whitespace-nowrap  font-medium text-gray-900">
+									@(++i)
+								</td>
+								<td class="text-gray-900 px-6 py-4 whitespace-nowrap">
+									@user.Email
+								</td>
+								<td class="flex justify-end text-gray-900 px-6 py-4 whitespace-nowrap">
+									<a
+										asp-area="Dashboard"
+										asp-controller="Role"
+										asp-action="Edit" 
+										asp-route-userId="@user.Id"
+										class="ml-2 px-4 py-1 rounded bg-green-500 text-white"
+									>
+										Edit Role
+									</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

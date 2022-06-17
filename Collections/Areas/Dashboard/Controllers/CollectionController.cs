@@ -50,7 +50,46 @@ namespace Collections.Areas.Dashboard.Controllers
 
             await _db.Collections.AddAsync(model);
             await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            var collection = await _db.Collections.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (collection is null)
+            {
+                return NotFound();
+            }
+
+            return View(collection);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(AppCollection model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            _db.Collections.Update(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var collection = await _db.Collections.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (collection is null)
+            {
+                return NotFound();
+            }
+
+            _db.Collections.Remove(collection);
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }

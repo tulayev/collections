@@ -14,7 +14,7 @@
 						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
 							Name
 						</th>
-						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-right">
 							Actions
 						</th>
 					</tr>
@@ -31,13 +31,30 @@
 									<td class=" text-gray-900 px-6 py-4 whitespace-nowrap">
 										@collection.Name
 									</td>
-									<td class=" text-gray-900 px-6 py-4 whitespace-nowrap">
+									<td class="flex justify-end text-gray-900 px-6 py-4 whitespace-nowrap">
 										<a 
 											asp-area="Dashboard"
 											asp-controller="Item"
 											asp-action="Create"
 											asp-route-collection="@collection.Id"
-										>Add Item</a>
+											class="ml-2 px-4 py-1 rounded bg-blue-500 text-white"
+										>
+											Add Item
+										</a>
+										<a
+											asp-action="Edit" 
+											asp-route-id="@collection.Id"
+											class="ml-2 px-4 py-1 rounded bg-green-500 text-white"
+										>
+											Edit
+										</a>
+										<a
+											asp-action="Delete" 
+											asp-route-id="@collection.Id"
+											class="ml-2 px-4 py-1 rounded bg-red-500 text-white"
+										>
+											Delete
+										</a>
 									</td>
 								</tr>
 							}

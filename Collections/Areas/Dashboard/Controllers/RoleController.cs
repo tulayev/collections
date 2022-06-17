@@ -14,11 +14,14 @@ namespace Collections.Areas.Admin.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
 
         private readonly UserManager<User> _userManager;
+        
+        private readonly SignInManager<User> _signManager;
 
-        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, SignInManager<User> signManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _signManager = signManager;
         }
 
         public IActionResult Index()
@@ -60,7 +63,12 @@ namespace Collections.Areas.Admin.Controllers
 
                 await _userManager.RemoveFromRoleAsync(user, rolesToBeRemoved[0]);
 
-                return RedirectToAction("Index");
+                if (user.Email == User.Identity.Name)
+                {
+                    await _signManager.SignOutAsync();
+                }
+
+                return RedirectToAction("Index", "User");
             }
 
             return NotFound();

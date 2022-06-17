@@ -73,9 +73,7 @@ namespace Collections.Areas.Dashboard.Controllers
             };
 
             await _db.Items.AddAsync(item);
-
             await _db.SaveChangesAsync();
-
             return RedirectToAction("Index");
         }
 
@@ -112,6 +110,8 @@ namespace Collections.Areas.Dashboard.Controllers
 
             var item = await _db.Items.Include(i => i.Tags).FirstOrDefaultAsync(i => i.Id == model.Id);
 
+            _db.Tags.RemoveRange(item.Tags);
+
             item.Tags.Clear();
 
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -122,7 +122,6 @@ namespace Collections.Areas.Dashboard.Controllers
             item.Tags = tags;
 
             await _db.SaveChangesAsync();
-
             return RedirectToAction("Index");
         }
 
@@ -135,12 +134,12 @@ namespace Collections.Areas.Dashboard.Controllers
                 return NotFound();
             }
 
+            _db.Tags.RemoveRange(item.Tags);
+
             item.Tags.Clear();
 
             _db.Items.Remove(item);
-
             await _db.SaveChangesAsync();
-
             return RedirectToAction("Index");
         }
     }
