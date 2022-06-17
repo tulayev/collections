@@ -1,6 +1,6 @@
-﻿namespace Collections.Utils
+﻿namespace Collections.Services
 {
-    public class UploadHandler
+    public class UploadHandler : IUploadHandler
     {
         private static IWebHostEnvironment _env;
         private const string ImagePath = "images";

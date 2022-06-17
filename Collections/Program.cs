@@ -1,5 +1,6 @@
 using Collections.Data;
 using Collections.Models;
+using Collections.Services;
 using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -41,6 +42,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddSingleton<IUploadHandler, UploadHandler>();
 
 var app = builder.Build().MigrateDatabase<ApplicationDbContext>();
 
