@@ -37,7 +37,7 @@ namespace Collections.Areas.Admin.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var allRoles = _roleManager.Roles.ToList();
-                var model = new ChangeRoleViewModel
+                var model = new RoleEditViewModel
                 {
                     UserId = user.Id,
                     UserEmail = user.Email,

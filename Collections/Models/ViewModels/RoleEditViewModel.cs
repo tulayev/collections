@@ -2,7 +2,7 @@
 
 namespace Collections.Models.ViewModels
 {
-    public class ChangeRoleViewModel
+    public class RoleEditViewModel
     {
         public string UserId { get; set; }
         
@@ -12,7 +12,7 @@ namespace Collections.Models.ViewModels
         
         public IList<string> UserRoles { get; set; }
         
-        public ChangeRoleViewModel()
+        public RoleEditViewModel()
         {
             AllRoles = new List<IdentityRole>();
             UserRoles = new List<string>();
