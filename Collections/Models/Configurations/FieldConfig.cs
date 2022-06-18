@@ -7,6 +7,7 @@ namespace Collections.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Field> builder)
         {
+            builder.Property(p => p.Key).HasMaxLength(255).IsRequired();
             builder.Property(p => p.Value).HasMaxLength(255).IsRequired();
         }
     }

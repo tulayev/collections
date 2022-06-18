@@ -41,6 +41,27 @@
 				type="file" 
 			/>
 		</div>
+		
+		<div class="mb-4 flex items-center">
+			<div class="w-1/2">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for="fieldGroupSelect">
+					Choose the type of the field
+				</label>
+				<select
+					id="fieldGroupSelect"
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+				>
+				</select>
+			</div>
+
+			<div class="w-1/2 flex justify-end">
+				<button id="addFieldBtn" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Add</button>
+			</div>
+		</div>
+
+		<div id="fieldGroupsWrapper">
+
+		</div>
 
 		<div class="flex items-center justify-between">
 			<button
@@ -52,3 +73,48 @@
 		</div>
 	</form>
 </div>
+
+@section Scripts {
+	<script>
+		const fieldGroupSelect = document.getElementById('fieldGroupSelect')
+		const addFieldBtn = document.getElementById('addFieldBtn')
+		const fieldGroupsWrapper = document.getElementById('fieldGroupsWrapper')
+
+		const getFieldGroups = async () => {
+			try {
+				const res = await fetch('/api/fieldgroups')
+				const fieldGroups = await res.json()
+				let index = 0;
+				for (let fg of fieldGroups)
+				{
+					let opt = document.createElement('option');
+					opt.value = fg.name
+					opt.innerHTML = fg.name
+
+					fieldGroupSelect.appendChild(opt)
+					index++
+				}
+			} catch (e) {
+				console.log(e.message)
+			}
+		}
+
+		getFieldGroups()
+
+		addFieldBtn.addEventListener('click', (e) => {
+			const group = `
+			<div class="mb-4">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for="Tags"></label>
+				<input
+					asp-for="Tags"
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+					type="text" 
+					placeholder="Write some tags through commas..."
+					required
+				/>
+				<span class="block text-red-500 text-sm" asp-validation-for="Tags"></span>
+			</div>`
+			fieldGroupsWrapper.innerHTML += group
+		})
+	</script>
+}
