@@ -1,4 +1,12 @@
 ﻿@model ItemEditViewModel
+@{
+	var types = new Dictionary<FieldType, string>
+	{
+		[FieldType.Number] = "number", 
+		[FieldType.Text] = "text", 
+		[FieldType.Boolean] = "checkbox", 
+	}; 
+}
 
 <h1 class="font-bold pl-2">Edit Item</h1>
 
@@ -10,14 +18,15 @@
 		enctype="multipart/form-data"
 	>
 		<input asp-for="Id" type="hidden" />
+		<input asp-for="Fields" type="hidden" />
 		<div class="mb-4">
 			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Name"></label>
 			<input
 				asp-for="Name"
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
 				type="text" 
+				required
 			/>
-			<span class="block text-red-500 text-sm" asp-validation-for="Name"></span>
 		</div>
 		
 		<div class="mb-4">
@@ -27,8 +36,8 @@
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
 				type="text" 
 				placeholder="Write some tags through commas..."
+				required
 			/>
-			<span class="block text-red-500 text-sm" asp-validation-for="Tags"></span>
 		</div>
 
 		<div class="mb-4">
@@ -46,6 +55,51 @@
 				type="file" 
 			/>
 		</div>
+
+		@if (Model.Fields.Count > 0)
+		{
+			<div id="fieldGroupsWrapper">
+				@foreach (var field in Model.Fields)
+				{
+					<div class="mb-4">
+						@switch (field.Type)
+						{
+							case FieldType.Textarea:
+								<label class="block text-gray-700 text-sm font-bold mb-2" for="@field.Id">@field.Key</label>
+								<input name="keys" value="@field.Key" type="hidden" />
+								<input name="types" value="@((int)field.Type)" type="hidden" />
+								<textarea
+									id="@field.Id"
+									name="values"
+									class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+									type="text"
+									required
+								>@field.Value</textarea>
+							break;
+							case FieldType.Boolean:
+								<label class="block text-gray-700 text-sm font-bold mb-2" for="@field.Id">@field.Key</label>
+								<input name="keys" value="@field.Key" type="hidden" />
+								<input name="types" value="@((int)field.Type)" type="hidden" />
+								<input name="values" value="@field.Value" type="checkbox" required />
+							break;
+							default:
+								<label class="block text-gray-700 text-sm font-bold mb-2" for="@field.Id">@field.Key</label>
+								<input name="keys" value="@field.Key" type="hidden" />
+								<input name="types" value="@((int)field.Type)" type="hidden" />
+								<input
+									id="@field.Id"
+									name="values"
+									class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+									type="@types[field.Type]" 
+									value="@field.Value"
+									required
+								/>
+							break;
+						}
+					</div>	
+				}
+			</div>
+		}
 
 		<div class="flex items-center justify-between">
 			<button

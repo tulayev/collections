@@ -52,8 +52,8 @@ if (!app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
     string port = Environment.GetEnvironmentVariable("PORT");
     app.Urls.Add($"http://*:{port}");
-    //app.UseExceptionHandler("/Home/Error");
-    //app.UseHsts();
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
 
 app.UseRequestLocalization(new RequestLocalizationOptions

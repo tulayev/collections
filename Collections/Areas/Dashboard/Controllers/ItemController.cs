@@ -75,9 +75,9 @@ namespace Collections.Areas.Dashboard.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ItemCreateViewModel model, string[] keys, string[] values)
+        public async Task<IActionResult> Create(ItemCreateViewModel model, string[] keys, string[] values, int[] types)
         {
-            if (keys != null && values != null && keys.Length != values.Length)
+            if (keys != null && values != null && keys != null && keys.Length != values.Length)
             {
                 return BadRequest();
             }
@@ -111,13 +111,13 @@ namespace Collections.Areas.Dashboard.Controllers
                 {
                     Key = keys[i],
                     Value = values[i],
-                    ItemId = item.Id
+                    ItemId = item.Id,
+                    Type = (FieldType)types[i]
                 });
             }
 
             await _db.Fields.AddRangeAsync(fieldsList);
             await _db.SaveChangesAsync();
-
             return RedirectToAction("Index");
         }
 
@@ -125,7 +125,9 @@ namespace Collections.Areas.Dashboard.Controllers
         {
             var item = await _db.Items
                 .Include(i => i.Tags)
+                .Include(i => i.Fields)
                 .FirstOrDefaultAsync(i => i.Id == id);
+
             var itemTags = item.Tags.Select(t => t.Name);
 
             if (item is null)
@@ -138,7 +140,8 @@ namespace Collections.Areas.Dashboard.Controllers
                 Id = item.Id,
                 Name = item.Name,
                 ExistingImage = item.Image,
-                Tags = String.Join(", ", itemTags)
+                Tags = String.Join(",", itemTags),
+                Fields = item.Fields
             };
 
             return View(model);
@@ -146,17 +149,19 @@ namespace Collections.Areas.Dashboard.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ItemEditViewModel model)
+        public async Task<IActionResult> Edit(ItemEditViewModel model, string[] keys, string[] values, int[] types)
         {
-            if (!ModelState.IsValid)
+            if (keys != null && values != null && keys != null && keys.Length != values.Length)
             {
-                return View(model);
+                return BadRequest();
             }
 
-            var item = await _db.Items.Include(i => i.Tags).FirstOrDefaultAsync(i => i.Id == model.Id);
+            var item = await _db.Items
+                .Include(i => i.Tags)
+                .Include(i => i.Fields)
+                .FirstOrDefaultAsync(i => i.Id == model.Id);
 
             _db.Tags.RemoveRange(item.Tags);
-
             item.Tags.Clear();
 
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -169,9 +174,26 @@ namespace Collections.Areas.Dashboard.Controllers
                 image = await _uploadHandler.UploadAsync(model.Image, item.Image);
             }
 
+            _db.Fields.RemoveRange(item.Fields);
+            item.Fields.Clear();
+
+            var fieldsList = new List<Field>();
+
+            for (int i = 0; i < keys.Length; i++)
+            {
+                fieldsList.Add(new Field
+                {
+                    Key = keys[i],
+                    Value = values[i],
+                    ItemId = item.Id,
+                    Type = (FieldType)types[i]
+                });
+            }
+
             item.Name = model.Name;
             item.Tags = tags;
-            item.Image = image.Length > 0 ? image : null;
+            item.Image = image.Length > 0 ? image : item.Image;
+            item.Fields = fieldsList;
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -189,7 +211,6 @@ namespace Collections.Areas.Dashboard.Controllers
             _uploadHandler.Delete(item.Image);
 
             _db.Tags.RemoveRange(item.Tags);
-
             item.Tags.Clear();
 
             _db.Items.Remove(item);
