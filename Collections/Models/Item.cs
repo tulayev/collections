@@ -20,5 +20,9 @@ namespace Collections.Models
         public AppCollection Collection { get; set; }
 
         public List<Tag> Tags { get; set; }
+
+        public List<Field> Fields { get; set; }
+
+        public List<Comment> Comments { get; set; }
     }
 }

@@ -191,6 +191,27 @@ namespace Collections.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FieldGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    FieldType = table.Column<int>(type: "integer", nullable: false, defaultValue: 2),
+                    CollectionId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FieldGroups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FieldGroups_Collections_CollectionId",
+                        column: x => x.CollectionId,
+                        principalTable: "Collections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
@@ -199,7 +220,7 @@ namespace Collections.Migrations
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     CollectionId = table.Column<int>(type: "integer", nullable: false),
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 17, 16, 30, 41, 813, DateTimeKind.Utc).AddTicks(8477))
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 9, 15, 0, 691, DateTimeKind.Utc).AddTicks(5219))
                 },
                 constraints: table =>
                 {
@@ -208,6 +229,66 @@ namespace Collections.Migrations
                         name: "FK_Items_Collections_CollectionId",
                         column: x => x.CollectionId,
                         principalTable: "Collections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Body = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    ItemId = table.Column<int>(type: "integer", nullable: false),
+                    PostedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 9, 15, 0, 691, DateTimeKind.Utc).AddTicks(4498))
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Comments_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Fields",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Value = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    FieldGroupId = table.Column<int>(type: "integer", nullable: false),
+                    ItemId = table.Column<int>(type: "integer", nullable: false),
+                    AppCollectionId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fields", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Fields_Collections_AppCollectionId",
+                        column: x => x.AppCollectionId,
+                        principalTable: "Collections",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Fields_FieldGroups_FieldGroupId",
+                        column: x => x.FieldGroupId,
+                        principalTable: "FieldGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Fields_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -236,24 +317,48 @@ namespace Collections.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Likes",
+                columns: table => new
+                {
+                    ItemId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Likes", x => new { x.ItemId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_Likes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Likes_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "c182ec86-ed6e-41fd-8ca4-fa2467d14d57", "c182ec86-ed6e-41fd-8ca4-fa2467d14d57", "user", "USER" },
-                    { "da399803-f66d-4cf7-827c-eeb60a30bb50", "da399803-f66d-4cf7-827c-eeb60a30bb50", "admin", "ADMIN" }
+                    { "9580a139-4062-4ecc-9177-ae26e65f02d5", "9580a139-4062-4ecc-9177-ae26e65f02d5", "user", "USER" },
+                    { "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd", "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd", "admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "Image", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "440d619e-65a9-4d4b-b71c-15f2a45a07fc", 0, "30f23293-9895-47c5-b5c4-ddb91f7ef823", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEPuNwbIqR4uqGVuPMoZczPxpI/saLhq0FE72LOTiaMM10vUMT7Sxftpy0vqPc3lp1Q==", null, false, "B10B8024-C3D7-4415-886A-D5A8371DE10E", false, "admin@collections.com" });
+                values: new object[] { "b2b5b537-8c11-49e0-8007-44d1a7ee67bc", 0, "66c0d525-487e-4372-b93d-6f604afadaaf", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEN0xQ91LsTbBtTg1ogWmRV7kaN8RGz4AjyyUHdla6TAdDlyh4lYdLzOzjO8pMiYhnQ==", null, false, "AAA41423-5703-45EC-A176-3B8C560D645A", false, "admin@collections.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "da399803-f66d-4cf7-827c-eeb60a30bb50", "440d619e-65a9-4d4b-b71c-15f2a45a07fc" });
+                values: new object[] { "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd", "b2b5b537-8c11-49e0-8007-44d1a7ee67bc" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -298,6 +403,36 @@ namespace Collections.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_ItemId",
+                table: "Comments",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FieldGroups_CollectionId",
+                table: "FieldGroups",
+                column: "CollectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fields_AppCollectionId",
+                table: "Fields",
+                column: "AppCollectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fields_FieldGroupId",
+                table: "Fields",
+                column: "FieldGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fields_ItemId",
+                table: "Fields",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Items_CollectionId",
                 table: "Items",
                 column: "CollectionId");
@@ -306,6 +441,11 @@ namespace Collections.Migrations
                 name: "IX_ItemTag_TagsId",
                 table: "ItemTag",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Likes_UserId",
+                table: "Likes",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -326,16 +466,28 @@ namespace Collections.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Fields");
+
+            migrationBuilder.DropTable(
                 name: "ItemTag");
+
+            migrationBuilder.DropTable(
+                name: "Likes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "FieldGroups");
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "Items");
 
             migrationBuilder.DropTable(
                 name: "Collections");
