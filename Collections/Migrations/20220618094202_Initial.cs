@@ -53,6 +53,20 @@ namespace Collections.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FieldGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    FieldType = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FieldGroups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -191,27 +205,6 @@ namespace Collections.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FieldGroups",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    FieldType = table.Column<int>(type: "integer", nullable: false, defaultValue: 2),
-                    CollectionId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FieldGroups", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FieldGroups_Collections_CollectionId",
-                        column: x => x.CollectionId,
-                        principalTable: "Collections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
@@ -220,7 +213,7 @@ namespace Collections.Migrations
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     CollectionId = table.Column<int>(type: "integer", nullable: false),
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 9, 15, 0, 691, DateTimeKind.Utc).AddTicks(5219))
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 9, 42, 2, 322, DateTimeKind.Utc).AddTicks(9470))
                 },
                 constraints: table =>
                 {
@@ -242,7 +235,7 @@ namespace Collections.Migrations
                     Body = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true),
                     ItemId = table.Column<int>(type: "integer", nullable: false),
-                    PostedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 9, 15, 0, 691, DateTimeKind.Utc).AddTicks(4498))
+                    PostedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 9, 42, 2, 322, DateTimeKind.Utc).AddTicks(8591))
                 },
                 constraints: table =>
                 {
@@ -268,17 +261,11 @@ namespace Collections.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Value = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     FieldGroupId = table.Column<int>(type: "integer", nullable: false),
-                    ItemId = table.Column<int>(type: "integer", nullable: false),
-                    AppCollectionId = table.Column<int>(type: "integer", nullable: true)
+                    ItemId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fields", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Fields_Collections_AppCollectionId",
-                        column: x => x.AppCollectionId,
-                        principalTable: "Collections",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Fields_FieldGroups_FieldGroupId",
                         column: x => x.FieldGroupId,
@@ -346,19 +333,30 @@ namespace Collections.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "9580a139-4062-4ecc-9177-ae26e65f02d5", "9580a139-4062-4ecc-9177-ae26e65f02d5", "user", "USER" },
-                    { "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd", "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd", "admin", "ADMIN" }
+                    { "4de3e76c-cd14-47c6-bcaa-ee1dca30bb90", "4de3e76c-cd14-47c6-bcaa-ee1dca30bb90", "user", "USER" },
+                    { "f29b4d18-fd96-463f-8a7e-e25def622ad2", "f29b4d18-fd96-463f-8a7e-e25def622ad2", "admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "Image", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "b2b5b537-8c11-49e0-8007-44d1a7ee67bc", 0, "66c0d525-487e-4372-b93d-6f604afadaaf", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEN0xQ91LsTbBtTg1ogWmRV7kaN8RGz4AjyyUHdla6TAdDlyh4lYdLzOzjO8pMiYhnQ==", null, false, "AAA41423-5703-45EC-A176-3B8C560D645A", false, "admin@collections.com" });
+                values: new object[] { "7a2a80b1-c2ae-477d-8f66-07027cee3d60", 0, "4d1087bc-027d-4f77-a45e-9650a588fb39", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEKtkH9PGqmjvePIPowhZbBP4SfxzJuS2VtOqIssXDGSO72r03Iji+cvjiLV/g1AmwA==", null, false, "565E8AB8-5D09-4A49-8223-94272725FE96", false, "admin@collections.com" });
+
+            migrationBuilder.InsertData(
+                table: "FieldGroups",
+                columns: new[] { "Id", "FieldType", "Name" },
+                values: new object[,]
+                {
+                    { 1, 1, "Number" },
+                    { 2, 2, "Text" },
+                    { 3, 3, "Textarea" },
+                    { 4, 4, "Checkbox" }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd", "b2b5b537-8c11-49e0-8007-44d1a7ee67bc" });
+                values: new object[] { "f29b4d18-fd96-463f-8a7e-e25def622ad2", "7a2a80b1-c2ae-477d-8f66-07027cee3d60" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -411,16 +409,6 @@ namespace Collections.Migrations
                 name: "IX_Comments_UserId",
                 table: "Comments",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FieldGroups_CollectionId",
-                table: "FieldGroups",
-                column: "CollectionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Fields_AppCollectionId",
-                table: "Fields",
-                column: "AppCollectionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Fields_FieldGroupId",

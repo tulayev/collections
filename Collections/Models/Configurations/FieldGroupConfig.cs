@@ -8,7 +8,6 @@ namespace Collections.Models.Configurations
         public void Configure(EntityTypeBuilder<FieldGroup> builder)
         {
             builder.Property(p => p.Name).HasMaxLength(255).IsRequired();
-            builder.Property(p => p.FieldType).HasDefaultValue(FieldType.Text);
         }
     }
 }

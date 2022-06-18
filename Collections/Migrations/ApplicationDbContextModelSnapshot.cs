@@ -63,7 +63,7 @@ namespace Collections.Migrations
                     b.Property<DateTime>("PostedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 18, 9, 15, 0, 691, DateTimeKind.Utc).AddTicks(4498));
+                        .HasDefaultValue(new DateTime(2022, 6, 18, 9, 42, 2, 322, DateTimeKind.Utc).AddTicks(8591));
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -85,9 +85,6 @@ namespace Collections.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AppCollectionId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("FieldGroupId")
                         .HasColumnType("integer");
 
@@ -100,8 +97,6 @@ namespace Collections.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppCollectionId");
 
                     b.HasIndex("FieldGroupId");
 
@@ -118,13 +113,8 @@ namespace Collections.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CollectionId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("FieldType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(2);
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -133,9 +123,33 @@ namespace Collections.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CollectionId");
-
                     b.ToTable("FieldGroups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FieldType = 1,
+                            Name = "Number"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FieldType = 2,
+                            Name = "Text"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FieldType = 3,
+                            Name = "Textarea"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FieldType = 4,
+                            Name = "Checkbox"
+                        });
                 });
 
             modelBuilder.Entity("Collections.Models.Item", b =>
@@ -152,7 +166,7 @@ namespace Collections.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 18, 9, 15, 0, 691, DateTimeKind.Utc).AddTicks(5219));
+                        .HasDefaultValue(new DateTime(2022, 6, 18, 9, 42, 2, 322, DateTimeKind.Utc).AddTicks(9470));
 
                     b.Property<string>("Image")
                         .HasMaxLength(255)
@@ -246,15 +260,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd",
-                            ConcurrencyStamp = "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd",
+                            Id = "f29b4d18-fd96-463f-8a7e-e25def622ad2",
+                            ConcurrencyStamp = "f29b4d18-fd96-463f-8a7e-e25def622ad2",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9580a139-4062-4ecc-9177-ae26e65f02d5",
-                            ConcurrencyStamp = "9580a139-4062-4ecc-9177-ae26e65f02d5",
+                            Id = "4de3e76c-cd14-47c6-bcaa-ee1dca30bb90",
+                            ConcurrencyStamp = "4de3e76c-cd14-47c6-bcaa-ee1dca30bb90",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -419,8 +433,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "b2b5b537-8c11-49e0-8007-44d1a7ee67bc",
-                            RoleId = "ea86b2d3-428a-4e8f-aed2-75e0535bb9cd"
+                            UserId = "7a2a80b1-c2ae-477d-8f66-07027cee3d60",
+                            RoleId = "f29b4d18-fd96-463f-8a7e-e25def622ad2"
                         });
                 });
 
@@ -461,17 +475,17 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b2b5b537-8c11-49e0-8007-44d1a7ee67bc",
+                            Id = "7a2a80b1-c2ae-477d-8f66-07027cee3d60",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "66c0d525-487e-4372-b93d-6f604afadaaf",
+                            ConcurrencyStamp = "4d1087bc-027d-4f77-a45e-9650a588fb39",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEN0xQ91LsTbBtTg1ogWmRV7kaN8RGz4AjyyUHdla6TAdDlyh4lYdLzOzjO8pMiYhnQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKtkH9PGqmjvePIPowhZbBP4SfxzJuS2VtOqIssXDGSO72r03Iji+cvjiLV/g1AmwA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "AAA41423-5703-45EC-A176-3B8C560D645A",
+                            SecurityStamp = "565E8AB8-5D09-4A49-8223-94272725FE96",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
                             Name = "Admin"
@@ -506,10 +520,6 @@ namespace Collections.Migrations
 
             modelBuilder.Entity("Collections.Models.Field", b =>
                 {
-                    b.HasOne("Collections.Models.AppCollection", null)
-                        .WithMany("Fields")
-                        .HasForeignKey("AppCollectionId");
-
                     b.HasOne("Collections.Models.FieldGroup", "FieldGroup")
                         .WithMany()
                         .HasForeignKey("FieldGroupId")
@@ -525,17 +535,6 @@ namespace Collections.Migrations
                     b.Navigation("FieldGroup");
 
                     b.Navigation("Item");
-                });
-
-            modelBuilder.Entity("Collections.Models.FieldGroup", b =>
-                {
-                    b.HasOne("Collections.Models.AppCollection", "Collection")
-                        .WithMany("FieldGroups")
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Collection");
                 });
 
             modelBuilder.Entity("Collections.Models.Item", b =>
@@ -632,13 +631,6 @@ namespace Collections.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Collections.Models.AppCollection", b =>
-                {
-                    b.Navigation("FieldGroups");
-
-                    b.Navigation("Fields");
                 });
 
             modelBuilder.Entity("Collections.Models.Item", b =>

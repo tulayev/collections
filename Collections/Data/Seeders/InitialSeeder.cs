@@ -57,5 +57,15 @@ namespace Collections.Data.Seeders
                 UserId = superAdminId
             });
         }
+
+        public static void SeedFieldGrups(ModelBuilder modelBuilder)
+        {
+            var fieldNumber = new FieldGroup { Id = 1, Name = "Number", FieldType = FieldType.Number };
+            var fieldText = new FieldGroup { Id = 2, Name = "Text", FieldType = FieldType.Text };
+            var fieldTextarea = new FieldGroup { Id = 3, Name = "Textarea", FieldType = FieldType.Textarea };
+            var fieldBool = new FieldGroup { Id = 4, Name = "Checkbox", FieldType = FieldType.Boolean };
+
+            modelBuilder.Entity<FieldGroup>().HasData(fieldNumber, fieldText, fieldTextarea, fieldBool);
+        }
     }
 }

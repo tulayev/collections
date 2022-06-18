@@ -18,6 +18,7 @@ namespace Collections.Data
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             InitialSeeder.SeedAdmin(modelBuilder);
+            InitialSeeder.SeedFieldGrups(modelBuilder);
         }
 
         public DbSet<AppCollection> Collections { get; set; }

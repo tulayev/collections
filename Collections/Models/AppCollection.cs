@@ -12,9 +12,5 @@ namespace Collections.Models
         public string UserId { get; set; }
 
         public User User { get; set; }
-
-        public List<FieldGroup> FieldGroups { get; set; }
-
-        public List<Field> Fields { get; set; }
     }
 }

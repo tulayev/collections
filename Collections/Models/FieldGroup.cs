@@ -7,10 +7,6 @@
         public string Name { get; set; }
 
         public FieldType FieldType { get; set; }
-
-        public int CollectionId { get; set; }
-
-        public AppCollection Collection { get; set; }
     }
 
     public enum FieldType 
