@@ -99,22 +99,83 @@
 			}
 		}
 
+		const getKeyValueGroup = (inputType) => {
+			let group;
+
+			switch(inputType) {
+				case 'Textarea':
+					group = `
+						<div class="mb-4">
+							<label class="block text-gray-700 text-sm font-bold mb-2">Key-Value Pair</label>
+							<div class="flex">
+								<input
+									name="keys"
+									class="mr-2 shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+									type="text" 
+									placeholder="Key..."
+									required
+								/>
+								<textarea
+									name="values"
+									class="shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+									type="text"
+									placeholder="Value..."
+									required
+								></textarea>
+							</div>
+						</div>`
+					break
+				case 'Checkbox':
+					group = `
+						<div class="mb-4">
+							<label class="block text-gray-700 text-sm font-bold mb-2">Key-Value Pair</label>
+							<div class="flex">
+								<input
+									name="keys"
+									class="mr-2 shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+									type="text" 
+									placeholder="Key..."
+									required
+								/>
+								<input
+									name="values" 
+									type="checkbox" 
+									required
+								/>
+							</div>
+						</div>`
+					break
+				default:
+					group = `
+						<div class="mb-4">
+							<label class="block text-gray-700 text-sm font-bold mb-2">Key-Value Pair</label>
+							<div class="flex">
+								<input
+									name="keys"
+									class="mr-2 shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+									type="text" 
+									placeholder="Key..."
+									required
+								/>
+								<input
+									name="values"
+									class="shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+									type="${inputType}"
+									placeholder="Value..."
+									required
+								/>
+							</div>
+						</div>`
+					break
+			}
+
+			return group;
+		}
+
 		getFieldGroups()
 
 		addFieldBtn.addEventListener('click', (e) => {
-			const group = `
-			<div class="mb-4">
-				<label class="block text-gray-700 text-sm font-bold mb-2" for="Tags"></label>
-				<input
-					asp-for="Tags"
-					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-					type="text" 
-					placeholder="Write some tags through commas..."
-					required
-				/>
-				<span class="block text-red-500 text-sm" asp-validation-for="Tags"></span>
-			</div>`
-			fieldGroupsWrapper.innerHTML += group
+			fieldGroupsWrapper.innerHTML += getKeyValueGroup(fieldGroupSelect.value)
 		})
 	</script>
 }

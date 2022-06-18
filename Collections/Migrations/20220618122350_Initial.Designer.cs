@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Collections.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220618103907_Initial")]
+    [Migration("20220618122350_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,7 +65,7 @@ namespace Collections.Migrations
                     b.Property<DateTime>("PostedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 18, 10, 39, 6, 928, DateTimeKind.Utc).AddTicks(6718));
+                        .HasDefaultValue(new DateTime(2022, 6, 18, 12, 23, 50, 596, DateTimeKind.Utc).AddTicks(5784));
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -87,9 +87,6 @@ namespace Collections.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("FieldGroupId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
@@ -104,8 +101,6 @@ namespace Collections.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FieldGroupId");
 
                     b.HasIndex("ItemId");
 
@@ -173,7 +168,7 @@ namespace Collections.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 18, 10, 39, 6, 928, DateTimeKind.Utc).AddTicks(7521));
+                        .HasDefaultValue(new DateTime(2022, 6, 18, 12, 23, 50, 596, DateTimeKind.Utc).AddTicks(6498));
 
                     b.Property<string>("Image")
                         .HasMaxLength(255)
@@ -267,15 +262,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e1025509-d5dc-4792-bae3-c804cdc77138",
-                            ConcurrencyStamp = "e1025509-d5dc-4792-bae3-c804cdc77138",
+                            Id = "b7b9d896-b8c6-4bb3-9d66-42f71eb22c2b",
+                            ConcurrencyStamp = "b7b9d896-b8c6-4bb3-9d66-42f71eb22c2b",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "949f9ac9-6478-483b-9265-f96433ba210c",
-                            ConcurrencyStamp = "949f9ac9-6478-483b-9265-f96433ba210c",
+                            Id = "7434d06e-2cc0-4662-b445-87e62f0e44d7",
+                            ConcurrencyStamp = "7434d06e-2cc0-4662-b445-87e62f0e44d7",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -440,8 +435,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "89b25c73-4c9b-409f-b2d8-9f2f05a2bbc0",
-                            RoleId = "e1025509-d5dc-4792-bae3-c804cdc77138"
+                            UserId = "4609af6f-fe40-4573-aecf-e2407536738f",
+                            RoleId = "b7b9d896-b8c6-4bb3-9d66-42f71eb22c2b"
                         });
                 });
 
@@ -482,17 +477,17 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "89b25c73-4c9b-409f-b2d8-9f2f05a2bbc0",
+                            Id = "4609af6f-fe40-4573-aecf-e2407536738f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ad9e30fa-1d9d-4daa-802e-eef3505ee685",
+                            ConcurrencyStamp = "b425dbbf-948c-4094-8e3d-0e1876a20b2a",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECNZazNpFrlXhVPhJefewgjd5w66gDxZwtYMVRcS5tJi9i6hONDXDy+p0BSP13n4/g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM4LZ4a+RR12A4F5ii3pvSo3wI+Gg2K6v7iOmcTbWOk2prpNM9hjGwonHwid3XwjCA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "F14D7FD2-AE08-484F-B37B-9CEBE760343C",
+                            SecurityStamp = "7999EC8F-3ECE-4584-8E80-E51C9CD880F6",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
                             Name = "Admin"
@@ -527,19 +522,11 @@ namespace Collections.Migrations
 
             modelBuilder.Entity("Collections.Models.Field", b =>
                 {
-                    b.HasOne("Collections.Models.FieldGroup", "FieldGroup")
-                        .WithMany()
-                        .HasForeignKey("FieldGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Collections.Models.Item", "Item")
                         .WithMany("Fields")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("FieldGroup");
 
                     b.Navigation("Item");
                 });

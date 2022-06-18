@@ -213,7 +213,7 @@ namespace Collections.Migrations
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     CollectionId = table.Column<int>(type: "integer", nullable: false),
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 10, 39, 6, 928, DateTimeKind.Utc).AddTicks(7521))
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 12, 23, 50, 596, DateTimeKind.Utc).AddTicks(6498))
                 },
                 constraints: table =>
                 {
@@ -235,7 +235,7 @@ namespace Collections.Migrations
                     Body = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true),
                     ItemId = table.Column<int>(type: "integer", nullable: false),
-                    PostedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 10, 39, 6, 928, DateTimeKind.Utc).AddTicks(6718))
+                    PostedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 12, 23, 50, 596, DateTimeKind.Utc).AddTicks(5784))
                 },
                 constraints: table =>
                 {
@@ -261,18 +261,11 @@ namespace Collections.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Key = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Value = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    FieldGroupId = table.Column<int>(type: "integer", nullable: false),
                     ItemId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fields", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Fields_FieldGroups_FieldGroupId",
-                        column: x => x.FieldGroupId,
-                        principalTable: "FieldGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Fields_Items_ItemId",
                         column: x => x.ItemId,
@@ -334,14 +327,14 @@ namespace Collections.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "949f9ac9-6478-483b-9265-f96433ba210c", "949f9ac9-6478-483b-9265-f96433ba210c", "user", "USER" },
-                    { "e1025509-d5dc-4792-bae3-c804cdc77138", "e1025509-d5dc-4792-bae3-c804cdc77138", "admin", "ADMIN" }
+                    { "7434d06e-2cc0-4662-b445-87e62f0e44d7", "7434d06e-2cc0-4662-b445-87e62f0e44d7", "user", "USER" },
+                    { "b7b9d896-b8c6-4bb3-9d66-42f71eb22c2b", "b7b9d896-b8c6-4bb3-9d66-42f71eb22c2b", "admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "Image", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "89b25c73-4c9b-409f-b2d8-9f2f05a2bbc0", 0, "ad9e30fa-1d9d-4daa-802e-eef3505ee685", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAECNZazNpFrlXhVPhJefewgjd5w66gDxZwtYMVRcS5tJi9i6hONDXDy+p0BSP13n4/g==", null, false, "F14D7FD2-AE08-484F-B37B-9CEBE760343C", false, "admin@collections.com" });
+                values: new object[] { "4609af6f-fe40-4573-aecf-e2407536738f", 0, "b425dbbf-948c-4094-8e3d-0e1876a20b2a", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEM4LZ4a+RR12A4F5ii3pvSo3wI+Gg2K6v7iOmcTbWOk2prpNM9hjGwonHwid3XwjCA==", null, false, "7999EC8F-3ECE-4584-8E80-E51C9CD880F6", false, "admin@collections.com" });
 
             migrationBuilder.InsertData(
                 table: "FieldGroups",
@@ -357,7 +350,7 @@ namespace Collections.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "e1025509-d5dc-4792-bae3-c804cdc77138", "89b25c73-4c9b-409f-b2d8-9f2f05a2bbc0" });
+                values: new object[] { "b7b9d896-b8c6-4bb3-9d66-42f71eb22c2b", "4609af6f-fe40-4573-aecf-e2407536738f" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -412,11 +405,6 @@ namespace Collections.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fields_FieldGroupId",
-                table: "Fields",
-                column: "FieldGroupId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Fields_ItemId",
                 table: "Fields",
                 column: "ItemId");
@@ -458,6 +446,9 @@ namespace Collections.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
+                name: "FieldGroups");
+
+            migrationBuilder.DropTable(
                 name: "Fields");
 
             migrationBuilder.DropTable(
@@ -468,9 +459,6 @@ namespace Collections.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "FieldGroups");
 
             migrationBuilder.DropTable(
                 name: "Tags");

@@ -75,8 +75,13 @@ namespace Collections.Areas.Dashboard.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ItemCreateViewModel model)
+        public async Task<IActionResult> Create(ItemCreateViewModel model, string[] keys, string[] values)
         {
+            if (keys != null && values != null && keys.Length != values.Length)
+            {
+                return BadRequest();
+            }
+
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
             var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower() }).ToList();
 
@@ -97,6 +102,22 @@ namespace Collections.Areas.Dashboard.Controllers
 
             await _db.Items.AddAsync(item);
             await _db.SaveChangesAsync();
+
+            var fieldsList = new List<Field>();
+
+            for (int i = 0; i < keys.Length; i++)
+            {
+                fieldsList.Add(new Field 
+                {
+                    Key = keys[i],
+                    Value = values[i],
+                    ItemId = item.Id
+                });
+            }
+
+            await _db.Fields.AddRangeAsync(fieldsList);
+            await _db.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 
