@@ -2,12 +2,14 @@
 {
     public static class Heroku
     {
-        public static string GetHerokuConnectionString()
+        public static string GetHerokuConnectionString(IConfiguration config)
         {
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                return config.GetConnectionString("Postgres");
+
+            
             string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
             var databaseUri = new Uri(connectionUrl);
-
             string db = databaseUri.LocalPath.TrimStart('/');
             string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
 

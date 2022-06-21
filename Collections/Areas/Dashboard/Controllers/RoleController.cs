@@ -63,10 +63,7 @@ namespace Collections.Areas.Admin.Controllers
 
                 await _userManager.RemoveFromRoleAsync(user, rolesToBeRemoved[0]);
 
-                if (user.Email == User.Identity.Name)
-                {
-                    await _signManager.SignOutAsync();
-                }
+                await _userManager.UpdateSecurityStampAsync(user);
 
                 return RedirectToAction("Index", "User");
             }

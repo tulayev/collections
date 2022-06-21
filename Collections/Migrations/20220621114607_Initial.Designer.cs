@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Collections.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220618151813_Initial")]
+    [Migration("20220621114607_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,13 +59,11 @@ namespace Collections.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("PostedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 18, 15, 18, 13, 446, DateTimeKind.Utc).AddTicks(9467));
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -168,10 +166,8 @@ namespace Collections.Migrations
                     b.Property<int>("CollectionId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 18, 15, 18, 13, 447, DateTimeKind.Utc).AddTicks(896));
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Image")
                         .HasMaxLength(255)
@@ -265,15 +261,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "27aaf27c-c301-41a3-8ce3-0b2cef8de9af",
-                            ConcurrencyStamp = "27aaf27c-c301-41a3-8ce3-0b2cef8de9af",
+                            Id = "5209cf81-63ac-4dc9-baa0-c54d8b11b84d",
+                            ConcurrencyStamp = "5209cf81-63ac-4dc9-baa0-c54d8b11b84d",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cb373b1f-5fa4-4b2a-bd56-e3a31adcd2e2",
-                            ConcurrencyStamp = "cb373b1f-5fa4-4b2a-bd56-e3a31adcd2e2",
+                            Id = "d96cffb1-8712-4365-b2f3-e97b6e713998",
+                            ConcurrencyStamp = "d96cffb1-8712-4365-b2f3-e97b6e713998",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -397,6 +393,15 @@ namespace Collections.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "Name",
+                            ClaimValue = "Admin",
+                            UserId = "fa7d164e-6eb9-4c8c-8772-a81e89bfe5ce"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -438,8 +443,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "a61649ce-ad8d-430b-a75d-eb827d9b2fb4",
-                            RoleId = "27aaf27c-c301-41a3-8ce3-0b2cef8de9af"
+                            UserId = "fa7d164e-6eb9-4c8c-8772-a81e89bfe5ce",
+                            RoleId = "5209cf81-63ac-4dc9-baa0-c54d8b11b84d"
                         });
                 });
 
@@ -480,17 +485,17 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a61649ce-ad8d-430b-a75d-eb827d9b2fb4",
+                            Id = "fa7d164e-6eb9-4c8c-8772-a81e89bfe5ce",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4785490d-9680-44b0-a0b5-75c0c346b5cd",
+                            ConcurrencyStamp = "62d461a9-a8a4-4b98-9456-505b5e623791",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDzieNLcHn+Ed959tMizr8gkHDFN6EkhMh5rQIP4rHceJIY3Xoj2J07CuOIkdUHiSw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOZR5d5dGBmcDU+cbITkSChC3pOFRazEs0an9GvzRTNPgTZJC4kVKlYXOSuCdhSVGw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3D303E93-C521-4754-82DC-4042B3FA7C11",
+                            SecurityStamp = "ACA306BA-87B7-4547-8637-D55FAFC63171",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
                             Name = "Admin"

@@ -1,4 +1,4 @@
-﻿<div class="relative">
+﻿<div class="mx-2 relative">
     <input
         type="text"
         class="bg-gray-800 text-sm rounded-full focus:outline-none focus:shadow-outline w-64 px-3 pl-8 py-1"
@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<div class="ml-6">
+<div class="mx-2">
     @if(User.Identity.IsAuthenticated && User.Claims.FirstOrDefault(c => c.Type == "Image") != null)
     {
         <img 
@@ -38,4 +38,8 @@
             class="rounded-full w-8"
         />
     }
+</div>
+
+<div class="relative mx-2">
+    <partial name="_LocaleSwitcherPartial" />
 </div>

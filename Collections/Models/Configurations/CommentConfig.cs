@@ -8,7 +8,6 @@ namespace Collections.Models.Configurations
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.Property(p => p.Body).IsRequired();
-            builder.Property(p => p.PostedAt).HasDefaultValue(DateTime.UtcNow);
         }
     }
 }

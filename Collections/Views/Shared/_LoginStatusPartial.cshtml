@@ -2,16 +2,22 @@
     @if (User.Identity.IsAuthenticated)
     {
         <li>
+            Welcome 
+            <b>@User.Claims.FirstOrDefault(c => c.Type == "Name").Value</b>
+        </li>
+        <li>
             <a 
                 asp-area="Dashboard" asp-controller="Home" asp-action="Index" 
-                class="hover:text-gray-400">
+                class="hover:text-green-500"
+            >
                 Dashboard
             </a>
         </li>
-        <form method="post" asp-controller="Account" asp-action="Logout">
-            <span class="mr-2">Welcome @User.Identity.Name</span>
-            <button type="submit">Log Out</button>
-        </form>
+        <li class="pl-4">
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <button class="hover:text-red-500" type="submit">Log Out</button>
+            </form>
+        </li>
     }
     else
     {

@@ -1,47 +1,62 @@
-﻿@{
+﻿@model List<Item>
+
+@{
     ViewData["Title"] = "Home";
 }
 
 <div class="container mx-auto px-4">
 
     <h2 class="text-blue-500 uppercase tracking-wide font-semibold">
-        Популярные аниме
+        All Items
     </h2>
 
     <div class="popular-anime text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-gray-800 pb-16">
-            
-        <div class="anime mt-8">
-            <div class="relative inline-block">
-                <a asp-controller="Home" asp-action="Show" asp-route-id="1">
-                    <img 
-                        src="~/images/naruto.jpg" 
-                        alt="anime poster" 
-                        class="hover:opacity-75 transition ease-in-out duration-150 w-[170px] h-[250px]"
-                    />
-                </a>
-                <div id="" class="absolute bottom-[-20px] right-[-20px] w-16 h-16 bg-gray-800 rounded-full text-sm">
-                </div>
-            </div>
         
-            <a href="#" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-8">
-                Naruto Shippuuden
-            </a>
-            <div class="text-gray-400 mt-1">TV</div>
-        </div>
+        @if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <div class="anime mt-8">
+                    <div class="relative inline-block">
+                        <a asp-action="Show" asp-route-id="@item.Id">
+                            @if (item.Image != null)
+                            {
+                                <img 
+                                    src="~/images/@item.Image" 
+                                    alt="anime poster" 
+                                    class="hover:opacity-75 transition ease-in-out duration-150 w-[170px] h-[250px]"
+                                />
+                            }
+                            else
+                            {
+                                <div class="flex justify-center items-center bg-gray-800 w-[170px] h-[250px]">
+                                    <span class="text-white text-2xl">No Image</span>
+                                </div>
+                            }
+                        </a>
+                    </div>
+        
+                    <a href="#" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">
+                        @item.Name
+                    </a>
+                    <div class="text-gray-400 mt-1">
+                        @foreach (var tag in item.Tags)
+                        {
+                            <a  
+                                asp-action="Index"
+                                asp-route-tag="@tag.Name"
+                                class="mr-1"
+                            >@tag.Name</a>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h3 class="mt-10 text-red-500 uppercase font-medium">No items found...</h3>
+        }
 
-        <div class="anime mt-8">
-            <div class="relative inline-block">
-                <div class="bg-gray-800 w-[170px] h-[250px]"></div>
-            </div>
-
-            <div class="block text-transparent text-lg bg-gray-700 rounded leading-tight mt-4">
-                Title goes here
-            </div>
-            <div class="inline-block text-transparent bg-gray-700 rounded mt-3">
-                TV Movie Ova (type)
-            </div>
-        </div>
-            
     </div>
     
 </div>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -20,11 +21,15 @@ namespace Collections.Areas.Dashboard.Controllers
         
         private readonly IUploadHandler _uploadHandler;
 
-        public ItemController(ApplicationDbContext db, UserManager<User> userManager, IUploadHandler uploadHandler)
+        private readonly IElasticClient _client;
+
+        public ItemController(ApplicationDbContext db, UserManager<User> userManager, 
+            IUploadHandler uploadHandler, IElasticClient client)
         {
             _db = db;
             _userManager = userManager;
             _uploadHandler = uploadHandler;
+            _client = client;
         }
 
         public async Task<IActionResult> Index(string? userId)
@@ -83,7 +88,7 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower() }).ToList();
+            var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower().Trim() }).ToList();
 
             string image = String.Empty;    
 
@@ -97,22 +102,25 @@ namespace Collections.Areas.Dashboard.Controllers
                 Name = model.Name,
                 CollectionId = model.CollectionId,
                 Tags = tags,
-                Image = image.Length > 0 ? image : null
+                Image = image.Length > 0 ? image : null,
+                CreatedAt = DateTime.Now.SetKindUtc()
             };
 
             await _db.Items.AddAsync(item);
             await _db.SaveChangesAsync();
 
-            var fieldsList = new List<Field>();
+            await AddToElasticIndex(item);
+
+            var fieldsList = new List<Models.Field>();
 
             for (int i = 0; i < keys.Length; i++)
             {
-                fieldsList.Add(new Field 
+                fieldsList.Add(new Models.Field 
                 {
                     Key = keys[i],
                     Value = values[i],
                     ItemId = item.Id,
-                    Type = (FieldType)types[i]
+                    Type = (Models.FieldType)types[i]
                 });
             }
 
@@ -165,7 +173,7 @@ namespace Collections.Areas.Dashboard.Controllers
             item.Tags.Clear();
 
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower() }).ToList();
+            var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower().Trim() }).ToList();
 
             string image = String.Empty;
 
@@ -177,16 +185,16 @@ namespace Collections.Areas.Dashboard.Controllers
             _db.Fields.RemoveRange(item.Fields);
             item.Fields.Clear();
 
-            var fieldsList = new List<Field>();
+            var fieldsList = new List<Models.Field>();
 
             for (int i = 0; i < keys.Length; i++)
             {
-                fieldsList.Add(new Field
+                fieldsList.Add(new Models.Field
                 {
                     Key = keys[i],
                     Value = values[i],
                     ItemId = item.Id,
-                    Type = (FieldType)types[i]
+                    Type = (Models.FieldType)types[i]
                 });
             }
 
@@ -216,6 +224,18 @@ namespace Collections.Areas.Dashboard.Controllers
             _db.Items.Remove(item);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        private async Task AddToElasticIndex(Item item)
+        {
+            var elasticItem = new ElasticItemViewModel
+            {
+                Id = item.Id,
+                Name = item.Name,
+                CollectionId = item.CollectionId
+            };
+
+            await _client.IndexDocumentAsync(elasticItem);
         }
     }
 }

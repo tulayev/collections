@@ -213,7 +213,7 @@ namespace Collections.Migrations
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     CollectionId = table.Column<int>(type: "integer", nullable: false),
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 15, 18, 13, 447, DateTimeKind.Utc).AddTicks(896))
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -235,7 +235,7 @@ namespace Collections.Migrations
                     Body = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true),
                     ItemId = table.Column<int>(type: "integer", nullable: false),
-                    PostedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2022, 6, 18, 15, 18, 13, 446, DateTimeKind.Utc).AddTicks(9467))
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -328,14 +328,14 @@ namespace Collections.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "27aaf27c-c301-41a3-8ce3-0b2cef8de9af", "27aaf27c-c301-41a3-8ce3-0b2cef8de9af", "admin", "ADMIN" },
-                    { "cb373b1f-5fa4-4b2a-bd56-e3a31adcd2e2", "cb373b1f-5fa4-4b2a-bd56-e3a31adcd2e2", "user", "USER" }
+                    { "5209cf81-63ac-4dc9-baa0-c54d8b11b84d", "5209cf81-63ac-4dc9-baa0-c54d8b11b84d", "admin", "ADMIN" },
+                    { "d96cffb1-8712-4365-b2f3-e97b6e713998", "d96cffb1-8712-4365-b2f3-e97b6e713998", "user", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "Image", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "a61649ce-ad8d-430b-a75d-eb827d9b2fb4", 0, "4785490d-9680-44b0-a0b5-75c0c346b5cd", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEDzieNLcHn+Ed959tMizr8gkHDFN6EkhMh5rQIP4rHceJIY3Xoj2J07CuOIkdUHiSw==", null, false, "3D303E93-C521-4754-82DC-4042B3FA7C11", false, "admin@collections.com" });
+                values: new object[] { "fa7d164e-6eb9-4c8c-8772-a81e89bfe5ce", 0, "62d461a9-a8a4-4b98-9456-505b5e623791", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEOZR5d5dGBmcDU+cbITkSChC3pOFRazEs0an9GvzRTNPgTZJC4kVKlYXOSuCdhSVGw==", null, false, "ACA306BA-87B7-4547-8637-D55FAFC63171", false, "admin@collections.com" });
 
             migrationBuilder.InsertData(
                 table: "FieldGroups",
@@ -349,9 +349,14 @@ namespace Collections.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AspNetUserClaims",
+                columns: new[] { "Id", "ClaimType", "ClaimValue", "UserId" },
+                values: new object[] { 1, "Name", "Admin", "fa7d164e-6eb9-4c8c-8772-a81e89bfe5ce" });
+
+            migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "27aaf27c-c301-41a3-8ce3-0b2cef8de9af", "a61649ce-ad8d-430b-a75d-eb827d9b2fb4" });
+                values: new object[] { "5209cf81-63ac-4dc9-baa0-c54d8b11b84d", "fa7d164e-6eb9-4c8c-8772-a81e89bfe5ce" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

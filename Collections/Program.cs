@@ -16,10 +16,9 @@ builder.Services
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     }); 
 
-bool IsDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
-string connectionString = IsDevelopment ? builder.Configuration.GetConnectionString("Postgres") : Heroku.GetHerokuConnectionString();
-
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
+    options.UseNpgsql(Heroku.GetHerokuConnectionString(builder.Configuration))
+);
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -41,9 +40,17 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.Zero;
+});
+
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddSingleton<IUploadHandler, UploadHandler>();
+
+builder.Services.AddElasticSearch(builder.Configuration);
+
 
 var app = builder.Build().MigrateDatabase<ApplicationDbContext>();
 

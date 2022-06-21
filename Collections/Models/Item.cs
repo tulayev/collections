@@ -13,9 +13,10 @@ namespace Collections.Models
 
 #nullable enable
         public string? Image { get; set; }
+        
+        public DateTime? CreatedAt { get; set; }
 #nullable disable
 
-        public DateTime CreatedAt { get; set; }
 
         public AppCollection Collection { get; set; }
 

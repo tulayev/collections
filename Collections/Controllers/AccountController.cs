@@ -72,6 +72,7 @@ namespace Collections.Controllers
                 {
                     await _userManager.AddClaimAsync(user, imageClaim);
                 }
+                await _userManager.AddClaimAsync(user, new Claim("Name", user.Name));
                 var userRole = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == Roles.RoleUser);
                 await _userManager.AddToRoleAsync(user, userRole.Name);
                 return RedirectToAction("Login");

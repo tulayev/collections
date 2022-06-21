@@ -56,6 +56,14 @@ namespace Collections.Data.Seeders
                 RoleId = adminRoleId,
                 UserId = superAdminId
             });
+
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(new IdentityUserClaim<string>
+            {
+                Id = 1,
+                UserId = superAdminId,
+                ClaimType = "Name",
+                ClaimValue = superAdmin.Name
+            });
         }
 
         public static void SeedFieldGrups(ModelBuilder modelBuilder)
