@@ -1,20 +1,19 @@
-﻿@model List<Item>
+﻿@model IndexViewModel
 
 @{
     ViewData["Title"] = "Home";
 }
 
-<div class="container mx-auto px-4">
+<div class="max-w-7xl mx-auto px-4 relative">
 
     <h2 class="text-blue-500 uppercase tracking-wide font-semibold">
         All Items
     </h2>
 
-    <div class="popular-anime text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-gray-800 pb-16">
-        
-        @if (Model.Count > 0)
+    <div class="text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-gray-800 pb-16">
+        @if (Model.Items.Count > 0)
         {
-            foreach (var item in Model)
+            foreach (var item in Model.Items)
             {
                 <div class="anime mt-8">
                     <div class="relative inline-block">
@@ -56,7 +55,28 @@
         {
             <h3 class="mt-10 text-red-500 uppercase font-medium">No items found...</h3>
         }
-
     </div>
     
+    <div class="flex justify-center">
+        @if (Model.PageViewModel.HasPreviousPage)
+        {
+            <a 
+                asp-action="Index"
+                asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                class="mx-4"
+            >
+                <img src="~/images/icons/arrow-left.svg" class="w-10" />
+            </a>
+        }
+        @if (Model.PageViewModel.HasNextPage)
+        {
+            <a 
+                asp-action="Index"
+                asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                class="mx-4"
+            >
+                <img src="~/images/icons/arrow-right.svg" class="w-10" />
+            </a>
+        }
+    </div>
 </div>

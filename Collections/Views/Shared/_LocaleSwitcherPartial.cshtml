@@ -14,15 +14,18 @@
     </svg>
 </a>
 <div id="localeDropdown" class="absolute hidden">
-    <ul class="">
+    <ul>
         @foreach (string lang in Locales.Languages)
         {
             @if (lang != currentLang)
             {
-                <li class="">
+                <li>
                     <a 
-                        asp-action="Index"
+                        asp-controller="Locale"
+                        asp-action="ChangeLocale"
                         asp-route-culture="@lang"
+                        asp-route-page="@ViewContext.RouteData.Values["Action"]"
+                        asp-route-id="@Context.GetRouteData().Values["id"]"
                         class="text-white"
                     >
                         @lang.ToUpper() 

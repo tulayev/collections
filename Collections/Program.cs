@@ -5,6 +5,7 @@ using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,6 +69,14 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     DefaultRequestCulture = new RequestCulture(Locales.Languages[0]),
     SupportedCultures = Locales.GetCultures,
     SupportedUICultures = Locales.GetCultures
+});
+
+app.Use(async (context, next) =>
+{
+    Thread.CurrentThread.CurrentCulture = new CultureInfo(context.Request.Cookies["Locale"] ?? Locales.Languages[0]);
+    Thread.CurrentThread.CurrentUICulture = new CultureInfo(context.Request.Cookies["Locale"] ?? Locales.Languages[0]);
+
+    await next();
 });
 
 app.UseHttpsRedirection();

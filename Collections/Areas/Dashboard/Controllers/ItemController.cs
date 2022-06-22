@@ -216,6 +216,8 @@ namespace Collections.Areas.Dashboard.Controllers
                 return NotFound();
             }
 
+            await RemoveFromElasticIndex(id);
+
             _uploadHandler.Delete(item.Image);
 
             _db.Tags.RemoveRange(item.Tags);
@@ -237,5 +239,7 @@ namespace Collections.Areas.Dashboard.Controllers
 
             await _client.IndexDocumentAsync(elasticItem);
         }
+        
+        private async Task RemoveFromElasticIndex(int id) => await _client.DeleteAsync<ElasticItemViewModel>(id);
     }
 }
