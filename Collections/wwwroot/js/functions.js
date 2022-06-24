@@ -1,4 +1,6 @@
-﻿const populateData = async(input, list) => {
+﻿// Dropdown
+
+const populateData = async (input, list) => {
     try {
         const response = await fetch(`/api/search?keyword=${input}`)
         const data = await response.json()
@@ -23,6 +25,8 @@
         console.log(e.message)
     }
 }
+
+// Theme Switch
 
 const iconToggle = (moonIcon, sunIcon) => {
     moonIcon.classList.toggle('hidden')
@@ -52,4 +56,39 @@ const themeSwitch = (moonIcon, sunIcon) => {
     iconToggle(moonIcon, sunIcon)
 }
 
-export { populateData, themeCheck, themeSwitch }
+// Like/Dislike
+
+const getLikes = async () => {
+    try {
+        const res = await fetch('/api/likes-count')
+        const data = await res.json()
+        document.querySelectorAll('.like-count').forEach(elem => {
+            elem.innerText = data.likes
+        })
+    } catch (e) {
+        console.log(e.message)
+    }
+}
+
+const like = async (username, itemId) => {
+    const settings = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+    }
+
+    try {
+        const res = await fetch(`/api/like?username=${username}&itemId=${itemId}`, settings)
+        const data = await res.json()
+
+        if (data.message === 'ok') {
+            getLikes()
+        }
+    } catch (e) {
+        console.log(e.message)
+    }
+}
+
+export { populateData, themeCheck, themeSwitch, getLikes, like }

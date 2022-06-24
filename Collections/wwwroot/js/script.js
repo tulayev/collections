@@ -1,8 +1,9 @@
-import { populateData, themeCheck, themeSwitch } from './functions.js'
+import { populateData, themeCheck, themeSwitch, getLikes, like } from './functions.js'
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // Locale switcher
+
     const localeSwitcher = document.getElementById('localeSwitcher')
     const localeDropdown = document.getElementById('localeDropdown')
 
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     // Search dropdown
+
     const searchInput = document.getElementById('searchInput')
     const searchResultList = document.getElementById('searchResultList')
 
@@ -27,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     // Theme switcher
+
     const moonIcon = document.getElementById('moon')
     const sunIcon = document.getElementById('sun')
 
@@ -44,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     themeCheck(userTheme, systemTheme, moonIcon, sunIcon)
 
     // Burger menu
+
     const burgerBtn = document.getElementById('burgerBtn')
     const burgerContent = document.getElementById('burgerContent')
 
@@ -54,4 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
             img.classList.toggle('hidden')
         })
     })
+
+    // Like/Dislike
+
+    const likeBtn = document.getElementById('like')
+    const username = document.getElementById('username')
+    const itemId = document.getElementById('itemId')
+
+    if (likeBtn) {
+        likeBtn.addEventListener('click', () => {
+            like(username.value, itemId.value)
+        })
+    }
+
+    getLikes()
 })
