@@ -117,10 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MainTitle" xml:space="preserve">
-    <value>Barcha narsalar</value>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Boshqaruv paneli</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Bosh sahifa</value>
+  <data name="Greeting" xml:space="preserve">
+    <value>Salom</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Kirish</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Chiqish</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Ro'yxatdan o'tish</value>
+  </data>
+  <data name="RegisterPointer" xml:space="preserve">
+    <value>Akkauntingiz yo'qmi? Unda ro'yxatdan o'ting -&gt;</value>
   </data>
 </root>

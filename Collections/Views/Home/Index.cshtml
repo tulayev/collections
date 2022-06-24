@@ -1,16 +1,18 @@
-﻿@model IndexViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IndexViewModel
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = @Localizer["Title"];
 }
 
 <div class="max-w-7xl mx-auto px-4 relative">
 
     <h2 class="text-blue-500 uppercase tracking-wide font-semibold">
-        All Items
+        @Localizer["MainTitle"]
     </h2>
 
-    <div class="text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-gray-800 pb-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-gray-800 pb-16">
         @if (Model.Items.Count > 0)
         {
             foreach (var item in Model.Items)
@@ -22,7 +24,7 @@
                             {
                                 <img 
                                     src="~/images/@item.Image" 
-                                    alt="anime poster" 
+                                    alt="@item.Name" 
                                     class="hover:opacity-75 transition ease-in-out duration-150 w-[170px] h-[250px]"
                                 />
                             }
@@ -35,16 +37,19 @@
                         </a>
                     </div>
         
-                    <a href="#" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">
-                        @item.Name
-                    </a>
-                    <div class="text-gray-400 mt-1">
+                    <div class="mt-4">
+                        <a href="#" class="dark:text-white text-gray-900 text-lg font-semibold hover:text-gray-400">
+                            @item.Name
+                        </a>
+                    </div>
+
+                    <div class="mt-1">
                         @foreach (var tag in item.Tags)
                         {
                             <a  
                                 asp-action="Index"
                                 asp-route-tag="@tag.Name"
-                                class="mr-1"
+                                class="dark:text-white text-gray-900 mr-1 hover:text-gray-400"
                             >@tag.Name</a>
                         }
                     </div>

@@ -17,32 +17,42 @@ namespace Collections.Controllers
 
         public async Task<IActionResult> Index(string? tag, int page = 1)
         {
-            if (tag != null)
-            {
-                var itemsByTag = await _db.Items
-                    .AsNoTracking()
-                    .Include(i => i.Fields)
-                    .Include(i => i.Tags)
-                    .Where(i => i.Tags.Any(t => t.Name.Contains(tag)))
-                    .OrderByDescending(i => i.CreatedAt)
-                    .ToListAsync();
-                return View(itemsByTag);
-            }
+            int count = 0;
+            int perPage = 12;
+            PageViewModel pageModel;
 
             var source = _db.Items
                 .AsNoTracking()
                 .Include(i => i.Tags)
-                .Include(i => i.Fields);
+                .Include(i => i.Fields)
+                .Include(i => i.Collection);
 
-            int count = await source.CountAsync();
-            int perPage = 12;
+            if (tag != null)
+            {
+                var itemsByTag = await source
+                    .Where(i => i.Tags.Any(t => t.Name.Contains(tag)))
+                    .OrderByDescending(i => i.CreatedAt)
+                    .ToListAsync();
+
+                count = itemsByTag.Count;
+
+                pageModel = new PageViewModel(count, page, perPage);
+
+                return View(new IndexViewModel
+                {
+                    Items = itemsByTag,
+                    PageViewModel = pageModel
+                });
+            }
+
+            count = await source.CountAsync();
             
             var items = await source
                 .OrderByDescending(i => i.CreatedAt)
                 .Paginate(page, perPage)
                 .ToListAsync();
 
-            var pageModel = new PageViewModel(count, page, perPage);
+            pageModel = new PageViewModel(count, page, perPage);
 
             var model = new IndexViewModel
             {
@@ -53,9 +63,19 @@ namespace Collections.Controllers
             return View(model);
         }
 
-        public IActionResult Show(int id)
+        public async Task<IActionResult> Show(int id)
         {
-            return View();
+            var item = await _db.Items
+                .Include(i => i.Fields)
+                .Include(i => i.Collection)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return View(item);
         }
     }
 }

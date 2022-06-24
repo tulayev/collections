@@ -4,7 +4,7 @@ namespace Collections.Controllers
 {
     public class LocaleController : Controller
     {
-        public IActionResult ChangeLocale(string page, string culture, int? id)
+        public IActionResult ChangeLocale(string page, string segment, string culture, int? id)
         {
             Response.Cookies.Append("Locale", culture, 
                 new CookieOptions
@@ -14,10 +14,10 @@ namespace Collections.Controllers
 
             if (id != null)
             {
-                return RedirectToAction(page, "Home", new { id, culture });
+                return RedirectToAction(segment, page, new { id, culture });
             }
             
-            return RedirectToAction(page, "Home", new { culture });
+            return RedirectToAction(segment, page, new { culture });
         }
     }
 }

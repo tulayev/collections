@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Areas\Admin\Views\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 

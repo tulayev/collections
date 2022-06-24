@@ -1,73 +1,40 @@
-﻿@{
-    ViewData["Title"] = "Details";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Item
+
+@{
+    ViewData["Title"] = @Localizer["Title"];
 }
 
 <div class="max-w-7xl mx-auto px-4">
-    <div class="anime-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
-        <div class="flex-none">
+    <div class="grid grid-cols-1 md:grid-cols-2">
+        <div>
             <img 
-                src="~/images/naruto.jpg" 
-                alt="cover" 
+                src="~/images/@Model.Image" 
+                alt="@Model.Name" 
+                class="mx-auto md:mx-0"
             />
         </div>
-        <div class="ml-12 mr-64">
-            <h2 class="font-bold text-6xl leading-tight mt-1">
-                Naruto Shippuuden
+        <div class="text-center md:text-left">
+            <h2 class="dark:text-white text-gray-900 font-bold text-6xl">
+                @Model.Name
             </h2>
-            <div class="text-gray-400">
-                <span>Жанры (боевик, драма...)</span>
-                &middot;
-                <span>Тип (TV, Movie, OVA...)</span>
-                &middot;
-                <span>Студия (MadHouse, Pierrot...)</span>
-            </div>
 
-            <p class="mt-12">
-                Описание аниме
+            <p class="dark:text-white text-gray-900 my-4">
+                <span class="text-blue-500 font-bold">Collection: </span>
+                @Model.Collection.Name
             </p>
-
-            <div class="mt-12">
-                <a href="#" class="inline-flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-600 rounded transition ease-in-out duration-150">
-                    <img src="~/images/play.svg" alt="Play Button" />
-                    <span class="ml-2">Посмотреть трейлер</span>
-                </a>
-            </div>
+            
+            @if (Model.Fields.Count > 0)
+            {
+                @foreach (var field in Model.Fields)
+                {
+                    <p class="dark:text-white text-gray-900 my-4">
+                        <span class="text-blue-500 font-bold">@field.Key: </span>
+                        @field.Value
+                    </p>
+                }
+            }
         </div>
-    </div> 
-
-    <div class="images-container border-b border-gray-800 pb-12 mt-8">
-        <h2 class="text-blue-500 uppercase .tracking-wide font-semibold">
-            Скриншоты
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mt-8">
-            <div>
-                <a href="#">
-                    <img 
-                        src="~/images/naruto-screenshot.png" 
-                        alt="screenshot" 
-                        class="hover:opacity-75 transition ease-in-out duration-150"
-                    />
-                </a>
-            </div>
-
-            <div>
-                <a href="#">
-                    <img 
-                        src="~/images/naruto-screenshot.png" 
-                        alt="screenshot" 
-                        class="hover:opacity-75 transition ease-in-out duration-150"
-                    />
-                </a>
-            </div>
-        </div>
-    </div> 
-
-    <div class="more-info-container mt-8">
-        <h2 class="text-blue-500 uppercase tracking-wide font-semibold mb-3">Дополнительная информация</h2>
-        <div class="text-sm">
-            <br />
-            <br />
-            Количество серий: 500
-        </div>
-    </div> 
+    </div>  
 </div>

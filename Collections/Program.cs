@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddControllersWithViews()
+    .AddViewLocalization()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -38,7 +39,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.AccessDeniedPath = "/Error/AccessDenied";
 });
 
 builder.Services.Configure<SecurityStampValidatorOptions>(options =>

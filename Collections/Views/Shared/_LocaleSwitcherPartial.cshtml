@@ -24,7 +24,8 @@
                         asp-controller="Locale"
                         asp-action="ChangeLocale"
                         asp-route-culture="@lang"
-                        asp-route-page="@ViewContext.RouteData.Values["Action"]"
+                        asp-route-page="@ViewContext.RouteData.Values["Controller"]"
+                        asp-route-segment="@ViewContext.RouteData.Values["Action"]"
                         asp-route-id="@Context.GetRouteData().Values["id"]"
                         class="dark:text-white text-gray-900"
                     >
