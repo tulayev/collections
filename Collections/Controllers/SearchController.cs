@@ -28,5 +28,12 @@ namespace Collections.Controllers
 
             return Ok(results.Documents.ToList());
         }
+
+        [Route("test/{id:int}")]
+        [HttpGet]
+        public void Remove(int id)
+        {
+            _client.Delete<ElasticItemViewModel>(id);
+        }
     }
 }

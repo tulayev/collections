@@ -204,6 +204,7 @@ namespace Collections.Areas.Dashboard.Controllers
             item.Fields = fieldsList;
 
             await _db.SaveChangesAsync();
+            await UpdateElasticIndex(item);
             return RedirectToAction("Index");
         }
 
@@ -216,8 +217,6 @@ namespace Collections.Areas.Dashboard.Controllers
                 return NotFound();
             }
 
-            await RemoveFromElasticIndex(id);
-
             _uploadHandler.Delete(item.Image);
 
             _db.Tags.RemoveRange(item.Tags);
@@ -225,6 +224,7 @@ namespace Collections.Areas.Dashboard.Controllers
 
             _db.Items.Remove(item);
             await _db.SaveChangesAsync();
+            await RemoveFromElasticIndex(id);
             return RedirectToAction("Index");
         }
 
@@ -239,7 +239,13 @@ namespace Collections.Areas.Dashboard.Controllers
 
             await _client.IndexDocumentAsync(elasticItem);
         }
-        
+
+        private async Task UpdateElasticIndex(Item item) =>
+            await _client.UpdateAsync<ElasticItemViewModel>(
+                item.Id,
+                u => u.Index("items").Doc(new ElasticItemViewModel { Name = item.Name, CollectionId = item.CollectionId })
+            );
+
         private async Task RemoveFromElasticIndex(int id) => await _client.DeleteAsync<ElasticItemViewModel>(id);
     }
 }
