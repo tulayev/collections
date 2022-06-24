@@ -1,6 +1,7 @@
 import { populateData, themeCheck, themeSwitch } from './functions.js'
 
 document.addEventListener('DOMContentLoaded', () => {
+
     // Locale switcher
     const localeSwitcher = document.getElementById('localeSwitcher')
     const localeDropdown = document.getElementById('localeDropdown')
@@ -41,4 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     themeCheck(userTheme, systemTheme, moonIcon, sunIcon)
+
+    // Burger menu
+    const burgerBtn = document.getElementById('burgerBtn')
+    const burgerContent = document.getElementById('burgerContent')
+
+    burgerBtn.addEventListener('click', () => {
+        burgerContent.classList.toggle('hidden')
+
+        burgerBtn.querySelectorAll('img').forEach(img => {
+            img.classList.toggle('hidden')
+        })
+    })
 })

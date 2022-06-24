@@ -8,7 +8,7 @@
     ViewData["Title"] = @SharedLocalizer["Login"];
 }
 
-<div class="mx-auto w-1/2">
+<div class="mx-auto w-full lg:w-1/2">
     <form class="shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post">
         <div class="text-red-500" asp-validation-summary="All"></div>
 
@@ -37,7 +37,7 @@
             <input asp-for="RememberMe" type="checkbox" />
         </div>
         
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row items-center justify-between">
             <button 
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
                 type="submit"
@@ -46,7 +46,7 @@
             </button>
             <div class="dark:text-white text-gray-900">
                 @SharedLocalizer["RegisterPointer"]
-                <a asp-controller="Account" asp-action="Register" class="dark:text-white text-gray-900 font-bold">
+                <a asp-controller="Account" asp-action="Register" class="text-blue-500 font-bold">
                     @SharedLocalizer["Register"]
                 </a>
             </div>

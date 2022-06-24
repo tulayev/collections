@@ -10,7 +10,10 @@
 
 <body class="dark:bg-gray-900 bg-white text-white">
     <header class="border-b border-gray-800">
-        <nav class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
+        <nav class="relative max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
+
+            <partial name="_BurgerMenuPartial" />
+
             <div class="flex flex-col lg:flex-row items-center">
                 <a asp-controller="Home" asp-action="Index">
                     <img src="~/images/logo.svg" alt="Logo" class="w-20 flex-none" />
@@ -19,7 +22,7 @@
                 <partial name="_LoginStatusPartial" />
             </div>
 
-            <div class="flex items-center mt-6 lg:mt-0">
+            <div class="flex flex-col sm:flex-row items-center mt-6 lg:mt-0">
                 <partial name="_SearchPartial" />
             </div>
         </nav>

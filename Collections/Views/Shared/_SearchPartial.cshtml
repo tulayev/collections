@@ -1,13 +1,13 @@
-﻿<div>
+﻿<div class="my-2 sm:my-0">
     <img src="~/images/moon.svg" id="moon" class="w-10 cursor-pointer" alt="Moon" />
     <img src="~/images/sun.svg" id="sun" class="w-6 cursor-pointer" alt="Sun" />
 </div>
 
-<div class="mx-2 relative">
+<div class="mx-2 my-2 sm:my-0 relative">
     <input
         id="searchInput"
         type="text"
-        class="dark:bg-gray-800 bg-blue-300 text-sm rounded-full focus:outline-none focus:shadow-outline w-64 px-3 pl-8 py-1"
+        class="dark:bg-gray-800 bg-blue-300 rounded-full focus:outline-none focus:shadow-outline w-64 pl-8 pr-2 py-2"
         placeholder="Search..."
     />
                 
@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div class="mx-2">
+<div class="mx-2 my-2 sm:my-0">
     @if(User.Identity.IsAuthenticated && User.Claims.FirstOrDefault(c => c.Type == "Image") != null)
     {
         <img 
@@ -41,6 +41,6 @@
     }
 </div>
 
-<div class="relative mx-2">
+<div class="relative mx-2 my-2 sm:my-0">
     <partial name="_LocaleSwitcherPartial" />
 </div>

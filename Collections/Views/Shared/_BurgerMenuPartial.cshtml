@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<Collections.SharedResource> SharedLocalizer
+
+<button id="burgerBtn" class="absolute top-2 right-2 z-50 sm:hidden">
+    <img src="~/images/burger.svg" class="w-10" alt="burger-icon" />
+    <img src="~/images/close.svg" class="w-10 hidden" alt="close-icon" />
+</button>
+
+<div id="burgerContent" class="absolute hidden top-0 right-0 bg-green-300 w-full h-[100vh] z-10">
+    <ul class="dark:text-white text-gray-900 text-4xl flex flex-col items-center mt-12 z-50">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <li>
+                @SharedLocalizer["Greeting"] 
+                <b>@User.Claims.FirstOrDefault(c => c.Type == "Name").Value</b>
+            </li>
+            <li>
+                <a 
+                    asp-area="Dashboard" asp-controller="Home" asp-action="Index" 
+                    class="hover:text-green-500"
+                >
+                    @SharedLocalizer["Dashboard"] 
+                </a>
+            </li>
+            <li>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <button class="hover:text-red-500" type="submit">@SharedLocalizer["Logout"]</button>
+                </form>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a asp-controller="Account" asp-action="Login" class="hover:text-gray-400">@SharedLocalizer["Login"]</a>
+            </li>
+        }
+    </ul>
+</div>
