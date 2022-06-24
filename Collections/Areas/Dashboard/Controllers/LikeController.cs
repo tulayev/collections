@@ -23,12 +23,16 @@ namespace Collections.Areas.Dashboard.Controllers
         [Route("api/likes-count")]
         public async Task<IActionResult> LikesCount()
         {
-            return Json(new { likes = await _db.Likes.CountAsync() });
+            return Json(new 
+            { 
+                likes_count = await _db.Likes.Where(l => l.Type == Models.Type.Like).CountAsync(),
+                dislikes_count = await _db.Likes.Where(l => l.Type == Models.Type.Dislike).CountAsync()
+            });
         }
 
         [HttpPost]
         [Route("api/like")]
-        public async Task<IActionResult> Like(string username, int itemId)
+        public async Task<IActionResult> Like(string username, int itemId, int type)
         {
             var user = await _userManager.FindByNameAsync(username);
             var item = await _db.Items.FirstOrDefaultAsync(i => i.Id == itemId);
@@ -38,19 +42,33 @@ namespace Collections.Areas.Dashboard.Controllers
                 return Json(new { Error = "error occured" });
             }
 
-            var like = new Like
-            {
-                ItemId = itemId,
-                UserId = user.Id
-            };
+            var existingLike = await _db.Likes.FirstOrDefaultAsync(l => l.UserId == user.Id && l.ItemId == item.Id);
 
-            if (!_db.Likes.Contains(like))
+            if (existingLike == null)
             {
-                _db.Likes.Add(like);
+                _db.Likes.Add(new Like
+                {
+                    ItemId = itemId,
+                    UserId = user.Id,
+                    Type = (Models.Type)type
+                });
             }
             else
             {
-                _db.Likes.Remove(like);
+                if (existingLike.Type != (Models.Type)type)
+                {
+                    _db.Likes.Remove(existingLike);
+                    _db.Likes.Add(new Like
+                    {
+                        ItemId = itemId,
+                        UserId= user.Id,
+                        Type = (Models.Type)type
+                    });
+                }
+                else
+                {
+                    _db.Likes.Remove(existingLike);
+                }
             }
 
             await _db.SaveChangesAsync();

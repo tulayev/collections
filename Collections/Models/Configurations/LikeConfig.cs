@@ -8,6 +8,7 @@ namespace Collections.Models.Configurations
         public void Configure(EntityTypeBuilder<Like> builder)
         {
             builder.HasKey(p => new { p.ItemId, p.UserId });
+            builder.Property(p => p.Type).IsRequired(); 
         }
     }
 }

@@ -1,4 +1,4 @@
-import { populateData, themeCheck, themeSwitch, getLikes, like } from './functions.js'
+import { populateData, themeCheck, themeSwitch, getLikes, vote } from './functions.js'
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -62,12 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Like/Dislike
 
     const likeBtn = document.getElementById('like')
+    const dislikeBtn = document.getElementById('dislike')
     const username = document.getElementById('username')
     const itemId = document.getElementById('itemId')
 
+    const type = {
+        'like': 1,
+        'dislike': 0
+    }
+
     if (likeBtn) {
         likeBtn.addEventListener('click', () => {
-            like(username.value, itemId.value)
+            vote(username.value, itemId.value, type.like)
+        })
+    }
+
+    if (dislikeBtn) {
+        dislikeBtn.addEventListener('click', () => {
+            vote(username.value, itemId.value, type.dislike)
         })
     }
 

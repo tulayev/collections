@@ -63,14 +63,18 @@ const getLikes = async () => {
         const res = await fetch('/api/likes-count')
         const data = await res.json()
         document.querySelectorAll('.like-count').forEach(elem => {
-            elem.innerText = data.likes
+            elem.innerText = data.likes_count
+        })
+
+        document.querySelectorAll('.dislike-count').forEach(elem => {
+            elem.innerText = data.dislikes_count
         })
     } catch (e) {
         console.log(e.message)
     }
 }
 
-const like = async (username, itemId) => {
+const vote = async (username, itemId, type) => {
     const settings = {
         method: 'POST',
         headers: {
@@ -80,7 +84,7 @@ const like = async (username, itemId) => {
     }
 
     try {
-        const res = await fetch(`/api/like?username=${username}&itemId=${itemId}`, settings)
+        const res = await fetch(`/api/like?username=${username}&itemId=${itemId}&type=${type}`, settings)
         const data = await res.json()
 
         if (data.message === 'ok') {
@@ -91,4 +95,4 @@ const like = async (username, itemId) => {
     }
 }
 
-export { populateData, themeCheck, themeSwitch, getLikes, like }
+export { populateData, themeCheck, themeSwitch, getLikes, vote }
