@@ -10,7 +10,7 @@ namespace Collections.Utils
         {
             string url = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" 
                 ? configuration["Elasticsearch:Url"]
-                : Environment.GetEnvironmentVariable("Bonsai_URL");
+                : Environment.GetEnvironmentVariable("BONSAI_URL");
 
             string defaultIndex = configuration["Elasticsearch:Index"];
 
