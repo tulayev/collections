@@ -15,7 +15,7 @@
         public Item Item { get; set; }
 
 #nullable enable
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get ; set; }
 #nullable disable
     }
 }

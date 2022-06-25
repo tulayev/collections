@@ -90,7 +90,7 @@ const vote = async (username, itemId, type) => {
     const settings = {
         method: 'POST',
         headers: {
-            Accept: 'application/json',
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
         }
     }
@@ -117,23 +117,22 @@ const getComments = async () => {
         if (data.comments.length > 0) {
             const commentsWrapper = document.getElementById('commentsWrapper')
             if (commentsWrapper) {
-                console.log(data.comments)
                 commentsWrapper.innerHTML = data.comments.map(c => {
-                    `
-                        <div class="flex my-4">
+                    return `
+                        <div class="flex my-8">
                             <div class="w-[20%] lg:w-[5%]">
-                                <img src="~/images/${c.user.image}" class="w-10 rounded-full" alt="avatar" />
+                                <img src="/images/${c.user.image ?? 'avatar.png'}" class="w-10 rounded-full" alt="avatar" />
                             </div>
                              <div class="w-[80%] lg:w-[95%]">
                                 <h4 class="text-blue-500 mb-2">
                                     ${c.user.name}
-                                    <span class="dark:text-white text-gray-900 text-sm ml-6">09-12-12 00:12</span>
+                                    <span class="dark:text-white text-gray-900 text-sm ml-6">${c.createdAt}</span>
                                 </h4>
-                                <p class="dark:text-white text-gray-900">This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment This is my comment</p>
+                                <p class="dark:text-white text-gray-900">${c.body}</p>
                             </div>
                         </div>
                     `
-                })
+                }).join('')
             }
         }
     } catch (e) {

@@ -1,5 +1,6 @@
 ﻿using Collections.Data;
 using Collections.Models;
+using Collections.Models.ViewModels;
 using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,15 @@ namespace Collections.Areas.Dashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> Get() => Ok(new
         {
-            comments = await _db.Comments.Include(c => c.User).ToListAsync()
+            comments = await _db.Comments
+                .Include(c => c.User)
+                .Select(c => new CommentViewModel
+                {
+                    Body = c.Body,
+                    User = new CommentUserViewModel { Name = c.User.Name, Image = c.User.Image },
+                    CreatedAt = c.CreatedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                })
+                .ToListAsync()
         });
 
         [HttpPost("post")]
