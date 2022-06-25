@@ -35,7 +35,7 @@
                     </p>
                 }
             }
-            <div>
+            <div class="flex flex-col items-center md:block">
                 @if (User.Identity.IsAuthenticated)
                 {
                     <input id="username" value="@User.Identity.Name" type="hidden" />
@@ -44,10 +44,6 @@
                         <img id="like" src="~/images/like.svg" alt="like" class="w-6 cursor-pointer" />
                         <img id="dislike" src="~/images/dislike.svg" alt="dislike" class="w-6 cursor-pointer" />
                     </div>
-                    <div class="flex justify-between w-20">
-                        <span class="like-count text-green-500"></span>
-                        <span class="dislike-count text-red-500"></span>
-                    </div>
                 }
                 else
                 {
@@ -55,12 +51,58 @@
                         <img src="~/images/like.svg" alt="like" class="w-6 cursor-not-allowed" />
                         <img src="~/images/dislike.svg" alt="dislike" class="w-6 cursor-not-allowed" />
                     </div>
-                    <div class="flex justify-between w-20">
-                        <span class="like-count text-green-500"></span>
-                        <span class="dislike-count text-red-500"></span>
-                    </div>   
                 }
+                <div class="flex justify-between w-20">
+                    <span class="like-count text-green-500"></span>
+                    <span class="dislike-count text-red-500"></span>
+                </div>   
+                <div class="flex justify-between w-20">
+                    <div id="likeProgressbar" class="h-2 bg-green-500"></div>
+                    <div id="dislikeProgressbar" class="h-2 bg-red-500"></div>
+                </div>   
             </div>
         </div>
     </div>  
+    <div>
+        <h3 class="my-6 text-xl text-blue-500">Comments</h3>
+        
+        <div id="commentsWrapper">
+            
+        </div>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="mt-10 mx-auto w-full sm:w-1/2">
+                <div>
+                    <textarea
+					    id="commentBody"
+					    class="w-full dark:bg-gray-800 bg-blue-300 dark:text-white text-gray-700 rounded shadow appearance-none rounded py-2 px-2 focus:outline-none focus:shadow-outline" 
+					    type="text"
+				    ></textarea>
+                </div>
+                <div class="text-right">
+                    <button
+                        id="commentSendBtn"
+				        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+				        type="button"
+			        >
+				        Send
+			        </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="mt-10 dark:text-white text-gray-900">
+                If you want to leave comments, please log in your account ->
+                <a
+                    asp-controller="Account"
+                    asp-action="Login"
+                    class="text-blue-500"
+                >
+                    Log In
+                </a>
+            </div>
+        }
+    </div>
 </div>

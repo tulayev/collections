@@ -1,4 +1,4 @@
-import { populateData, themeCheck, themeSwitch, getLikes, vote } from './functions.js'
+import { populateData, themeCheck, themeSwitch, getLikes, vote, getComments, postComment } from './functions.js'
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -84,4 +84,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     getLikes()
+
+    // Comments
+
+    const commentBody = document.getElementById('commentBody')
+    const commentSendBtn = document.getElementById('commentSendBtn')
+
+    if (commentBody && commentSendBtn) {
+        if (commentBody.value.length <= 0) {
+            commentSendBtn.classList.add('cursor-not-allowed')
+            commentSendBtn.disabled = true
+        }
+
+        commentBody.addEventListener('input', (e) => {
+            if (e.target.value.length > 0) {
+                commentSendBtn.classList.remove('cursor-not-allowed')
+                commentSendBtn.disabled = false
+            } else {    
+                commentSendBtn.classList.add('cursor-not-allowed')
+                commentSendBtn.disabled = true
+            }
+        })
+
+        commentSendBtn.addEventListener('click', () => {
+            postComment(username.value, itemId.value, commentBody.value)
+        })
+    }
+
+    getComments()
 })

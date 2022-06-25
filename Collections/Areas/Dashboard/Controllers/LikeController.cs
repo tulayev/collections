@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Collections.Areas.Dashboard.Controllers
 {
     [ApiController]
-    public class LikeController : Controller
+    public class LikeController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
         
@@ -23,7 +23,7 @@ namespace Collections.Areas.Dashboard.Controllers
         [Route("api/likes-count")]
         public async Task<IActionResult> LikesCount()
         {
-            return Json(new 
+            return Ok(new 
             { 
                 likes_count = await _db.Likes.Where(l => l.Type == Models.Type.Like).CountAsync(),
                 dislikes_count = await _db.Likes.Where(l => l.Type == Models.Type.Dislike).CountAsync()
@@ -39,7 +39,7 @@ namespace Collections.Areas.Dashboard.Controllers
 
             if (user == null || item == null)
             {
-                return Json(new { Error = "error occured" });
+                return Ok(new { error = "Error occured" });
             }
 
             var existingLike = await _db.Likes.FirstOrDefaultAsync(l => l.UserId == user.Id && l.ItemId == item.Id);
@@ -72,7 +72,7 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             await _db.SaveChangesAsync();
-            return Json(new { message = "ok" });
+            return Ok(new { message = "ok" });
         }
     }
 }
