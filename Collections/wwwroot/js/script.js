@@ -1,4 +1,7 @@
-import { populateData, themeCheck, themeSwitch, getLikes, vote, getComments, postComment } from './functions.js'
+import { populateData } from './modules/dropdown.js'
+import { themeCheck, themeSwitch } from './modules/theme.js'
+import { getLikes, vote } from './modules/like.js'
+import { getComments, postComment } from './modules/comment.js'
 
 document.addEventListener('DOMContentLoaded', () => {
 

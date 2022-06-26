@@ -78,6 +78,7 @@
 	<script>
 		const fieldGroupSelect = document.getElementById('fieldGroupSelect')
 		const addFieldBtn = document.getElementById('addFieldBtn')
+		const removeFieldBtns = document.querySelectorAll('.removeFieldBtns')
 		const fieldGroupsWrapper = document.getElementById('fieldGroupsWrapper')
 		const types = { 'Number': 1, 'Text': 2, 'Textarea': 3, 'Checkbox': 4 }
 
@@ -101,85 +102,109 @@
 		}
 
 		const getKeyValueGroup = inputType => {
-			let group;
+			let group
+
+			const wrapper = document.createElement('div')
+			wrapper.classList.add('mb-4')
+			
+			const inputWrapper = document.createElement('div')
+			inputWrapper.classList.add('flex')
+
+			const label = document.createElement('label') 
+			label.className = 'block text-gray-700 text-sm font-bold mb-2'
+			label.innerText = 'Key-Value Pair'
+			
+			const keyInput = document.createElement('input')
+			keyInput.name = 'keys'
+			keyInput.type = 'text'
+			keyInput.className = 'mr-2 shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+			keyInput.required = true
+			
+			const typeInput = document.createElement('input')
+			typeInput.name = 'types'
+			typeInput.type = 'hidden'
+
+			const removeFieldBtn = document.createElement('button')
+			removeFieldBtn.type = 'button'
+			removeFieldBtn.classList.add('removeFieldBtns')
+			removeFieldBtn.innerHTML = '<img src="/images/minus.png" class="w-10" />'
+
+			wrapper.appendChild(label)
 
 			switch(inputType) {
 				case 'Textarea':
-					group = `
-						<div class="mb-4">
-							<label class="block text-gray-700 text-sm font-bold mb-2">Key-Value Pair</label>
-							<div class="flex">
-								<input name="types" type="hidden" value="${types[inputType]}" />
-								<input
-									name="keys"
-									class="mr-2 shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-									type="text" 
-									placeholder="Key..."
-									required
-								/>
-								<textarea
-									name="values"
-									class="shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-									type="text"
-									placeholder="Value..."
-									required
-								></textarea>
-							</div>
-						</div>`
-					break
+					typeInput.value = types[inputType]
+					
+					const textarea = document.createElement('textarea')
+					textarea.className = 'shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+					textarea.name = 'values'
+					textarea.type = 'text'
+					textarea.required = true
+					
+					inputWrapper.appendChild(typeInput)
+					inputWrapper.appendChild(keyInput)
+					inputWrapper.appendChild(textarea)
+					inputWrapper.appendChild(removeFieldBtn)
+					wrapper.appendChild(inputWrapper)
+					
+					group = wrapper
+
+					removeFieldBtn.addEventListener('click', () => {
+						fieldGroupsWrapper.removeChild(wrapper)
+					})
+				break
+
 				case 'Checkbox':
-					group = `
-						<div class="mb-4">
-							<label class="block text-gray-700 text-sm font-bold mb-2">Key-Value Pair</label>
-							<div class="flex">
-								<input name="types" type="hidden" value="${types[inputType]}" />
-								<input
-									name="keys"
-									class="mr-2 shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-									type="text" 
-									placeholder="Key..."
-									required
-								/>
-								<input
-									name="values" 
-									type="checkbox" 
-									required
-								/>
-							</div>
-						</div>`
-					break
+					typeInput.value = types[inputType]
+
+					const checkbox = document.createElement('input')
+					checkbox.name = 'values'
+					checkbox.type = 'checkbox'
+					checkbox.required = true
+				
+					inputWrapper.appendChild(typeInput)
+					inputWrapper.appendChild(keyInput)
+					inputWrapper.appendChild(checkbox)
+					inputWrapper.appendChild(removeFieldBtn)
+					wrapper.appendChild(inputWrapper)
+					
+					group = wrapper
+
+					removeFieldBtn.addEventListener('click', () => {
+						fieldGroupsWrapper.removeChild(wrapper)
+					})
+				break
+				
 				default:
-					group = `
-						<div class="mb-4">
-							<label class="block text-gray-700 text-sm font-bold mb-2">Key-Value Pair</label>
-							<div class="flex">
-								<input name="types" type="hidden" value="${types[inputType]}" />
-								<input
-									name="keys"
-									class="mr-2 shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-									type="text" 
-									placeholder="Key..."
-									required
-								/>
-								<input
-									name="values"
-									class="shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-									type="${inputType}"
-									placeholder="Value..."
-									required
-								/>
-							</div>
-						</div>`
-					break
+					typeInput.value = types[inputType]
+
+					const input = document.createElement('input')
+					input.name = 'values'
+					input.type = inputType
+					input.className = 'shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+					input.required = true
+
+					inputWrapper.appendChild(typeInput)
+					inputWrapper.appendChild(keyInput)
+					inputWrapper.appendChild(input)
+					inputWrapper.appendChild(removeFieldBtn)
+					wrapper.appendChild(inputWrapper)
+					
+					group = wrapper
+
+					removeFieldBtn.addEventListener('click', () => {
+						fieldGroupsWrapper.removeChild(wrapper)
+					})
+				break
 			}
 
-			return group;
+			return group
 		}
 
 		getFieldGroups()
 
-		addFieldBtn.addEventListener('click', (e) => {
-			fieldGroupsWrapper.innerHTML += getKeyValueGroup(fieldGroupSelect.value)
+		addFieldBtn.addEventListener('click', () => {
+			fieldGroupsWrapper.appendChild(getKeyValueGroup(fieldGroupSelect.value))
 		})
 	</script>
 }
