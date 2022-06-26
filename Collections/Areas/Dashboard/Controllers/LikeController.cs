@@ -21,12 +21,12 @@ namespace Collections.Areas.Dashboard.Controllers
 
         [HttpGet]
         [Route("api/likes-count")]
-        public async Task<IActionResult> LikesCount()
+        public async Task<IActionResult> LikesCount(int itemId)
         {
             return Ok(new 
             { 
-                likes_count = await _db.Likes.Where(l => l.Type == Models.Type.Like).CountAsync(),
-                dislikes_count = await _db.Likes.Where(l => l.Type == Models.Type.Dislike).CountAsync()
+                likes_count = await _db.Likes.Where(l => l.Type == Models.Type.Like && l.ItemId == itemId).CountAsync(),
+                dislikes_count = await _db.Likes.Where(l => l.Type == Models.Type.Dislike && l.ItemId == itemId).CountAsync()
             });
         }
 

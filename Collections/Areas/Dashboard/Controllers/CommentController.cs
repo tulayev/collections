@@ -23,10 +23,11 @@ namespace Collections.Areas.Dashboard.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get() => Ok(new
+        public async Task<IActionResult> Get(int itemId) => Ok(new
         {
             comments = await _db.Comments
                 .Include(c => c.User)
+                .Where(c => c.ItemId == itemId)
                 .Select(c => new CommentViewModel
                 {
                     Body = c.Body,

@@ -1,6 +1,6 @@
-﻿const getLikes = async () => {
+﻿const getLikes = async(itemId) => {
     try {
-        const res = await fetch('/api/likes-count')
+        const res = await fetch(`/api/likes-count?itemId=${itemId}`)
         const data = await res.json()
         const likesCount = data.likes_count
         const dislikesCount = data.dislikes_count
@@ -40,7 +40,7 @@ const vote = async (username, itemId, type) => {
         const data = await res.json()
 
         if (data.message === 'ok') {
-            getLikes()
+            getLikes(itemId)
         }
     } catch (e) {
         console.log(e.message)

@@ -1,6 +1,6 @@
-﻿const getComments = async () => {
+﻿const getComments = async (itemId) => {
     try {
-        const res = await fetch('/api/comments')
+        const res = await fetch(`/api/comments?itemId=${itemId}`)
         const data = await res.json()
 
         if (data.comments.length > 0) {
@@ -43,7 +43,7 @@ const postComment = async (username, itemId, body) => {
         const data = await res.json()
 
         if (data.message === 'ok') {
-            getComments()
+            getComments(itemId)
             document.getElementById('commentBody').value = ''
         }
     } catch (e) {

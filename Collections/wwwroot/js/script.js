@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    getLikes()
+    getLikes(itemId.value)
 
     // Comments
 
@@ -114,5 +114,5 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    getComments()
+    getComments(itemId.value)
 })

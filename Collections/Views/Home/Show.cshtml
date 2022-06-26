@@ -8,13 +8,22 @@
 
 <div class="max-w-7xl mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-2">
-        <div>
-            <img 
-                src="~/images/@Model.Image" 
-                alt="@Model.Name" 
-                class="mx-auto md:mx-0"
-            />
-        </div>
+        @if (Model.Image != null)
+        {
+            <div>
+                <img 
+                    src="~/images/@Model.Image" 
+                    alt="@Model.Name" 
+                    class="w-1/2 mx-auto md:mx-0"
+                />
+            </div>
+        }
+        else
+        {
+            <div class="flex justify-center items-center w-1/2 h-full bg-gray-800">
+                <span class="text-white text-2xl">No Image</span>    
+            </div>
+        }
         <div class="text-center md:text-left">
             <h2 class="dark:text-white text-gray-900 font-bold text-6xl">
                 @Model.Name
