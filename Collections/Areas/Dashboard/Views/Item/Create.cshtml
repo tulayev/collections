@@ -80,7 +80,7 @@
 		const addFieldBtn = document.getElementById('addFieldBtn')
 		const removeFieldBtns = document.querySelectorAll('.removeFieldBtns')
 		const fieldGroupsWrapper = document.getElementById('fieldGroupsWrapper')
-		const types = { 'Number': 1, 'Text': 2, 'Textarea': 3, 'Checkbox': 4 }
+		const types = { 'Number': 1, 'Text': 2, 'Textarea': 3, 'Checkbox': 4, "Date": 5 }
 
 		const getFieldGroups = async () => {
 			try {
@@ -136,38 +136,14 @@
 					typeInput.value = types[inputType]
 					
 					const textarea = document.createElement('textarea')
-					textarea.className = 'shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
 					textarea.name = 'values'
-					textarea.type = 'text'
-					textarea.required = true
 					
 					inputWrapper.appendChild(typeInput)
 					inputWrapper.appendChild(keyInput)
 					inputWrapper.appendChild(textarea)
 					inputWrapper.appendChild(removeFieldBtn)
 					wrapper.appendChild(inputWrapper)
-					
-					group = wrapper
 
-					removeFieldBtn.addEventListener('click', () => {
-						fieldGroupsWrapper.removeChild(wrapper)
-					})
-				break
-
-				case 'Checkbox':
-					typeInput.value = types[inputType]
-
-					const checkbox = document.createElement('input')
-					checkbox.name = 'values'
-					checkbox.type = 'checkbox'
-					checkbox.required = true
-				
-					inputWrapper.appendChild(typeInput)
-					inputWrapper.appendChild(keyInput)
-					inputWrapper.appendChild(checkbox)
-					inputWrapper.appendChild(removeFieldBtn)
-					wrapper.appendChild(inputWrapper)
-					
 					group = wrapper
 
 					removeFieldBtn.addEventListener('click', () => {
@@ -181,7 +157,7 @@
 					const input = document.createElement('input')
 					input.name = 'values'
 					input.type = inputType
-					input.className = 'shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+					input.className = inputType === 'Checkbox' ? '' : 'shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
 					input.required = true
 
 					inputWrapper.appendChild(typeInput)
@@ -205,6 +181,19 @@
 
 		addFieldBtn.addEventListener('click', () => {
 			fieldGroupsWrapper.appendChild(getKeyValueGroup(fieldGroupSelect.value))
+			
+			if (fieldGroupSelect.value === 'Textarea') {
+				const textareas = document.querySelectorAll('textarea')
+				if (textareas) {
+					ClassicEditor
+						.create(textareas[textareas.length - 1], {
+							removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed'],
+						})
+						.catch(error => {
+							console.error(error)
+						})
+				}
+			}
 		})
 	</script>
 }

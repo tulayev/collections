@@ -5,16 +5,32 @@
         list.innerHTML = ''
 
         if (input.length > 0) {
+            let listItem
+
             data.map(item => {
-                list.innerHTML +=
+                if (item.image.length > 0) {
+                    listItem = `
+                        <li class="border-b border-gray-700">
+                            <a href="/home/show/${item.slug}" class="block hover:bg-gray-700 flex items-center transition ease-in-out duration-150 px-3 py-3">
+                                <img src="/images/${item.image}" alt="cover" class="w-10">
+                                <span class="ml-4">${item.name}</span>
+                            </a>
+                        </li>
                     `
-                    <li class="border-b border-gray-700">
-                        <a href="#" class="block hover:bg-gray-700 flex items-center transition ease-in-out duration-150 px-3 py-3">
-                            <img src="https://cdn.myanimelist.net/images/anime/1079/109928.jpg?s=33c1c9c33504d732712ca3e1ebcafc7a" alt="cover" class="w-10">
-                            <span class="ml-4">${item.name}</span>
-                        </a>
-                    </li>
+                } else {
+                    listItem = `
+                        <li class="border-b border-gray-700">
+                            <a href="/home/show/${item.slug}" class="block hover:bg-gray-700 flex items-center transition ease-in-out duration-150 px-3 py-3">
+                                <div class="flex justify-center items-center w-10 h-14 bg-gray-800">
+                                    <span class="text-white text-sm">No Image</span>
+                                </div>
+                                <span class="ml-4">${item.name}</span>
+                            </a>
+                        </li>
                     `
+                }
+                list.innerHTML += listItem
+                    
             })
         } else {
             list.innerHTML = ''

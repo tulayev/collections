@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nest;
+using SlugGenerator;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -82,7 +83,7 @@ namespace Collections.Areas.Dashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ItemCreateViewModel model, string[] keys, string[] values, int[] types)
         {
-            if (keys != null && values != null && keys != null && keys.Length != values.Length)
+            if (keys != null && values != null && keys.Length != values.Length)
             {
                 return BadRequest();
             }
@@ -100,6 +101,7 @@ namespace Collections.Areas.Dashboard.Controllers
             var item = new Item
             {
                 Name = model.Name,
+                Slug = String.Empty,
                 CollectionId = model.CollectionId,
                 Tags = tags,
                 Image = image.Length > 0 ? image : null,
@@ -108,6 +110,7 @@ namespace Collections.Areas.Dashboard.Controllers
 
             await _db.Items.AddAsync(item);
             await _db.SaveChangesAsync();
+            item.Slug = $"{item.Id}-{item.Name.GenerateSlug()}";
 
             await AddToElasticIndex(item);
 
@@ -159,7 +162,7 @@ namespace Collections.Areas.Dashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ItemEditViewModel model, string[] keys, string[] values, int[] types)
         {
-            if (keys != null && values != null && keys != null && keys.Length != values.Length)
+            if (keys != null && values != null && keys.Length != values.Length)
             {
                 return BadRequest();
             }
@@ -202,6 +205,7 @@ namespace Collections.Areas.Dashboard.Controllers
             item.Tags = tags;
             item.Image = image.Length > 0 ? image : item.Image;
             item.Fields = fieldsList;
+            item.Slug = $"{item.Id}-{item.Name.GenerateSlug()}";
 
             await _db.SaveChangesAsync();
             await UpdateElasticIndex(item);
@@ -234,7 +238,9 @@ namespace Collections.Areas.Dashboard.Controllers
             {
                 Id = item.Id,
                 Name = item.Name,
-                CollectionId = item.CollectionId
+                Slug = item.Slug,
+                CollectionId = item.CollectionId,
+                Image = item.Image
             };
 
             await _client.IndexDocumentAsync(elasticItem);
@@ -243,7 +249,13 @@ namespace Collections.Areas.Dashboard.Controllers
         private async Task UpdateElasticIndex(Item item) =>
             await _client.UpdateAsync<ElasticItemViewModel>(
                 item.Id,
-                u => u.Index("items").Doc(new ElasticItemViewModel { Name = item.Name, CollectionId = item.CollectionId })
+                u => u.Index("items").Doc(new ElasticItemViewModel 
+                { 
+                    Name = item.Name, 
+                    CollectionId = item.CollectionId, 
+                    Slug = item.Slug,
+                    Image = item.Image
+                })
             );
 
         private async Task RemoveFromElasticIndex(int id) => await _client.DeleteAsync<ElasticItemViewModel>(id);

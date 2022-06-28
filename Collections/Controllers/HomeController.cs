@@ -63,12 +63,12 @@ namespace Collections.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Show(int id)
+        public async Task<IActionResult> Show(string slug)
         {
             var item = await _db.Items
                 .Include(i => i.Fields)
                 .Include(i => i.Collection)
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .FirstOrDefaultAsync(i => i.Slug == slug);
 
             if (item == null)
             {

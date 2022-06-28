@@ -75,8 +75,9 @@ namespace Collections.Data.Seeders
             var fieldText = new FieldGroup { Id = 2, Name = "Text", FieldType = FieldType.Text };
             var fieldTextarea = new FieldGroup { Id = 3, Name = "Textarea", FieldType = FieldType.Textarea };
             var fieldBool = new FieldGroup { Id = 4, Name = "Checkbox", FieldType = FieldType.Boolean };
+            var fieldDate = new FieldGroup { Id = 5, Name = "Date", FieldType = FieldType.Date };
 
-            modelBuilder.Entity<FieldGroup>().HasData(fieldNumber, fieldText, fieldTextarea, fieldBool);
+            modelBuilder.Entity<FieldGroup>().HasData(fieldNumber, fieldText, fieldTextarea, fieldBool, fieldDate);
         }
     }
 }

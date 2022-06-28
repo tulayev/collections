@@ -69,11 +69,7 @@
 								<input name="keys" value="@field.Key" type="hidden" />
 								<input name="types" value="@((int)field.Type)" type="hidden" />
 								<textarea
-									id="@field.Id"
 									name="values"
-									class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-									type="text"
-									required
 								>@field.Value</textarea>
 							break;
 							case FieldType.Boolean:
@@ -87,12 +83,10 @@
 								<input name="keys" value="@field.Key" type="hidden" />
 								<input name="types" value="@((int)field.Type)" type="hidden" />
 								<input
-									id="@field.Id"
 									name="values"
 									class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 									type="@types[field.Type]" 
 									value="@field.Value"
-									required
 								/>
 							break;
 						}
@@ -111,3 +105,18 @@
 		</div>
 	</form>
 </div>
+
+@section Scripts {
+	<script>
+		const textareas = document.querySelectorAll('textarea')
+		if (textareas) {
+			ClassicEditor
+				.create(textareas[textareas.length - 1], {
+					removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed'],
+				})
+				.catch(error => {
+					console.error(error)
+				})
+		}
+	</script>
+}

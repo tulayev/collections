@@ -14,6 +14,7 @@
         Number = 1,
         Text = 2,
         Textarea = 3,
-        Boolean = 4
+        Boolean = 4,
+        Date = 5
     }
 }

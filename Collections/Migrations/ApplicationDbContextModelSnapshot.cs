@@ -150,6 +150,12 @@ namespace Collections.Migrations
                             Id = 4,
                             FieldType = 4,
                             Name = "Checkbox"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            FieldType = 5,
+                            Name = "Date"
                         });
                 });
 
@@ -172,6 +178,11 @@ namespace Collections.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
@@ -262,15 +273,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eaacdd76-3ade-4b09-bb25-aec88903d97c",
-                            ConcurrencyStamp = "eaacdd76-3ade-4b09-bb25-aec88903d97c",
+                            Id = "39417897-7230-429f-bb64-9bb68da6be8b",
+                            ConcurrencyStamp = "39417897-7230-429f-bb64-9bb68da6be8b",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "078cb412-ef33-4e7d-92f8-1fd74641abaa",
-                            ConcurrencyStamp = "078cb412-ef33-4e7d-92f8-1fd74641abaa",
+                            Id = "8d553839-fbc4-4b19-9276-2767db1a3b4a",
+                            ConcurrencyStamp = "8d553839-fbc4-4b19-9276-2767db1a3b4a",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -401,7 +412,7 @@ namespace Collections.Migrations
                             Id = 1,
                             ClaimType = "Name",
                             ClaimValue = "Admin",
-                            UserId = "d9d0d5e0-463e-4301-bfea-14ca67916854"
+                            UserId = "6220a00b-f6ac-46c8-a552-b59d6d258e61"
                         });
                 });
 
@@ -444,8 +455,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "d9d0d5e0-463e-4301-bfea-14ca67916854",
-                            RoleId = "eaacdd76-3ade-4b09-bb25-aec88903d97c"
+                            UserId = "6220a00b-f6ac-46c8-a552-b59d6d258e61",
+                            RoleId = "39417897-7230-429f-bb64-9bb68da6be8b"
                         });
                 });
 
@@ -486,17 +497,17 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d9d0d5e0-463e-4301-bfea-14ca67916854",
+                            Id = "6220a00b-f6ac-46c8-a552-b59d6d258e61",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b23ab07f-9baf-465f-99bf-59257f8407b3",
+                            ConcurrencyStamp = "4993e7f3-5ba1-4926-96f4-97fa442809fc",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDhkgbxdZYuDPwm5EevAlz1DcAoZFm7p+OyYqL/eSd3i7ryLNBlRUolAQ5WldWXitw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGhBgSCGZdGgrA1pT9DeJV1NZsgy5MSppoF3PJCHGr0etuUZqNwCfzOQswal2cgHvg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "D060A865-FD82-425D-AED8-91885731AFE8",
+                            SecurityStamp = "6980C2A3-A4A6-4346-BBDC-F7662BDA2025",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
                             Name = "Admin"
