@@ -61,7 +61,7 @@ namespace Collections.Controllers
                 Name = model.Name,
                 UserName = model.Email,
                 Email = model.Email,
-                Image = image.Length > 0 ? image : null
+                Image = image
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

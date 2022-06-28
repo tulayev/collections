@@ -21,7 +21,7 @@
                     listItem = `
                         <li class="border-b border-gray-700">
                             <a href="/home/show/${item.slug}" class="block hover:bg-gray-700 flex items-center transition ease-in-out duration-150 px-3 py-3">
-                                <div class="flex justify-center items-center w-10 h-14 bg-gray-800">
+                                <div class="flex justify-center items-center w-10 h-14 bg-gray-900">
                                     <span class="text-white text-sm">No Image</span>
                                 </div>
                                 <span class="ml-4">${item.name}</span>

@@ -96,8 +96,7 @@ namespace Collections.Migrations
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -273,15 +272,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "39417897-7230-429f-bb64-9bb68da6be8b",
-                            ConcurrencyStamp = "39417897-7230-429f-bb64-9bb68da6be8b",
+                            Id = "792d5792-2f31-4b63-bf29-1c83dfdb9ba6",
+                            ConcurrencyStamp = "792d5792-2f31-4b63-bf29-1c83dfdb9ba6",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8d553839-fbc4-4b19-9276-2767db1a3b4a",
-                            ConcurrencyStamp = "8d553839-fbc4-4b19-9276-2767db1a3b4a",
+                            Id = "73505802-857b-42e1-96e0-c8a6d9f93500",
+                            ConcurrencyStamp = "73505802-857b-42e1-96e0-c8a6d9f93500",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -412,7 +411,7 @@ namespace Collections.Migrations
                             Id = 1,
                             ClaimType = "Name",
                             ClaimValue = "Admin",
-                            UserId = "6220a00b-f6ac-46c8-a552-b59d6d258e61"
+                            UserId = "253c3082-8768-4d06-bdb8-5f08c0365050"
                         });
                 });
 
@@ -455,8 +454,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "6220a00b-f6ac-46c8-a552-b59d6d258e61",
-                            RoleId = "39417897-7230-429f-bb64-9bb68da6be8b"
+                            UserId = "253c3082-8768-4d06-bdb8-5f08c0365050",
+                            RoleId = "792d5792-2f31-4b63-bf29-1c83dfdb9ba6"
                         });
                 });
 
@@ -497,17 +496,17 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6220a00b-f6ac-46c8-a552-b59d6d258e61",
+                            Id = "253c3082-8768-4d06-bdb8-5f08c0365050",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4993e7f3-5ba1-4926-96f4-97fa442809fc",
+                            ConcurrencyStamp = "8284cc05-5a5b-4c4f-bf89-c5738855b757",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGhBgSCGZdGgrA1pT9DeJV1NZsgy5MSppoF3PJCHGr0etuUZqNwCfzOQswal2cgHvg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGYAnl64hYFeFlOgneOUd2jmwY1ciOKvM8XJYPdOdHUZii3hEZygrIlUK+U9LtPOkQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6980C2A3-A4A6-4346-BBDC-F7662BDA2025",
+                            SecurityStamp = "9DB08317-C207-4494-A46A-4F85269B3D2C",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
                             Name = "Admin"

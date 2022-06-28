@@ -104,7 +104,7 @@ namespace Collections.Areas.Dashboard.Controllers
                 Slug = String.Empty,
                 CollectionId = model.CollectionId,
                 Tags = tags,
-                Image = image.Length > 0 ? image : null,
+                Image = image,
                 CreatedAt = DateTime.Now.SetKindUtc()
             };
 

@@ -23,6 +23,7 @@
 		<div class="mb-4">
 			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Tags"></label>
 			<input
+				id="tags"
 				asp-for="Tags"
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
 				type="text" 
@@ -30,6 +31,8 @@
 				required
 			/>
 		</div>
+
+		<div id="matchList" class="mb-2 flex"></div>
 
 		<div class="mb-4">
 			<label class="block text-gray-700 text-sm font-bold mb-2" asp-for="Image"></label>
@@ -54,7 +57,7 @@
 
 			<div class="w-1/2 ml-2">
 				<button id="addFieldBtn" type="button">
-					<img src="~/images/plus.png" alt="plus" class="w-8" />
+					<img src="~/images/add.svg" alt="plus" class="w-8" />
 				</button>
 			</div>
 		</div>
@@ -76,6 +79,7 @@
 
 @section Scripts {
 	<script>
+		// Custom user defined fields
 		const fieldGroupSelect = document.getElementById('fieldGroupSelect')
 		const addFieldBtn = document.getElementById('addFieldBtn')
 		const removeFieldBtns = document.querySelectorAll('.removeFieldBtns')
@@ -127,7 +131,7 @@
 			const removeFieldBtn = document.createElement('button')
 			removeFieldBtn.type = 'button'
 			removeFieldBtn.classList.add('removeFieldBtns')
-			removeFieldBtn.innerHTML = '<img src="/images/minus.png" class="w-10" />'
+			removeFieldBtn.innerHTML = '<img src="/images/trash-can.svg" class="w-10" />'
 
 			wrapper.appendChild(label)
 
@@ -194,6 +198,56 @@
 						})
 				}
 			}
+		})
+
+		// Tags autocomplete
+		const tagsInput = document.getElementById('tags')
+		const matchList = document.getElementById('matchList')
+		const userChosenTags = new Set()
+
+		const outputHtml = (matches) => {
+			matchList.innerHTML = matches.map(x => {
+				return `
+					<div class="mx-1 p-2 bg-green-500 text-white rounded cursor-pointer">
+						${x.name}
+					</div>
+				`
+			}).join('')
+
+			if (matchList.innerHTML.length > 0) {
+				const matchItems = matchList.querySelectorAll('div')
+				matchItems.forEach(i => {
+					i.addEventListener('click', (e) => {
+						userChosenTags.add(e.target.innerText.trim())
+						const arr = Array.from(userChosenTags)
+						tagsInput.value = arr.join(', ')
+					})
+				})
+			}
+		}
+
+		const searchTags = async (searchText) => {
+			try {
+				const res = await fetch('/api/tags')
+				const tags = await res.json()
+				let matches = tags.filter(t => {
+					const regex = new RegExp(`^${searchText}`, 'gi')
+					return t.name.match(regex)
+				})
+
+				if (searchText.length === 0) {
+					matches = []
+					matchList.innerHTML = ''
+				}
+
+				outputHtml(matches)
+			} catch(e) {
+				console.log(e.message)
+			}
+		}
+
+		tagsInput.addEventListener('input', (e) => {
+			searchTags(e.target.value)
 		})
 	</script>
 }

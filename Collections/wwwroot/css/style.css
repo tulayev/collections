@@ -650,6 +650,11 @@ video {
   margin-bottom: 2rem;
 }
 
+.mx-1 {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -790,6 +795,10 @@ video {
   height: 5rem;
 }
 
+.h-14 {
+  height: 3.5rem;
+}
+
 .w-full {
   width: 100%;
 }
@@ -872,12 +881,12 @@ video {
           appearance: none;
 }
 
-.grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -1029,6 +1038,11 @@ video {
 .bg-purple-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(168 85 247 / var(--tw-bg-opacity));
+}
+
+.bg-gray-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
 
 .fill-current {
@@ -1314,6 +1328,10 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 .transition {
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1432,10 +1450,6 @@ video {
     width: 50%;
   }
 
-  .sm\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .sm\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1508,16 +1522,12 @@ video {
     flex: none;
   }
 
-  .md\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .md\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .md\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .md\:flex-row {
@@ -1608,10 +1618,6 @@ video {
     width: 95%;
   }
 
-  .lg\:grid-cols-5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
   .lg\:grid-cols-6 {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -1623,11 +1629,5 @@ video {
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .xl\:grid-cols-6 {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }

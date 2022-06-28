@@ -8,7 +8,7 @@
 
 <div class="max-w-7xl mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-2">
-        @if (Model.Image != null)
+        @if (!String.IsNullOrWhiteSpace(@Model.Image))
         {
             <div>
                 <img 
@@ -40,7 +40,7 @@
                 {
                     <p class="dark:text-white text-gray-900 my-4">
                         <span class="text-blue-500 font-bold">@field.Key: </span>
-                        @field.Value
+                        @Html.Raw(field.Value)
                     </p>
                 }
             }
