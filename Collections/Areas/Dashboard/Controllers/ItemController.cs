@@ -84,7 +84,6 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             int perPage = 3;
-
             return View(await PaginatedList<Item>.CreateAsync(userItems.AsNoTracking(), page ?? 1, perPage));
         }
         

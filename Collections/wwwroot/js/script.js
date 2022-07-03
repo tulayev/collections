@@ -119,4 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (itemId) {
         getComments(itemId.value)
     }
+
+    // Pagination
+
+    const links = document.querySelectorAll('a')
+
+    if (links) {
+        links.forEach(l => {
+            if (l.classList.contains('disabled')) {
+                l.classList.add(...['cursor-not-allowed', 'pointer-events-none', 'bg-gray-500'])
+                l.classList.remove('bg-blue-500')
+            }
+        })
+    }
 })

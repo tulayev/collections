@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Collections.Utils;
-using Collections.Models.ViewModels;
+using Collections.Models;
 
 namespace Collections.Controllers
 {
@@ -15,52 +15,28 @@ namespace Collections.Controllers
             _db = db;
         }
 
-        public async Task<IActionResult> Index(string? tag, int page = 1)
+        public async Task<IActionResult> Index(string? tag, int? page)
         {
-            int count = 0;
-            int perPage = 12;
-            PageViewModel pageModel;
-
             var source = _db.Items
-                .AsNoTracking()
                 .Include(i => i.Tags)
                 .Include(i => i.Fields)
                 .Include(i => i.Collection);
 
+            int perPage = 12;
+
             if (tag != null)
             {
-                var itemsByTag = await source
+                var itemsByTag = source
                     .Where(i => i.Tags.Any(t => t.Name.Contains(tag)))
-                    .OrderByDescending(i => i.CreatedAt)
-                    .ToListAsync();
+                    .OrderByDescending(i => i.CreatedAt);
 
-                count = itemsByTag.Count;
-
-                pageModel = new PageViewModel(count, page, perPage);
-
-                return View(new IndexViewModel
-                {
-                    Items = itemsByTag,
-                    PageViewModel = pageModel
-                });
+                return View(await PaginatedList<Item>.CreateAsync(itemsByTag.AsNoTracking(), page ?? 1, perPage));
             }
 
-            count = await source.CountAsync();
-            
-            var items = await source
-                .OrderByDescending(i => i.CreatedAt)
-                .Paginate(page, perPage)
-                .ToListAsync();
+            var items = source
+                .OrderByDescending(i => i.CreatedAt);
 
-            pageModel = new PageViewModel(count, page, perPage);
-
-            var model = new IndexViewModel
-            {
-                Items = items,
-                PageViewModel = pageModel
-            };
-
-            return View(model);
+            return View(await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), page ?? 1, perPage));
         }
 
         public async Task<IActionResult> Show(string slug)
