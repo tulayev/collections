@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Comments" xml:space="preserve">
+    <value>Izohlar</value>
+  </data>
+  <data name="LoginPointer" xml:space="preserve">
+    <value>Agar siz izohlar qqoldirmoqchi bo'lsangiz, iltimos, akkauntingizga kiring</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Yuborish</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Batafsil</value>
   </data>

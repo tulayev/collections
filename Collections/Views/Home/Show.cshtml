@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<Collections.SharedResource> SharedLocalizer
 @model Item
 
 @{
@@ -73,7 +74,7 @@
         </div>
     </div>  
     <div>
-        <h3 class="my-6 text-xl text-blue-500">Comments</h3>
+        <h3 class="my-6 text-xl text-blue-500">@Localizer["Comments"]</h3>
         
         <div id="commentsWrapper">
             
@@ -95,7 +96,7 @@
 				        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
 				        type="button"
 			        >
-				        Send
+				        @Localizer["Send"]
 			        </button>
                 </div>
             </div>
@@ -103,13 +104,13 @@
         else
         {
             <div class="mt-10 dark:text-white text-gray-900">
-                If you want to leave comments, please log in your account ->
+                @Localizer["LoginPointer"] ->
                 <a
                     asp-controller="Account"
                     asp-action="Login"
                     class="text-blue-500"
                 >
-                    Log In
+                    @SharedLocalizer["Login"]
                 </a>
             </div>
         }

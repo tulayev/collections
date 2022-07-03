@@ -17,7 +17,7 @@
         {
             foreach (var item in Model)
             {
-                <div class="anime mt-8">
+                <div class="mt-8">
                     <div class="relative inline-block">
                         <a asp-action="Show" asp-route-slug="@item.Slug">
                             @if (!String.IsNullOrWhiteSpace(item.Image))
