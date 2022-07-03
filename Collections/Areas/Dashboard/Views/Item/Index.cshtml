@@ -1,27 +1,64 @@
-﻿@model List<Item>
+﻿@model Collections.Utils.PaginatedList<Item>
 @{ int i = 0; }
 
 <div class="flex flex-col">
 	<div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
 		<div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-			<div class="overflow-hidden">
+			<div>
+				<form asp-action="Index" method="get">
+					<div class="">
+						<p>
+							Find by name: 
+							<input 
+								type="text" 
+								name="search" 
+								class="shadow appearance-none border rounded p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+								valu="@ViewData["CurrentFilter"]"
+							/>
+							<button type="submit" class="text-white p-1 bg-blue-500 rounded">
+								Search
+							</button>|
+							<a 
+								asp-action="Index"
+								class="text-blue-500"
+							>
+								Back to Full List
+							</a>
+						</p>
+					</div>
+				</form>
 				<table class="min-w-full">
-				<thead class="border-b">
-					<tr>
-						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
-							#
-						</th>
-						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
-							Name
-						</th>
-						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
-							Image
-						</th>
-						<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-right">
-							Actions
-						</th>
-					</tr>
-				</thead>
+					<thead class="border-b">
+						<tr>
+							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+								#
+							</th>
+							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+								<a 
+									asp-action="Index" 
+									asp-route-sort="@ViewData["NameSortParam"]"
+									asp-route-filter="@ViewData["CurrentFilter"]"
+								>
+									Name
+								</a>
+							</th>
+							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+								<a 
+									asp-action="Index" 
+									asp-route-sort="@ViewData["CollectionSortParam"]"
+									asp-route-filter="@ViewData["CurrentFilter"]"
+								>
+									Collection
+								</a>
+							</th>
+							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+								Image
+							</th>
+							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-right">
+								Actions
+							</th>
+						</tr>
+					</thead>
 					<tbody>
 						@if (Model.Count > 0)
 						{
@@ -33,6 +70,9 @@
 									</td>
 									<td class="text-gray-900 px-6 py-4 whitespace-nowrap">
 										@item.Name
+									</td>
+									<td class="text-gray-900 px-6 py-4 whitespace-nowrap">
+										@item.Collection.Name
 									</td>
 									<td class="text-gray-900 px-6 py-4 whitespace-nowrap">
 										<img 
@@ -62,7 +102,46 @@
 						}
 					</tbody>
 				</table>
+				@{
+					var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+					var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+				}
+
+				<div class="mt-8">
+					<a 
+						asp-action="Index"
+						asp-route-sort="@ViewData["CurrentSort"]"
+						asp-route-page="@(Model.PageIndex - 1)"
+						asp-route-filter="@ViewData["CurrentFilter"]"
+						class="text-white p-2 mx-2 rounded bg-blue-500 @prevDisabled"
+					>
+						Previous
+					</a>
+					<a 
+						asp-action="Index"
+						asp-route-sort="@ViewData["CurrentSort"]"
+						asp-route-page="@(Model.PageIndex + 1)"
+						asp-route-filter="@ViewData["CurrentFilter"]"
+						class="text-white p-2 mx-2 rounded bg-blue-500 @nextDisabled"
+					>
+						Next
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+@section Scripts {
+	<script>
+		const links = document.querySelectorAll('a')
+		if (links) {
+			links.forEach(l => {
+				if (l.classList.contains('disabled')) {
+					l.classList.add(...['cursor-default', 'pointer-events-none', 'bg-gray-500'])
+					l.classList.remove('bg-blue-500')
+				}
+			})
+		}
+	</script>
+}

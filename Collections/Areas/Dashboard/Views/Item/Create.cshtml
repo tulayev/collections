@@ -221,6 +221,7 @@
 						userChosenTags.add(e.target.innerText.trim())
 						const arr = Array.from(userChosenTags)
 						tagsInput.value = arr.join(', ')
+						matchList.removeChild(e.target)
 					})
 				})
 			}

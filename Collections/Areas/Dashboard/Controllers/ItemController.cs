@@ -33,7 +33,7 @@ namespace Collections.Areas.Dashboard.Controllers
             _client = client;
         }
 
-        public async Task<IActionResult> Index(string? userId)
+        public async Task<IActionResult> Index(string? userId, string sort, string filter, string search, int? page)
         {
             User user;
 
@@ -46,10 +46,46 @@ namespace Collections.Areas.Dashboard.Controllers
                 user = await _userManager.FindByIdAsync(userId);
             }
 
-            var userCollections = await _db.Collections.Where(c => c.UserId == user.Id).Select(c => c.Id).ToListAsync();
-            var userItems = await _db.Items.Where(i => userCollections.Contains(i.CollectionId)).ToListAsync();
+            ViewData["CurrentSort"] = sort;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sort) ? "name_desc" : "";
+            ViewData["CollectionSortParam"] = String.IsNullOrEmpty(sort) ? "collection_desc" : "";
 
-            return View(userItems);
+            if (search != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                search = filter;
+            }
+            
+            ViewData["CurrentFilter"] = search;
+
+            var userCollections = await _db.Collections.Where(c => c.UserId == user.Id).Select(c => c.Id).ToListAsync();
+            var userItems = _db.Items.Include(i => i.Collection).Where(i => userCollections.Contains(i.CollectionId));
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                userItems = userItems.Where(i => i.Name.ToLower().Contains(search.ToLower())
+                                       || i.Collection.Name.ToLower().Contains(search.ToLower()));
+            }
+
+            switch (sort)
+            {
+                case "name_desc":
+                    userItems = userItems.OrderByDescending(i => i.Name);
+                    break;
+                case "collection_desc":
+                    userItems = userItems.OrderByDescending(i => i.Collection.Name);
+                    break;
+                default:
+                    userItems = userItems.OrderBy(i => i.Name);
+                    break;
+            }
+
+            int perPage = 3;
+
+            return View(await PaginatedList<Item>.CreateAsync(userItems.AsNoTracking(), page ?? 1, perPage));
         }
         
         public async Task<IActionResult> Create(int? collection)
