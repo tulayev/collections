@@ -110,7 +110,16 @@ namespace Collections.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user.Status == Status.Default)
+                    return RedirectToAction("Index", "Home");
+                else
+                {
+                    ModelState.AddModelError("Login", "Failed to login! The user has been blocked");
+                    await _signInManager.SignOutAsync();
+                    return View(model);
+                }
+
             }
             else
             {

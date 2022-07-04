@@ -16,8 +16,16 @@ namespace Collections.Models
             }
         }
 
+        public Status Status { get; set; }
+
 #nullable enable
         public string? Image { get; set; }
 #nullable disable
+    }
+
+    public enum Status
+    {
+        Default = 1,
+        Blocked = 2
     }
 }

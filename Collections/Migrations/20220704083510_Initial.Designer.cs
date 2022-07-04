@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Collections.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220628164755_Initial")]
+    [Migration("20220704083510_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -274,15 +274,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "792d5792-2f31-4b63-bf29-1c83dfdb9ba6",
-                            ConcurrencyStamp = "792d5792-2f31-4b63-bf29-1c83dfdb9ba6",
+                            Id = "37d5e98a-2dd1-4ab5-836a-7c266288b7f0",
+                            ConcurrencyStamp = "37d5e98a-2dd1-4ab5-836a-7c266288b7f0",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "73505802-857b-42e1-96e0-c8a6d9f93500",
-                            ConcurrencyStamp = "73505802-857b-42e1-96e0-c8a6d9f93500",
+                            Id = "6d19fa3c-19f2-4b7f-a23b-ca36f63af129",
+                            ConcurrencyStamp = "6d19fa3c-19f2-4b7f-a23b-ca36f63af129",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -413,7 +413,7 @@ namespace Collections.Migrations
                             Id = 1,
                             ClaimType = "Name",
                             ClaimValue = "Admin",
-                            UserId = "253c3082-8768-4d06-bdb8-5f08c0365050"
+                            UserId = "c6e03c4e-b04e-4358-8957-520f49ada7a0"
                         });
                 });
 
@@ -456,8 +456,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "253c3082-8768-4d06-bdb8-5f08c0365050",
-                            RoleId = "792d5792-2f31-4b63-bf29-1c83dfdb9ba6"
+                            UserId = "c6e03c4e-b04e-4358-8957-520f49ada7a0",
+                            RoleId = "37d5e98a-2dd1-4ab5-836a-7c266288b7f0"
                         });
                 });
 
@@ -493,25 +493,31 @@ namespace Collections.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
                     b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            Id = "253c3082-8768-4d06-bdb8-5f08c0365050",
+                            Id = "c6e03c4e-b04e-4358-8957-520f49ada7a0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8284cc05-5a5b-4c4f-bf89-c5738855b757",
+                            ConcurrencyStamp = "7c574146-35a2-4566-bd28-ec501ac1ca40",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGYAnl64hYFeFlOgneOUd2jmwY1ciOKvM8XJYPdOdHUZii3hEZygrIlUK+U9LtPOkQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIsaYwE9qqE7Ttn1LyVFHxLJE8jhmyEIlmJLdG9yNGha6CCt46LBVA812TmOpm18cw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9DB08317-C207-4494-A46A-4F85269B3D2C",
+                            SecurityStamp = "41630D9F-5740-4A87-905B-53AB8A80CB81",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
-                            Name = "Admin"
+                            Name = "Admin",
+                            Status = 0
                         });
                 });
 

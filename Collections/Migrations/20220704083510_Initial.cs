@@ -31,6 +31,7 @@ namespace Collections.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     Discriminator = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: true, defaultValue: 1),
                     Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -330,14 +331,14 @@ namespace Collections.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "73505802-857b-42e1-96e0-c8a6d9f93500", "73505802-857b-42e1-96e0-c8a6d9f93500", "user", "USER" },
-                    { "792d5792-2f31-4b63-bf29-1c83dfdb9ba6", "792d5792-2f31-4b63-bf29-1c83dfdb9ba6", "admin", "ADMIN" }
+                    { "37d5e98a-2dd1-4ab5-836a-7c266288b7f0", "37d5e98a-2dd1-4ab5-836a-7c266288b7f0", "admin", "ADMIN" },
+                    { "6d19fa3c-19f2-4b7f-a23b-ca36f63af129", "6d19fa3c-19f2-4b7f-a23b-ca36f63af129", "user", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "Image", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "253c3082-8768-4d06-bdb8-5f08c0365050", 0, "8284cc05-5a5b-4c4f-bf89-c5738855b757", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEGYAnl64hYFeFlOgneOUd2jmwY1ciOKvM8XJYPdOdHUZii3hEZygrIlUK+U9LtPOkQ==", null, false, "9DB08317-C207-4494-A46A-4F85269B3D2C", false, "admin@collections.com" });
+                values: new object[] { "c6e03c4e-b04e-4358-8957-520f49ada7a0", 0, "7c574146-35a2-4566-bd28-ec501ac1ca40", "User", "admin@collections.com", false, null, false, null, "Admin", "ADMIN@COLLECTIONS.COM", "ADMIN@COLLECTIONS.COM", "AQAAAAEAACcQAAAAEIsaYwE9qqE7Ttn1LyVFHxLJE8jhmyEIlmJLdG9yNGha6CCt46LBVA812TmOpm18cw==", null, false, "41630D9F-5740-4A87-905B-53AB8A80CB81", false, "admin@collections.com" });
 
             migrationBuilder.InsertData(
                 table: "FieldGroups",
@@ -354,12 +355,12 @@ namespace Collections.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUserClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "UserId" },
-                values: new object[] { 1, "Name", "Admin", "253c3082-8768-4d06-bdb8-5f08c0365050" });
+                values: new object[] { 1, "Name", "Admin", "c6e03c4e-b04e-4358-8957-520f49ada7a0" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "792d5792-2f31-4b63-bf29-1c83dfdb9ba6", "253c3082-8768-4d06-bdb8-5f08c0365050" });
+                values: new object[] { "37d5e98a-2dd1-4ab5-836a-7c266288b7f0", "c6e03c4e-b04e-4358-8957-520f49ada7a0" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
