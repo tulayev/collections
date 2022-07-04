@@ -27,12 +27,13 @@ namespace Collections.Areas.Dashboard.Controllers
         {
             comments = await _db.Comments
                 .Include(c => c.User)
+                    .ThenInclude(u => u.File)
                 .Where(c => c.ItemId == itemId)
                 .Select(c => new CommentViewModel
                 {
                     Body = c.Body,
-                    User = new CommentUserViewModel { Name = c.User.Name, Image = c.User.Image },
-                    CreatedAt = c.CreatedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                    User = new CommentUserViewModel { Name = c.User.Name, Image = c.User.File.Name },
+                    CreatedAt = c.CreatedAt.ToString("yyyy-MM-dd HH:mm")
                 })
                 .ToListAsync()
         });

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Collections.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220704083510_Initial")]
+    [Migration("20220704122703_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,29 @@ namespace Collections.Migrations
                     b.ToTable("Collections");
                 });
 
+            modelBuilder.Entity("Collections.Models.AppFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("Collections.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -59,7 +82,7 @@ namespace Collections.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ItemId")
@@ -171,12 +194,11 @@ namespace Collections.Migrations
                     b.Property<int>("CollectionId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Image")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                    b.Property<int?>("FileId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -191,6 +213,8 @@ namespace Collections.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CollectionId");
+
+                    b.HasIndex("FileId");
 
                     b.ToTable("Items");
                 });
@@ -274,15 +298,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "37d5e98a-2dd1-4ab5-836a-7c266288b7f0",
-                            ConcurrencyStamp = "37d5e98a-2dd1-4ab5-836a-7c266288b7f0",
+                            Id = "6fbd13a1-87d2-4513-b5fc-dcf574fc4d42",
+                            ConcurrencyStamp = "6fbd13a1-87d2-4513-b5fc-dcf574fc4d42",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "6d19fa3c-19f2-4b7f-a23b-ca36f63af129",
-                            ConcurrencyStamp = "6d19fa3c-19f2-4b7f-a23b-ca36f63af129",
+                            Id = "be1782df-d25b-486f-aa98-0da7df9f740f",
+                            ConcurrencyStamp = "be1782df-d25b-486f-aa98-0da7df9f740f",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -413,7 +437,7 @@ namespace Collections.Migrations
                             Id = 1,
                             ClaimType = "Name",
                             ClaimValue = "Admin",
-                            UserId = "c6e03c4e-b04e-4358-8957-520f49ada7a0"
+                            UserId = "64d4ea66-cdc6-451e-8362-eeb23fe36f31"
                         });
                 });
 
@@ -456,8 +480,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "c6e03c4e-b04e-4358-8957-520f49ada7a0",
-                            RoleId = "37d5e98a-2dd1-4ab5-836a-7c266288b7f0"
+                            UserId = "64d4ea66-cdc6-451e-8362-eeb23fe36f31",
+                            RoleId = "6fbd13a1-87d2-4513-b5fc-dcf574fc4d42"
                         });
                 });
 
@@ -484,9 +508,8 @@ namespace Collections.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("Image")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                    b.Property<int?>("FileId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -498,22 +521,24 @@ namespace Collections.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(1);
 
+                    b.HasIndex("FileId");
+
                     b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            Id = "c6e03c4e-b04e-4358-8957-520f49ada7a0",
+                            Id = "64d4ea66-cdc6-451e-8362-eeb23fe36f31",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7c574146-35a2-4566-bd28-ec501ac1ca40",
+                            ConcurrencyStamp = "83d48241-d1d7-498d-ad3f-3c60406cc958",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIsaYwE9qqE7Ttn1LyVFHxLJE8jhmyEIlmJLdG9yNGha6CCt46LBVA812TmOpm18cw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEO0El0S2A4lEYbSUDxbWO1ClFy0jKu9xsmqxD1KHl+4Fm1Jry0NSTqCTZA1YW8zInw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "41630D9F-5740-4A87-905B-53AB8A80CB81",
+                            SecurityStamp = "9317E885-0F18-4920-B29D-8CF3DFEACAE0",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
                             Name = "Admin",
@@ -566,7 +591,13 @@ namespace Collections.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Collections.Models.AppFile", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId");
+
                     b.Navigation("Collection");
+
+                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("Collections.Models.Like", b =>
@@ -652,6 +683,15 @@ namespace Collections.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Collections.Models.User", b =>
+                {
+                    b.HasOne("Collections.Models.AppFile", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId");
+
+                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("Collections.Models.Item", b =>

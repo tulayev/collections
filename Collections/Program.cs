@@ -49,7 +49,7 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-builder.Services.AddSingleton<IUploadHandler, UploadHandler>();
+builder.Services.AddSingleton<IFileHandler, FileHandler>();
 
 builder.Services.AddElasticSearch(builder.Configuration);
 

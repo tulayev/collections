@@ -1,5 +1,6 @@
 ﻿using Collections.Data;
 using Collections.Models;
+using Collections.Services;
 using Collections.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,10 +17,13 @@ namespace Collections.Areas.Dashboard.Controllers
 
         private readonly ApplicationDbContext _db;
 
-        public UserController(UserManager<User> userManager, ApplicationDbContext db)
+        private readonly IFileHandler _fileHandler;
+
+        public UserController(UserManager<User> userManager, ApplicationDbContext db, IFileHandler fileHandler)
         {
             _userManager = userManager;
-            _db = db;   
+            _db = db;
+            _fileHandler = fileHandler;
         }
 
         public async Task<IActionResult> Index()
@@ -42,6 +46,26 @@ namespace Collections.Areas.Dashboard.Controllers
             user.Status = (Status)status;
             await _userManager.UpdateSecurityStampAsync(user);
             _db.SaveChanges();  
+            return RedirectToAction("Index");
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string userId)
+        {
+            var user = await _userManager.Users
+                .Include(u => u.File)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            if (user.File != null)
+                _db.Files.Remove(user.File);
+            await _db.SaveChangesAsync();   
+            await _userManager.DeleteAsync(user);
             return RedirectToAction("Index");
         }
     }

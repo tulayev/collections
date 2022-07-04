@@ -1,11 +1,13 @@
 ﻿namespace Collections.Services
 {
-    public interface IUploadHandler
+    public interface IFileHandler
     {
         Task<string> UploadAsync(IFormFile file);
 
         Task<string> UploadAsync(IFormFile file, string existingFilePath);
 
-        void Delete(string existingFilePath);
+        string GeneratePath(string filename);
+
+        void Delete(string path);
     }
 }

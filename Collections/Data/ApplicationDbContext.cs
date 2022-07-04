@@ -21,6 +21,29 @@ namespace Collections.Data
             InitialSeeder.SeedFieldGrups(modelBuilder);
         }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            this.ChangeTracker.DetectChanges();
+            var entities = this.ChangeTracker.Entries()
+                        .Where(t => t.State == EntityState.Deleted)
+                        .Select(t => t.Entity)
+                        .ToArray();
+
+            foreach (var entity in entities)
+            {
+                if (entity is AppFile appFile)
+                {
+                    var file = entity as AppFile;
+                    if (!String.IsNullOrWhiteSpace(file.Path) && System.IO.File.Exists(file.Path))
+                    {
+                        System.IO.File.Delete(file.Path);
+                    }
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
         public DbSet<AppCollection> Collections { get; set; }
 
         public DbSet<Item> Items { get; set; }
@@ -34,5 +57,7 @@ namespace Collections.Data
         public DbSet<Like> Likes { get; set; }
 
         public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<AppFile> Files { get; set; }
     }
 }

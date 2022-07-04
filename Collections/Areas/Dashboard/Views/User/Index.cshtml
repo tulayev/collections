@@ -46,6 +46,7 @@
 													type="submit"
 													class="ml-2 px-4 py-1 rounded bg-red-500 text-white"
 												>
+													<i class="fa-solid fa-lock"></i>
 													Block
 												</button>
 											}
@@ -56,9 +57,24 @@
 													type="submit"
 													class="ml-2 px-4 py-1 rounded bg-green-500 text-white"
 												>
+													<i class="fa-solid fa-unlock"></i>
 													Unblock
 												</button>
 											}
+										</form>
+										<form
+											asp-area="Dashboard"
+											asp-controller="User"
+											asp-action="Delete" 
+										>
+											<input type="hidden" name="userId" value="@user.Id" />
+											<button
+												type="submit"
+												class="ml-2 px-4 py-1 rounded bg-red-500 text-white"
+											>
+												<i class="fa-solid fa-trash-can"></i>
+												Delete User
+											</button>
 										</form>
 									}
 									<a

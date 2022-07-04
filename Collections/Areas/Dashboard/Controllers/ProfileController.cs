@@ -1,9 +1,11 @@
-﻿using Collections.Models;
+﻿using Collections.Data;
+using Collections.Models;
 using Collections.Models.ViewModels;
 using Collections.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Collections.Areas.Dashboard.Controllers
@@ -12,14 +14,17 @@ namespace Collections.Areas.Dashboard.Controllers
     [Authorize]
     public class ProfileController : Controller
     {
+        private readonly ApplicationDbContext _db;
+
         private readonly UserManager<User> _userManager;
 
-        private readonly IUploadHandler _uploadHandler;
+        private readonly IFileHandler _fileHandler;
 
-        public ProfileController(UserManager<User> userManager, IUploadHandler uploadHandler)
+        public ProfileController(ApplicationDbContext db, UserManager<User> userManager, IFileHandler fileHandler)
         {
+            _db = db;
             _userManager = userManager;
-            _uploadHandler = uploadHandler;
+            _fileHandler = fileHandler;
         }
 
         public async Task<IActionResult> Edit()
@@ -43,16 +48,30 @@ namespace Collections.Areas.Dashboard.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByIdAsync(model.Id);
+            var user = await _userManager.Users
+                .Include(u => u.File)
+                .FirstOrDefaultAsync(u => u.Id == model.Id);
 
-            string image = String.Empty;
+            var file = user.File;
             Claim imageClaim = null;
 
             if (model.Image != null)
             {
-                image = await _uploadHandler.UploadAsync(model.Image, user.Image);
-                imageClaim = new Claim("Image", image);
-                user.Image = image;
+                if (file != null)
+                {
+                    string filename = await _fileHandler.UploadAsync(model.Image, file.Path);
+                    file.Name = filename;
+                    file.Path = _fileHandler.GeneratePath(filename);
+                }
+                else
+                {
+                    string filename = await _fileHandler.UploadAsync(model.Image);
+                    file.Name = filename;
+                    file.Path = _fileHandler.GeneratePath(filename);
+                    _db.Files.Add(file);
+                }
+                await _db.SaveChangesAsync();
+                imageClaim = new Claim("Image", file.Name);
             }
 
             var hasher = new PasswordHasher<User>();
@@ -60,6 +79,7 @@ namespace Collections.Areas.Dashboard.Controllers
             user.Name = model.Name ?? user.Name;
             user.UserName = model.Email ?? user.UserName;
             user.Email = model.Email ?? user.Email;
+            user.FileId = file?.Id;
             
             if (model.Password != null)
                 user.PasswordHash = hasher.HashPassword(user, model.Password);

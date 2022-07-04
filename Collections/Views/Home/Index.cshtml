@@ -20,10 +20,10 @@
                 <div class="mt-8">
                     <div class="relative inline-block">
                         <a asp-action="Show" asp-route-slug="@item.Slug">
-                            @if (!String.IsNullOrWhiteSpace(item.Image))
+                            @if (!String.IsNullOrWhiteSpace(item.File?.Name))
                             {
                                 <img 
-                                    src="~/images/@item.Image" 
+                                    src="~/uploads/@item.File.Name" 
                                     alt="@item.Name" 
                                     class="hover:opacity-75 transition ease-in-out duration-150 w-[170px] h-[250px]"
                                 />

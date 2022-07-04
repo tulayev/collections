@@ -20,16 +20,16 @@ namespace Collections.Areas.Dashboard.Controllers
 
         private readonly UserManager<User> _userManager;
         
-        private readonly IUploadHandler _uploadHandler;
+        private readonly IFileHandler _fileHandler;
 
         private readonly IElasticClient _client;
 
         public ItemController(ApplicationDbContext db, UserManager<User> userManager, 
-            IUploadHandler uploadHandler, IElasticClient client)
+            IFileHandler fileHandler, IElasticClient client)
         {
             _db = db;
             _userManager = userManager;
-            _uploadHandler = uploadHandler;
+            _fileHandler = fileHandler;
             _client = client;
         }
 
@@ -62,7 +62,11 @@ namespace Collections.Areas.Dashboard.Controllers
             ViewData["CurrentFilter"] = search;
 
             var userCollections = await _db.Collections.Where(c => c.UserId == user.Id).Select(c => c.Id).ToListAsync();
-            var userItems = _db.Items.Include(i => i.Collection).Where(i => userCollections.Contains(i.CollectionId));
+            var userItems = _db.Items
+                .Include(i => i.Collection)
+                .Include(i => i.File)
+                .Where(i => userCollections
+                .Contains(i.CollectionId));
 
             if (!String.IsNullOrEmpty(search))
             {
@@ -126,11 +130,18 @@ namespace Collections.Areas.Dashboard.Controllers
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
             var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower().Trim() }).ToList();
 
-            string image = String.Empty;    
+            AppFile file = null;    
 
             if (model.Image != null)
             {
-                image = await _uploadHandler.UploadAsync(model.Image);
+                string filename = await _fileHandler.UploadAsync(model.Image);
+                file = new AppFile
+                {
+                    Name = filename,
+                    Path = _fileHandler.GeneratePath(filename)
+                };
+                _db.Files.Add(file);
+                await _db.SaveChangesAsync();
             }
 
             var item = new Item
@@ -139,7 +150,7 @@ namespace Collections.Areas.Dashboard.Controllers
                 Slug = String.Empty,
                 CollectionId = model.CollectionId,
                 Tags = tags,
-                Image = image,
+                FileId = file?.Id ?? null,
                 CreatedAt = DateTime.Now.SetKindUtc()
             };
 
@@ -171,6 +182,7 @@ namespace Collections.Areas.Dashboard.Controllers
         {
             var item = await _db.Items
                 .Include(i => i.Tags)
+                .Include(i => i.File)
                 .Include(i => i.Fields)
                 .FirstOrDefaultAsync(i => i.Id == id);
 
@@ -185,7 +197,7 @@ namespace Collections.Areas.Dashboard.Controllers
             {
                 Id = item.Id,
                 Name = item.Name,
-                ExistingImage = item.Image,
+                ExistingImage = item.File?.Name,
                 Tags = String.Join(",", itemTags),
                 Fields = item.Fields
             };
@@ -204,6 +216,7 @@ namespace Collections.Areas.Dashboard.Controllers
 
             var item = await _db.Items
                 .Include(i => i.Tags)
+                .Include(i => i.File)
                 .Include(i => i.Fields)
                 .FirstOrDefaultAsync(i => i.Id == model.Id);
 
@@ -213,11 +226,24 @@ namespace Collections.Areas.Dashboard.Controllers
             string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
             var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower().Trim() }).ToList();
 
-            string image = String.Empty;
+            var file = item.File;
 
             if (model.Image != null)
             {
-                image = await _uploadHandler.UploadAsync(model.Image, item.Image);
+                if (file != null)
+                {
+                    string filename = await _fileHandler.UploadAsync(model.Image, file.Path);
+                    file.Name = filename;
+                    file.Path = _fileHandler.GeneratePath(filename);
+                }
+                else
+                {
+                    string filename = await _fileHandler.UploadAsync(model.Image);
+                    file.Name = filename;
+                    file.Path = _fileHandler.GeneratePath(filename);
+                    _db.Files.Add(file);
+                }
+                await _db.SaveChangesAsync();
             }
 
             _db.Fields.RemoveRange(item.Fields);
@@ -238,7 +264,7 @@ namespace Collections.Areas.Dashboard.Controllers
 
             item.Name = model.Name;
             item.Tags = tags;
-            item.Image = image.Length > 0 ? image : item.Image;
+            item.FileId = file?.Id;
             item.Fields = fieldsList;
             item.Slug = $"{item.Id}-{item.Name.GenerateSlug()}";
 
@@ -249,18 +275,20 @@ namespace Collections.Areas.Dashboard.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var item = await _db.Items.Include(i => i.Tags).FirstOrDefaultAsync(i => i.Id == id);
+            var item = await _db.Items
+                .Include(i => i.Tags)
+                .Include(i => i.File)
+                .FirstOrDefaultAsync(i => i.Id == id);
 
             if (item is null)
             {
                 return NotFound();
             }
 
-            _uploadHandler.Delete(item.Image);
-
+            if (item.File != null)
+                _db.Files.Remove(item.File);
             _db.Tags.RemoveRange(item.Tags);
             item.Tags.Clear();
-
             _db.Items.Remove(item);
             await _db.SaveChangesAsync();
             await RemoveFromElasticIndex(id);
@@ -275,7 +303,7 @@ namespace Collections.Areas.Dashboard.Controllers
                 Name = item.Name,
                 Slug = item.Slug,
                 CollectionId = item.CollectionId,
-                Image = item.Image
+                Image = item.File?.Name
             };
 
             await _client.IndexDocumentAsync(elasticItem);
@@ -289,7 +317,7 @@ namespace Collections.Areas.Dashboard.Controllers
                     Name = item.Name, 
                     CollectionId = item.CollectionId, 
                     Slug = item.Slug,
-                    Image = item.Image
+                    Image = item.File?.Name
                 })
             );
 

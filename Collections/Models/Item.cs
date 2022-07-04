@@ -12,14 +12,13 @@ namespace Collections.Models
 
         public int CollectionId  { get; set; }
 
-#nullable enable
-        public string? Image { get; set; }
-        
-        public DateTime? CreatedAt { get; set; }
-#nullable disable
+        public int? FileId { get; set; }
 
+        public DateTime CreatedAt { get; set; }
 
         public AppCollection Collection { get; set; }
+
+        public AppFile File { get; set; }
 
         public List<Tag> Tags { get; set; }
 

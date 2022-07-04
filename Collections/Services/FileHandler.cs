@@ -1,20 +1,25 @@
 ﻿namespace Collections.Services
 {
-    public class UploadHandler : IUploadHandler
+    public class FileHandler : IFileHandler
     {
-        private static IWebHostEnvironment _env;
-        private const string ImagePath = "images";
+        private readonly IWebHostEnvironment _env;
+        private const string UploadsPath = "uploads";
 
-        public UploadHandler(IWebHostEnvironment env)
+        public FileHandler(IWebHostEnvironment env)
         {
             _env = env;
+
+            if (!Directory.Exists(Path.Combine(_env.WebRootPath, UploadsPath)))
+            {
+                Directory.CreateDirectory(Path.Combine(_env.WebRootPath, UploadsPath));
+            }
         }
 
         public async Task<string> UploadAsync(IFormFile file)
         {
             string ext = Path.GetExtension(file.FileName);
             string fileName = String.Concat(Path.GetRandomFileName(), ext);
-            string path = Path.Combine(_env.WebRootPath, ImagePath, fileName);
+            string path = GeneratePath(fileName);
 
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
@@ -28,7 +33,7 @@
         {
             string ext = Path.GetExtension(file.FileName);
             string fileName = String.Concat(Path.GetRandomFileName(), ext);
-            string path = Path.Combine(_env.WebRootPath, ImagePath, fileName);
+            string path = GeneratePath(fileName);
 
             Delete(existingFilePath);
 
@@ -40,18 +45,14 @@
             return fileName;
         }
 
-        public void Delete(string existingFilePath)
+        public string GeneratePath(string filename) => Path.Combine(new string[] { _env.WebRootPath, UploadsPath, filename });
+
+        public void Delete(string path)
         {
-            if (!String.IsNullOrWhiteSpace(existingFilePath))
+            if (!String.IsNullOrWhiteSpace(path) && System.IO.File.Exists(path))
             {
-                string oldImagePath = Path.Combine(GetImagesPath, existingFilePath);
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                }
+                System.IO.File.Delete(path);
             }
         }
-
-        public static string GetImagesPath => Path.Combine(_env.WebRootPath, ImagePath);
     }
 }

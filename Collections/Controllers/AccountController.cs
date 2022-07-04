@@ -1,4 +1,5 @@
-﻿using Collections.Models;
+﻿using Collections.Data;
+using Collections.Models;
 using Collections.Models.ViewModels;
 using Collections.Services;
 using Collections.Utils;
@@ -11,21 +12,24 @@ namespace Collections.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly ApplicationDbContext _db;
+
         private readonly UserManager<User> _userManager;
         
         private readonly SignInManager<User> _signInManager;
 
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        private readonly IUploadHandler _uploadHandler;
+        private readonly IFileHandler _fileHandler;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, 
-            RoleManager<IdentityRole> roleManager, IUploadHandler uploadHandler)
+        public AccountController(ApplicationDbContext db, UserManager<User> userManager, SignInManager<User> signInManager, 
+            RoleManager<IdentityRole> roleManager, IFileHandler fileHandler)
         {
+            _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-            _uploadHandler = uploadHandler;
+            _fileHandler = fileHandler;
         }
 
         public IActionResult Index()
@@ -47,13 +51,20 @@ namespace Collections.Controllers
                 return View(model);
             }
 
-            string image = String.Empty;
             Claim imageClaim = null;
+            AppFile file = null;
 
             if (model.Image != null)
             {
-                image = await _uploadHandler.UploadAsync(model.Image);
-                imageClaim = new Claim("Image", image);
+                string filename = await _fileHandler.UploadAsync(model.Image);
+                file = new AppFile
+                {
+                    Name = filename,
+                    Path = _fileHandler.GeneratePath(filename)
+                };
+                _db.Files.Add(file);    
+                await _db.SaveChangesAsync();
+                imageClaim = new Claim("Image", file.Name);
             }
 
             var user = new User
@@ -61,7 +72,7 @@ namespace Collections.Controllers
                 Name = model.Name,
                 UserName = model.Email,
                 Email = model.Email,
-                Image = image
+                FileId = file?.Id
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

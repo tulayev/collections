@@ -19,6 +19,7 @@ namespace Collections.Controllers
         {
             var source = _db.Items
                 .Include(i => i.Tags)
+                .Include(i => i.File)
                 .Include(i => i.Fields)
                 .Include(i => i.Collection);
 
@@ -43,6 +44,7 @@ namespace Collections.Controllers
         {
             var item = await _db.Items
                 .Include(i => i.Fields)
+                .Include(i => i.File)
                 .Include(i => i.Collection)
                 .FirstOrDefaultAsync(i => i.Slug == slug);
 

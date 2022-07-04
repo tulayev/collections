@@ -18,9 +18,9 @@ namespace Collections.Models
 
         public Status Status { get; set; }
 
-#nullable enable
-        public string? Image { get; set; }
-#nullable disable
+        public int? FileId { get; set; }
+
+        public AppFile File { get; set; }
     }
 
     public enum Status

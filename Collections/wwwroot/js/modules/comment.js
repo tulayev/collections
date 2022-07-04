@@ -10,7 +10,7 @@
                     return `
                         <div class="flex my-8">
                             <div class="w-[20%] lg:w-[5%]">
-                                <img src="/images/${c.user.image ?? 'avatar.png'}" class="w-10 rounded-full" alt="avatar" />
+                                <img src="/uploads/${c.user.image ?? 'avatar.png'}" class="w-10 rounded-full" alt="avatar" />
                             </div>
                                 <div class="w-[80%] lg:w-[95%]">
                                 <h4 class="text-blue-500 mb-2">
@@ -22,17 +22,17 @@
                         </div>
                     `
                 }).join('')
-            } else {
-                const displayInfo = {
-                    'en': 'No comments yet...',
-                    'uz': 'Bu yerda izohlar hali yo\'q...'
-                }
-                commentsWrapper.innerHTML = `
-                    <div class="flex my-8">
-                        <p class="dark:text-white text-gray-900">${displayInfo[document.documentElement.lang]}</p>
-                    </div>
-                `
-            }
+            }// else {
+            //    const displayInfo = {
+            //        'en': 'No comments yet...',
+            //        'uz': 'Bu yerda izohlar hali yo\'q...'
+            //    }
+            //    commentsWrapper.innerHTML = `
+            //        <div class="flex my-8">
+            //            <p class="dark:text-white text-gray-900">${displayInfo[document.documentElement.lang]}</p>
+            //        </div>
+            //    `
+            //}
         }
     } catch (e) {
         console.log(e.message)
