@@ -1,12 +1,12 @@
 # Collections
 
+## Demo: https://t-collections.herokuapp.com/
+
 ## Technologies:
 - ASP.NET Core 6.0
 - EF Core
 - PostgreSQL
 - JS (no external libs)
-
-## Demo
 
 ## Features implemented:
 - Elasticsearch
