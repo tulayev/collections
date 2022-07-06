@@ -94,10 +94,8 @@ namespace Collections.Areas.Dashboard.Controllers
                 adminUsersList.Add(admin);
             }
 
-            if (collection is null)
-			{
+            if (collection == null)
                 return NotFound();
-			}
 
             var userCollection = await _db.Collections.FindAsync(collection);
 
@@ -115,33 +113,20 @@ namespace Collections.Areas.Dashboard.Controllers
         public async Task<IActionResult> Create(ItemCreateViewModel model, string[] keys, string[] values, int[] types)
         {
             if (keys != null && values != null && keys.Length != values.Length)
-            {
                 return BadRequest();
-            }
-
-            string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower().Trim() }).ToList();
 
             AppFile file = null;    
 
             if (model.Image != null)
-            {
-                string filename = await _fileHandler.UploadAsync(model.Image);
-                file = new AppFile
-                {
-                    Name = filename,
-                    Path = _fileHandler.GeneratePath(filename)
-                };
-                _db.Files.Add(file);
-                await _db.SaveChangesAsync();
-            }
+                file = await GetUploadedFile(file, model.Image);
 
             var item = new Item
             {
                 Name = model.Name,
                 Slug = String.Empty,
                 CollectionId = model.CollectionId,
-                Tags = tags,
+                Tags = GetTags(model.Tags),
+                Fields = GetCustomFields((ItemId: 0, keys, values, types)),
                 FileId = file?.Id ?? null,
                 CreatedAt = DateTime.Now.SetKindUtc()
             };
@@ -163,20 +148,6 @@ namespace Collections.Areas.Dashboard.Controllers
                 Comments = new List<CommentDto>()
             });
 
-            var fieldsList = new List<Models.Field>();
-
-            for (int i = 0; i < keys.Length; i++)
-            {
-                fieldsList.Add(new Models.Field 
-                {
-                    Key = keys[i],
-                    Value = values[i],
-                    ItemId = item.Id,
-                    Type = (Models.FieldType)types[i]
-                });
-            }
-
-            await _db.Fields.AddRangeAsync(fieldsList);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -191,10 +162,8 @@ namespace Collections.Areas.Dashboard.Controllers
 
             var itemTags = item.Tags.Select(t => t.Name);
 
-            if (item is null)
-            {
+            if (item == null)
                 return NotFound();
-            }
 
             var model = new ItemEditViewModel
             {
@@ -213,9 +182,7 @@ namespace Collections.Areas.Dashboard.Controllers
         public async Task<IActionResult> Edit(ItemEditViewModel model, string[] keys, string[] values, int[] types)
         {
             if (keys != null && values != null && keys.Length != values.Length)
-            {
                 return BadRequest();
-            }
 
             var item = await _db.Items
                 .Include(i => i.Tags)
@@ -223,52 +190,15 @@ namespace Collections.Areas.Dashboard.Controllers
                 .Include(i => i.Fields)
                 .FirstOrDefaultAsync(i => i.Id == model.Id);
 
-            _db.Tags.RemoveRange(item.Tags);
-            item.Tags.Clear();
-
-            string[] tagsArray = model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            var tags = tagsArray.ToList().Select(t => new Tag { Name = t.ToLower().Trim() }).ToList();
-
             var file = item.File;
 
             if (model.Image != null)
-            {
-                if (file != null)
-                {
-                    string filename = await _fileHandler.UploadAsync(model.Image, file.Path);
-                    file.Name = filename;
-                    file.Path = _fileHandler.GeneratePath(filename);
-                }
-                else
-                {
-                    string filename = await _fileHandler.UploadAsync(model.Image);
-                    file.Name = filename;
-                    file.Path = _fileHandler.GeneratePath(filename);
-                    _db.Files.Add(file);
-                }
-                await _db.SaveChangesAsync();
-            }
-
-            _db.Fields.RemoveRange(item.Fields);
-            item.Fields.Clear();
-
-            var fieldsList = new List<Models.Field>();
-
-            for (int i = 0; i < keys.Length; i++)
-            {
-                fieldsList.Add(new Models.Field
-                {
-                    Key = keys[i],
-                    Value = values[i],
-                    ItemId = item.Id,
-                    Type = (Models.FieldType)types[i]
-                });
-            }
+                file = await GetUploadedFile(file, model.Image);
 
             item.Name = model.Name;
-            item.Tags = tags;
+            item.Tags = GetTags(model.Tags, item.Tags);
             item.FileId = file?.Id;
-            item.Fields = fieldsList;
+            item.Fields = GetCustomFields((item.Id, keys, values, types), item.Fields);
             item.Slug = $"{item.Id}-{item.Name.GenerateSlug()}";
 
             await _db.SaveChangesAsync();
@@ -294,21 +224,83 @@ namespace Collections.Areas.Dashboard.Controllers
                 .Include(i => i.File)
                 .FirstOrDefaultAsync(i => i.Id == id);
 
-            if (item is null)
-            {
+            if (item == null)
                 return NotFound();
-            }
 
             if (item.File != null)
                 _db.Files.Remove(item.File);
+
             _db.Tags.RemoveRange(item.Tags);
             item.Tags.Clear();
+            
             _db.Items.Remove(item);
             await _db.SaveChangesAsync();
             
             await _elasticClient.RemoveFromElasticIndex(id);
             
             return RedirectToAction("Index");
+        }
+
+        private async Task<AppFile> GetUploadedFile(AppFile file, IFormFile formFile)
+        {
+            if (file != null)
+            {
+                string filename = await _fileHandler.UploadAsync(formFile, file.Path);
+                file.Name = filename;
+                file.Path = _fileHandler.GeneratePath(filename);
+            }
+            else
+            {
+                string filename = await _fileHandler.UploadAsync(formFile);
+                file = new AppFile
+                {
+                    Name = filename,
+                    Path = _fileHandler.GeneratePath(filename)
+                };
+                _db.Files.Add(file);
+            }
+
+            await _db.SaveChangesAsync();
+            return file;
+        }
+
+        private List<Tag> GetTags(string tags, List<Tag> existingTags = null)
+        {
+            if (existingTags != null)
+            {
+                _db.Tags.RemoveRange(existingTags);
+                existingTags.Clear();
+            }
+            string[] tagsArray = tags.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            return tagsArray.ToList().Select(t => new Tag { Name = t.ToLower().Trim() }).ToList();
+        }
+
+        private List<Models.Field> GetCustomFields((int ItemId, string[] Keys, string[] Values, int[] Types) data, 
+            List<Models.Field> existingFields = null)
+        {
+            if (existingFields != null)
+            {
+                _db.Fields.RemoveRange(existingFields);
+                existingFields.Clear();
+            }
+
+            var fieldsList = new List<Models.Field>();
+
+            for (int i = 0; i < data.Keys.Length; i++)
+            {
+                fieldsList.Add(new Models.Field
+                {
+                    Key = data.Keys[i],
+                    Value = data.Values[i],
+                    ItemId = data.ItemId,
+                    Type = (Models.FieldType)data.Types[i]
+                });
+            }
+
+            if (data.ItemId == 0) 
+                _db.Fields.AddRange(fieldsList);
+
+            return fieldsList;
         }
     }
 }
