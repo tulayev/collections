@@ -1,14 +1,17 @@
 ﻿@model Collections.Utils.PaginatedList<Item>
-@{ int i = 0; }
+@{ 
+	int i = 0;
+	ViewData["Title"] = "Items Index";
+}
 
 <div class="flex flex-col">
 	<div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
 		<div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
 			<div>
 				<form asp-action="Index" method="get">
-					<div class="">
-						<p>
-							Find by name: 
+					<div class="pl-4">
+						<p class="text-lg">
+							<span class="font-medium">Find by name:</span>  
 							<input 
 								type="text" 
 								name="search" 
@@ -34,21 +37,23 @@
 								#
 							</th>
 							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+								Name
 								<a 
 									asp-action="Index" 
 									asp-route-sort="@ViewData["NameSortParam"]"
 									asp-route-filter="@ViewData["CurrentFilter"]"
 								>
-									Name
+									<img class="inline w-4" src="~/images/up-and-down-arrows.svg" />
 								</a>
 							</th>
 							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">
+								Collection
 								<a 
 									asp-action="Index" 
 									asp-route-sort="@ViewData["CollectionSortParam"]"
 									asp-route-filter="@ViewData["CurrentFilter"]"
 								>
-									Collection
+									<img class="inline w-4" src="~/images/up-and-down-arrows.svg" />
 								</a>
 							</th>
 							<th scope="col" class="font-bold text-gray-900 px-6 py-4 text-left">

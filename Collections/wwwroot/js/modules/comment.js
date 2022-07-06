@@ -22,17 +22,17 @@
                         </div>
                     `
                 }).join('')
-            }// else {
-            //    const displayInfo = {
-            //        'en': 'No comments yet...',
-            //        'uz': 'Bu yerda izohlar hali yo\'q...'
-            //    }
-            //    commentsWrapper.innerHTML = `
-            //        <div class="flex my-8">
-            //            <p class="dark:text-white text-gray-900">${displayInfo[document.documentElement.lang]}</p>
-            //        </div>
-            //    `
-            //}
+            } else {
+                const displayInfo = {
+                    'en': 'No comments yet...',
+                    'uz': 'Bu yerda izohlar hali yo\'q...'
+                }
+                commentsWrapper.innerHTML = `
+                    <div class="flex my-8">
+                        <p class="dark:text-white text-gray-900">${displayInfo[document.documentElement.lang]}</p>
+                    </div>
+                `
+            }
         }
     } catch (e) {
         console.log(e.message)

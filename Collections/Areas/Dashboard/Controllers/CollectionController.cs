@@ -1,5 +1,6 @@
 ﻿using Collections.Data;
 using Collections.Models;
+using Collections.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,22 +22,43 @@ namespace Collections.Areas.Dashboard.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string? userId)
+        public async Task<IActionResult> Index(string? userId, string sort, string filter, string search, int? page)
         {
             User user;
 
             if (userId == null)
-            {
                 user = await _userManager.FindByEmailAsync(User.Identity.Name);
-            }
             else
+                user = await _userManager.FindByIdAsync(userId);
+
+            ViewData["CurrentSort"] = sort;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sort) ? "name_desc" : "";
+
+            if (search != null)
+                page = 1;
+            else
+                search = filter;
+
+            ViewData["CurrentFilter"] = search;
+
+            var collections = _db.Collections.Where(c => c.UserId == user.Id);
+
+            if (!String.IsNullOrEmpty(search))
+                collections = collections.Where(i => i.Name.ToLower().Contains(search.ToLower()));
+
+
+            switch (sort)
             {
-                user = await _userManager.FindByIdAsync(userId);    
+                case "name_desc":
+                    collections = collections.OrderByDescending(i => i.Name);
+                    break;
+                default:
+                    collections = collections.OrderBy(i => i.Name);
+                    break;
             }
 
-            var collections = await _db.Collections.Where(c => c.UserId == user.Id).ToListAsync();
-            
-            return View(collections);
+            int perPage = 10;
+            return View(await PaginatedList<AppCollection>.CreateAsync(collections.AsNoTracking(), page ?? 1, perPage));
         }
 
         public IActionResult Create()

@@ -79,7 +79,7 @@ namespace Collections.Areas.Dashboard.Controllers
                     break;
             }
 
-            int perPage = 3;
+            int perPage = 10;
             return View(await PaginatedList<Item>.CreateAsync(userItems.AsNoTracking(), page ?? 1, perPage));
         }
         
