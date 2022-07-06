@@ -8,14 +8,14 @@
 </button>
 
 <div id="burgerContent" class="absolute hidden top-0 right-0 bg-green-300 w-full h-[100vh] z-10">
-    <ul class="dark:text-white text-gray-900 text-4xl flex flex-col items-center mt-12 z-50">
+    <ul class="dark:text-white text-gray-900 text-2xl flex flex-col items-center mt-12 z-50">
         @if (User.Identity.IsAuthenticated)
         {
-            <li>
+            <li class="my-2">
                 @SharedLocalizer["Greeting"] 
                 <b>@User.Claims.FirstOrDefault(c => c.Type == "Name").Value</b>
             </li>
-            <li>
+            <li class="my-2">
                 <a 
                     asp-area="Dashboard" asp-controller="Home" asp-action="Index" 
                     class="hover:text-green-500"
@@ -23,7 +23,7 @@
                     @SharedLocalizer["Dashboard"] 
                 </a>
             </li>
-            <li>
+            <li class="my-2">
                 <form method="post" asp-controller="Account" asp-action="Logout">
                     <button class="hover:text-red-500" type="submit">@SharedLocalizer["Logout"]</button>
                 </form>

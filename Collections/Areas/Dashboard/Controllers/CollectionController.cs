@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -16,13 +17,16 @@ namespace Collections.Areas.Dashboard.Controllers
 
         private readonly UserManager<User> _userManager;
 
-        public CollectionController(ApplicationDbContext db, UserManager<User> userManager)
+        private readonly IWebHostEnvironment _env;
+
+        public CollectionController(ApplicationDbContext db, UserManager<User> userManager, IWebHostEnvironment env)
         {
             _db = db;
             _userManager = userManager;
+            _env = env;
         }
 
-        public async Task<IActionResult> Index(string? userId, string sort, string filter, string search, int? page)
+        public async Task<IActionResult> Index(string userId, string sort, string filter, string search, int? page)
         {
             User user;
 
@@ -41,7 +45,7 @@ namespace Collections.Areas.Dashboard.Controllers
 
             ViewData["CurrentFilter"] = search;
 
-            var collections = _db.Collections.Where(c => c.UserId == user.Id);
+            var collections = _db.Collections.Include(c => c.User).Where(c => c.UserId == user.Id);
 
             if (!String.IsNullOrEmpty(search))
                 collections = collections.Where(i => i.Name.ToLower().Contains(search.ToLower()));
@@ -120,6 +124,37 @@ namespace Collections.Areas.Dashboard.Controllers
 
             _db.Collections.Remove(collection);
             await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Export(string userId)
+        {
+            List<AppCollection> collections = null;
+            var sb = new StringBuilder();
+            string fileName = "collections.csv";
+            string path = Path.Combine(new string[] { _env.WebRootPath, "uploads", fileName });
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+
+            if (userId != null)
+                collections = await _db.Collections.Where(c => c.UserId == userId).ToListAsync();
+
+            if (collections != null)
+            {
+                sb.AppendLine("ID,Name");
+                foreach (var collection in collections)
+                {
+                    string newLine = $"{collection.Id},{collection.Name}";
+                    sb.AppendLine(newLine);
+                }
+                System.IO.File.WriteAllText(path, sb.ToString());
+
+                return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName);
+            }
+
             return RedirectToAction("Index");
         }
     }

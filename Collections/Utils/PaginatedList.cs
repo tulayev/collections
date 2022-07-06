@@ -21,9 +21,16 @@ namespace Collections.Utils
 
         public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int page, int perPage)
         {
-            var count = await source.CountAsync();
-            var items = await source.Skip((page - 1) * perPage).Take(perPage).ToListAsync();
-            return new PaginatedList<T>(items, count, page, perPage);
+            try
+            {
+                var count = await source.CountAsync();
+                var items = await source.Skip((page - 1) * perPage).Take(perPage).ToListAsync();
+                return new PaginatedList<T>(items, count, page, perPage);
+            }
+            catch
+            {
+                return new PaginatedList<T>(new List<T>(), 0, page, perPage);
+            }
         }
     }
 }

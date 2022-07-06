@@ -3,8 +3,8 @@
 	int i = 0; 
 	ViewData["Title"] = "Collections Index";
 }
-<div class="flex flex-col pt-4">
-	<div class="mx-7 text-right">
+<div class="flex pt-4 justify-end">
+	<div class="mr-4">
 		<a
 			asp-area="Dashboard"
 			asp-controller="Collection"
@@ -12,6 +12,17 @@
 			class="px-4 py-2 bg-blue-500 text-white rounded"
 		>
 			Create
+		</a>
+	</div>
+	<div class="mr-7">
+		<a
+			asp-area="Dashboard"
+			asp-controller="Collection"
+			asp-action="Export"
+			asp-route-userId="@Model.FirstOrDefault()?.User.Id"
+			class="px-4 py-2 bg-green-500 text-white rounded"
+		>
+			Export CSV
 		</a>
 	</div>
 </div>

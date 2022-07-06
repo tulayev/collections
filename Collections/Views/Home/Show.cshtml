@@ -39,10 +39,10 @@
             {
                 @foreach (var field in Model.Fields)
                 {
-                    <p class="dark:text-white text-gray-900 my-4">
+                    <div class="dark:text-white text-gray-900 my-4">
                         <span class="text-blue-500 font-bold">@field.Key: </span>
                         @Html.Raw(field.Value)
-                    </p>
+                    </div>
                 }
             }
             <div class="flex flex-col items-center md:block">

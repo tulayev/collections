@@ -38,9 +38,16 @@
                     </div>
         
                     <div class="mt-4">
-                        <a href="#" class="dark:text-white text-gray-900 text-lg font-semibold hover:text-gray-400">
+                        <h2 class="dark:text-white text-gray-900 text-lg font-semibold uppercase">
                             @item.Name
-                        </a>
+                        </h2>
+                    </div>
+
+                    <div class="mt-2">
+                        <div class="dark:text-white text-sm text-gray-900">
+                            <span class="text-blue-500">@Localizer["Collection"]:</span>
+                            @item.Collection.Name
+                        </div>
                     </div>
 
                     <div class="mt-1">
@@ -49,8 +56,10 @@
                             <a  
                                 asp-action="Index"
                                 asp-route-tag="@tag.Name"
-                                class="dark:text-white text-gray-900 mr-1 hover:text-gray-400"
-                            >@tag.Name</a>
+                                class="dark:text-white text-gray-900 text-xs mr-1 hover:bg-sky-700 hover:rounded-xl"
+                            >
+                                @tag.Name
+                            </a>
                         }
                     </div>
                 </div>
@@ -58,7 +67,7 @@
         }
         else
         {
-            <h3 class="mt-10 text-red-500 uppercase font-medium">No items found...</h3>
+            <h3 class="mt-10 text-red-500 uppercase font-medium">@Localizer["NoItems"]</h3>
         }
     </div>
     
