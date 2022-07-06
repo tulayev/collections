@@ -1,5 +1,4 @@
-﻿using Collections.Models;
-using Collections.Models.ViewModels;
+﻿using Collections.Models.ViewModels;
 using Nest;
 
 namespace Collections.Utils
@@ -33,7 +32,12 @@ namespace Collections.Utils
 
         private static void CreateIndex(IElasticClient client, string indexName)
         {
-            client.Indices.Create(indexName, i => i.Map<ElasticItemViewModel>(x => x.AutoMap()));
+            client.Indices.Create(indexName, i => i.Map<ElasticItemViewModel>(
+                x => x.AutoMap()
+                    .Properties(p => p.Nested<CommentDto>(c => c.Name(c => c.Comments).AutoMap()
+                    .Properties(cb => cb.Keyword(c => c.Name(nn => nn.Body)))))
+                    )
+            );
         }
     }
 }

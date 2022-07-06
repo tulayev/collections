@@ -46,10 +46,10 @@
                 }
             }
             <div class="flex flex-col items-center md:block">
+                <input id="itemId" value="@Model.Id" type="hidden" />
                 @if (User.Identity.IsAuthenticated)
                 {
                     <input id="username" value="@User.Identity.Name" type="hidden" />
-                    <input id="itemId" value="@Model.Id" type="hidden" />
                     <div class="flex justify-between w-20">
                         <img id="like" src="~/images/like.svg" alt="like" class="w-6 cursor-pointer" />
                         <img id="dislike" src="~/images/dislike.svg" alt="dislike" class="w-6 cursor-pointer" />

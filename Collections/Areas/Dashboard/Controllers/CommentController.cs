@@ -1,10 +1,12 @@
 ﻿using Collections.Data;
 using Collections.Models;
 using Collections.Models.ViewModels;
+using Collections.Services;
 using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -16,10 +18,13 @@ namespace Collections.Areas.Dashboard.Controllers
 
         private readonly UserManager<User> _userManager;
 
-        public CommentController(ApplicationDbContext db, UserManager<User> userManager)
+        private readonly AppElasticClient _elasticClient;
+
+        public CommentController(ApplicationDbContext db, UserManager<User> userManager, IElasticClient client)
         {
             _db = db;
             _userManager = userManager;
+            _elasticClient = new AppElasticClient(client);
         }
 
         [HttpGet]
@@ -59,6 +64,14 @@ namespace Collections.Areas.Dashboard.Controllers
 
             _db.Comments.Add(comment);
             await _db.SaveChangesAsync();
+
+            await _elasticClient.UpdateElasticItem(itemId, new ElasticItemViewModel
+            {
+                Comments = await _db.Comments.Where(c => c.ItemId == itemId)
+                                    .Select(c => new CommentDto { Body = c.Body })
+                                    .ToListAsync()
+            });
+
             return Ok(new { message = "ok" });
         }
     }

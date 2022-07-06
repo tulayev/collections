@@ -29,11 +29,11 @@ namespace Collections.Controllers
             return Ok(results.Documents.ToList());
         }
 
-        [Route("test/{id:int}")]
+        [Route("test")]
         [HttpGet]
-        public void Remove(int id)
+        public void Remove(DocumentPath<ElasticItemViewModel> id)
         {
-            _client.Delete<ElasticItemViewModel>(id);
+            _client.Delete(id);
         }
     }
 }

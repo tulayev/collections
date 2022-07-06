@@ -22,7 +22,7 @@ namespace Collections.Areas.Dashboard.Controllers
         
         private readonly IFileHandler _fileHandler;
 
-        private readonly IElasticClient _client;
+        private readonly AppElasticClient _elasticClient;
 
         public ItemController(ApplicationDbContext db, UserManager<User> userManager, 
             IFileHandler fileHandler, IElasticClient client)
@@ -30,7 +30,7 @@ namespace Collections.Areas.Dashboard.Controllers
             _db = db;
             _userManager = userManager;
             _fileHandler = fileHandler;
-            _client = client;
+            _elasticClient = new AppElasticClient(client);
         }
 
         public async Task<IActionResult> Index(string? userId, string sort, string filter, string search, int? page)
@@ -38,26 +38,18 @@ namespace Collections.Areas.Dashboard.Controllers
             User user;
 
             if (userId == null)
-            {
                 user = await _userManager.FindByEmailAsync(User.Identity.Name);
-            }
             else
-            {
                 user = await _userManager.FindByIdAsync(userId);
-            }
 
             ViewData["CurrentSort"] = sort;
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sort) ? "name_desc" : "";
             ViewData["CollectionSortParam"] = String.IsNullOrEmpty(sort) ? "collection_desc" : "";
 
             if (search != null)
-            {
                 page = 1;
-            }
             else
-            {
                 search = filter;
-            }
             
             ViewData["CurrentFilter"] = search;
 
@@ -158,7 +150,18 @@ namespace Collections.Areas.Dashboard.Controllers
             await _db.SaveChangesAsync();
             item.Slug = $"{item.Id}-{item.Name.GenerateSlug()}";
 
-            await AddToElasticIndex(item);
+            await _elasticClient.AddToElasticIndex(new ElasticItemViewModel
+            {
+                Id = item.Id,
+                Item = new ItemDto
+                {
+                    Slug = item.Slug,
+                    CollectionId = item.CollectionId,
+                    Name = item.Name,
+                    Image = item.File?.Name
+                },
+                Comments = new List<CommentDto>()
+            });
 
             var fieldsList = new List<Models.Field>();
 
@@ -269,7 +272,18 @@ namespace Collections.Areas.Dashboard.Controllers
             item.Slug = $"{item.Id}-{item.Name.GenerateSlug()}";
 
             await _db.SaveChangesAsync();
-            await UpdateElasticIndex(item);
+            
+            await _elasticClient.UpdateElasticItem(item.Id, new ElasticItemViewModel
+            {
+                Item = new ItemDto
+                {
+                    Name = item.Name,
+                    Slug = item.Slug,
+                    CollectionId = item.CollectionId,
+                    Image = item.File?.Name
+                }
+            });
+            
             return RedirectToAction("Index");
         }
 
@@ -291,36 +305,10 @@ namespace Collections.Areas.Dashboard.Controllers
             item.Tags.Clear();
             _db.Items.Remove(item);
             await _db.SaveChangesAsync();
-            await RemoveFromElasticIndex(id);
+            
+            await _elasticClient.RemoveFromElasticIndex(id);
+            
             return RedirectToAction("Index");
         }
-
-        private async Task AddToElasticIndex(Item item)
-        {
-            var elasticItem = new ElasticItemViewModel
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Slug = item.Slug,
-                CollectionId = item.CollectionId,
-                Image = item.File?.Name
-            };
-
-            await _client.IndexDocumentAsync(elasticItem);
-        }
-
-        private async Task UpdateElasticIndex(Item item) =>
-            await _client.UpdateAsync<ElasticItemViewModel>(
-                item.Id,
-                u => u.Index("items").Doc(new ElasticItemViewModel 
-                { 
-                    Name = item.Name, 
-                    CollectionId = item.CollectionId, 
-                    Slug = item.Slug,
-                    Image = item.File?.Name
-                })
-            );
-
-        private async Task RemoveFromElasticIndex(int id) => await _client.DeleteAsync<ElasticItemViewModel>(id);
     }
 }
