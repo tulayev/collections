@@ -21,20 +21,24 @@ namespace Collections.Areas.Dashboard.Controllers
         private readonly UserManager<User> _userManager;
         
         private readonly IFileHandler _fileHandler;
-
+        
+        private readonly IS3Handler _s3Handler;
+        
         private readonly AppElasticClient _elasticClient;
 
         public ItemController(ApplicationDbContext db, UserManager<User> userManager, 
-            IFileHandler fileHandler, IElasticClient client)
+            IFileHandler fileHandler, IS3Handler s3Handler, IElasticClient client)
         {
             _db = db;
             _userManager = userManager;
             _fileHandler = fileHandler;
+            _s3Handler = s3Handler;
             _elasticClient = new AppElasticClient(client);
         }
 
         public async Task<IActionResult> Index(string? userId, string sort, string filter, string search, int? page)
         {
+            string f = await _s3Handler.GetPathAsync("1.jpg");
             User user;
 
             if (userId == null)
@@ -118,7 +122,9 @@ namespace Collections.Areas.Dashboard.Controllers
             AppFile file = null;    
 
             if (model.Image != null)
+            {
                 file = await GetUploadedFile(file, model.Image);
+            }
 
             var item = new Item
             {
@@ -228,7 +234,10 @@ namespace Collections.Areas.Dashboard.Controllers
                 return NotFound();
 
             if (item.File != null)
+            {
+                await _s3Handler.DeleteFileAsync(item.File.S3Key);
                 _db.Files.Remove(item.File);
+            }
 
             _db.Tags.RemoveRange(item.Tags);
             item.Tags.Clear();
@@ -246,16 +255,20 @@ namespace Collections.Areas.Dashboard.Controllers
             if (file != null)
             {
                 string filename = await _fileHandler.UploadAsync(formFile, file.Path);
+                string s3Key = await _s3Handler.UploadFileAsync(formFile, file.S3Key);
                 file.Name = filename;
                 file.Path = _fileHandler.GeneratePath(filename);
+                file.S3Key = s3Key;
             }
             else
             {
                 string filename = await _fileHandler.UploadAsync(formFile);
+                string s3Key = await _s3Handler.UploadFileAsync(formFile);
                 file = new AppFile
                 {
                     Name = filename,
-                    Path = _fileHandler.GeneratePath(filename)
+                    Path = _fileHandler.GeneratePath(filename),
+                    S3Key = s3Key
                 };
                 _db.Files.Add(file);
             }

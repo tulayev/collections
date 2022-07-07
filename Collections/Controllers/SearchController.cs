@@ -31,9 +31,9 @@ namespace Collections.Controllers
 
         [Route("test")]
         [HttpGet]
-        public void Remove(DocumentPath<ElasticItemViewModel> id)
+        public void Remove(int id)
         {
-            _client.Delete(id);
+            _client.Delete<ElasticItemViewModel>(id);
         }
     }
 }

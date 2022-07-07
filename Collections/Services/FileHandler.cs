@@ -3,6 +3,7 @@
     public class FileHandler : IFileHandler
     {
         private readonly IWebHostEnvironment _env;
+        
         private const string UploadsPath = "uploads";
 
         public FileHandler(IWebHostEnvironment env)
@@ -47,7 +48,7 @@
 
         public string GeneratePath(string filename) => Path.Combine(new string[] { _env.WebRootPath, UploadsPath, filename });
 
-        public void Delete(string path)
+        private void Delete(string path)
         {
             if (!String.IsNullOrWhiteSpace(path) && System.IO.File.Exists(path))
             {

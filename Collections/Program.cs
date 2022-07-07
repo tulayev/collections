@@ -1,3 +1,4 @@
+using Amazon.S3;
 using Collections.Data;
 using Collections.Models;
 using Collections.Services;
@@ -53,6 +54,9 @@ builder.Services.AddSingleton<IFileHandler, FileHandler>();
 
 builder.Services.AddElasticSearch(builder.Configuration);
 
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddSingleton<IS3Handler, S3Handler>();
 
 var app = builder.Build().MigrateDatabase<ApplicationDbContext>();
 

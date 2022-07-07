@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Collections.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220704122703_Initial")]
+    [Migration("20220707174549_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,10 @@ namespace Collections.Migrations
 
                     b.Property<string>("Path")
                         .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("S3Key")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
@@ -298,15 +302,15 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6fbd13a1-87d2-4513-b5fc-dcf574fc4d42",
-                            ConcurrencyStamp = "6fbd13a1-87d2-4513-b5fc-dcf574fc4d42",
+                            Id = "4a5c3ee5-db55-4247-b3a7-503f5f64daff",
+                            ConcurrencyStamp = "4a5c3ee5-db55-4247-b3a7-503f5f64daff",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "be1782df-d25b-486f-aa98-0da7df9f740f",
-                            ConcurrencyStamp = "be1782df-d25b-486f-aa98-0da7df9f740f",
+                            Id = "7e2564d0-78fd-4b9a-8e6c-39d6fdc52af8",
+                            ConcurrencyStamp = "7e2564d0-78fd-4b9a-8e6c-39d6fdc52af8",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -437,7 +441,7 @@ namespace Collections.Migrations
                             Id = 1,
                             ClaimType = "Name",
                             ClaimValue = "Admin",
-                            UserId = "64d4ea66-cdc6-451e-8362-eeb23fe36f31"
+                            UserId = "211c1a4a-7cae-437f-88f6-b2632e798c3d"
                         });
                 });
 
@@ -480,8 +484,8 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "64d4ea66-cdc6-451e-8362-eeb23fe36f31",
-                            RoleId = "6fbd13a1-87d2-4513-b5fc-dcf574fc4d42"
+                            UserId = "211c1a4a-7cae-437f-88f6-b2632e798c3d",
+                            RoleId = "4a5c3ee5-db55-4247-b3a7-503f5f64daff"
                         });
                 });
 
@@ -528,17 +532,17 @@ namespace Collections.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "64d4ea66-cdc6-451e-8362-eeb23fe36f31",
+                            Id = "211c1a4a-7cae-437f-88f6-b2632e798c3d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "83d48241-d1d7-498d-ad3f-3c60406cc958",
+                            ConcurrencyStamp = "06f4ecd4-a671-4deb-86c9-eccd96a0effa",
                             Email = "admin@collections.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COLLECTIONS.COM",
                             NormalizedUserName = "ADMIN@COLLECTIONS.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEO0El0S2A4lEYbSUDxbWO1ClFy0jKu9xsmqxD1KHl+4Fm1Jry0NSTqCTZA1YW8zInw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOLYbiXXfHh3XFpy57C6snN15H/CHzOfG+7U3xQNhmSI1OggDcCGeQPNCTessGBA+w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9317E885-0F18-4920-B29D-8CF3DFEACAE0",
+                            SecurityStamp = "CD8255B2-9A27-42C6-B797-072AA111B345",
                             TwoFactorEnabled = false,
                             UserName = "admin@collections.com",
                             Name = "Admin",
