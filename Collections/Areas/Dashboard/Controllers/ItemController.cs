@@ -38,7 +38,6 @@ namespace Collections.Areas.Dashboard.Controllers
 
         public async Task<IActionResult> Index(string? userId, string sort, string filter, string search, int? page)
         {
-            string f = await _s3Handler.GetPathAsync("1.jpg");
             User user;
 
             if (userId == null)
