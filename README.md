@@ -10,6 +10,7 @@
 
 ## Features implemented:
 - Elasticsearch
+- File upload (local disk and AWS S3)
 - Auth system
 - Dashboard 
 - Roles (Admin and User)
