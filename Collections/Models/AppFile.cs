@@ -10,5 +10,7 @@
 
 #nullable enable
         public string? S3Key { get; set; }
+
+        public string? S3Path { get; set; }
     }
 }

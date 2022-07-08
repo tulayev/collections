@@ -11,7 +11,7 @@
                     listItem = `
                     <li class="border-b border-gray-700">
                         <a href="/home/show/${i.item.slug}" class="block hover:bg-gray-700 flex items-center transition ease-in-out duration-150 px-3 py-3">
-                            <img src="/uploads/${i.item.image}" alt="cover" class="w-10">
+                            <img src="${i.item.image}" alt="cover" class="w-10">
                             <span class="ml-4">${i.item.name}</span>
                         </a>
                     </li>

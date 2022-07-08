@@ -26,7 +26,7 @@
     @if(User.Identity.IsAuthenticated && User.Claims.FirstOrDefault(c => c.Type == "Image") != null)
     {
         <img 
-            src="~/uploads/@User.Claims.FirstOrDefault(c => c.Type == "Image").Value" 
+            src="@User.Claims.FirstOrDefault(c => c.Type == "Image").Value" 
             alt="avatar" 
             class="rounded-full w-8"
         />

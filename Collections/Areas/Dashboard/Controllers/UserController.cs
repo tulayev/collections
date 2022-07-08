@@ -17,13 +17,13 @@ namespace Collections.Areas.Dashboard.Controllers
 
         private readonly ApplicationDbContext _db;
 
-        private readonly IFileHandler _fileHandler;
+        private readonly IS3Handler _s3Handler;
 
-        public UserController(UserManager<User> userManager, ApplicationDbContext db, IFileHandler fileHandler)
+        public UserController(UserManager<User> userManager, ApplicationDbContext db, IS3Handler s3Handler)
         {
             _userManager = userManager;
             _db = db;
-            _fileHandler = fileHandler;
+            _s3Handler = s3Handler;
         }
 
         public async Task<IActionResult> Index()
@@ -63,7 +63,11 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             if (user.File != null)
+            {
                 _db.Files.Remove(user.File);
+                await _s3Handler.DeleteFileAsync(user.File.S3Key);
+            }
+
             await _db.SaveChangesAsync();   
             await _userManager.DeleteAsync(user);
             return RedirectToAction("Index");

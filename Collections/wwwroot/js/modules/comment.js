@@ -10,7 +10,7 @@
                     return `
                         <div class="flex my-8">
                             <div class="w-[20%] lg:w-[5%]">
-                                <img src="/uploads/${c.user.image ?? 'avatar.png'}" class="w-10 rounded-full" alt="avatar" />
+                                <img src="${c.user.image ?? '/images/avatar.png'}" class="w-10 rounded-full" alt="avatar" />
                             </div>
                                 <div class="w-[80%] lg:w-[95%]">
                                 <h4 class="text-blue-500 mb-2">

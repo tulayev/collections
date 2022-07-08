@@ -19,12 +19,15 @@ namespace Collections.Areas.Dashboard.Controllers
         private readonly UserManager<User> _userManager;
 
         private readonly IFileHandler _fileHandler;
+        
+        private readonly IS3Handler _s3Handler;
 
-        public ProfileController(ApplicationDbContext db, UserManager<User> userManager, IFileHandler fileHandler)
+        public ProfileController(ApplicationDbContext db, UserManager<User> userManager, IFileHandler fileHandler, IS3Handler s3Handler)
         {
             _db = db;
             _userManager = userManager;
             _fileHandler = fileHandler;
+            _s3Handler = s3Handler;
         }
 
         public async Task<IActionResult> Edit()
@@ -60,18 +63,27 @@ namespace Collections.Areas.Dashboard.Controllers
                 if (file != null)
                 {
                     string filename = await _fileHandler.UploadAsync(model.Image, file.Path);
+                    string s3Key = await _s3Handler.UploadFileAsync(model.Image, file.S3Key);
                     file.Name = filename;
                     file.Path = _fileHandler.GeneratePath(filename);
+                    file.S3Key = s3Key;
+                    file.S3Path = await _s3Handler.GetPathAsync(s3Key);
                 }
                 else
                 {
                     string filename = await _fileHandler.UploadAsync(model.Image);
-                    file.Name = filename;
-                    file.Path = _fileHandler.GeneratePath(filename);
+                    string s3Key = await _s3Handler.UploadFileAsync(model.Image);
+                    file = new AppFile
+                    {
+                        Name = filename,
+                        Path = _fileHandler.GeneratePath(filename),
+                        S3Key = s3Key,
+                        S3Path = await _s3Handler.GetPathAsync(s3Key)
+                    };
                     _db.Files.Add(file);
                 }
                 await _db.SaveChangesAsync();
-                imageClaim = new Claim("Image", file.Name);
+                imageClaim = new Claim("Image", file.S3Path);
             }
 
             var hasher = new PasswordHasher<User>();

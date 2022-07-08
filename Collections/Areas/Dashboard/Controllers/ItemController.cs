@@ -148,7 +148,7 @@ namespace Collections.Areas.Dashboard.Controllers
                     Slug = item.Slug,
                     CollectionId = item.CollectionId,
                     Name = item.Name,
-                    Image = item.File?.Name
+                    Image = item.File?.S3Path
                 },
                 Comments = new List<CommentDto>()
             });
@@ -174,7 +174,7 @@ namespace Collections.Areas.Dashboard.Controllers
             {
                 Id = item.Id,
                 Name = item.Name,
-                ExistingImage = item.File?.Name,
+                ExistingImage = item.File?.S3Path,
                 Tags = String.Join(",", itemTags),
                 Fields = item.Fields
             };
@@ -215,7 +215,7 @@ namespace Collections.Areas.Dashboard.Controllers
                     Name = item.Name,
                     Slug = item.Slug,
                     CollectionId = item.CollectionId,
-                    Image = item.File?.Name
+                    Image = item.File?.S3Path
                 }
             });
             
@@ -258,6 +258,7 @@ namespace Collections.Areas.Dashboard.Controllers
                 file.Name = filename;
                 file.Path = _fileHandler.GeneratePath(filename);
                 file.S3Key = s3Key;
+                file.S3Path = await _s3Handler.GetPathAsync(s3Key);
             }
             else
             {
@@ -267,7 +268,8 @@ namespace Collections.Areas.Dashboard.Controllers
                 {
                     Name = filename,
                     Path = _fileHandler.GeneratePath(filename),
-                    S3Key = s3Key
+                    S3Key = s3Key,
+                    S3Path = await _s3Handler.GetPathAsync(s3Key)
                 };
                 _db.Files.Add(file);
             }
