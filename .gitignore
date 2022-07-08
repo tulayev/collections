@@ -217,6 +217,9 @@ project.lock.json
 # Development settings
 **/appsettings.Development.json
 
+#AWS S3 credentials
+**/credentials
+
 # SpecFlow specific
 *.feature.cs
 *.feature.xlsx.*
