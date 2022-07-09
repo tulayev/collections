@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Collections.Utils;
 using Collections.Models;
+using Collections.Models.ViewModels;
 
 namespace Collections.Controllers
 {
@@ -15,13 +16,22 @@ namespace Collections.Controllers
             _db = db;
         }
 
-        public async Task<IActionResult> Index(string? tag, int? page)
+        public async Task<IActionResult> Index(string? tag, string? collection, string? user, int? page)
         {
             var source = _db.Items
                 .Include(i => i.Tags)
                 .Include(i => i.File)
                 .Include(i => i.Fields)
-                .Include(i => i.Collection);
+                .Include(i => i.Collection)
+                    .ThenInclude(i => i.User);
+
+            var collections = _db.Collections
+                .Include(c => c.User)
+                .Include(c => c.Items)
+                .GroupBy(c => new { Name = c.Name, Author = c.User.Name, Total = c.Items.Count })
+                .Select(c => new AppCollectionViewModel { Name = c.Key.Name, Author = c.Key.Author, Total = c.Key.Total })
+                .OrderByDescending(x => x.Total)
+                .Take(5);
 
             int perPage = 12;
 
@@ -31,13 +41,34 @@ namespace Collections.Controllers
                     .Where(i => i.Tags.Any(t => t.Name.Contains(tag)))
                     .OrderByDescending(i => i.CreatedAt);
 
-                return View(await PaginatedList<Item>.CreateAsync(itemsByTag.AsNoTracking(), page ?? 1, perPage));
+                return View(new HomePageViewModel
+                {
+                    Items = await PaginatedList<Item>.CreateAsync(itemsByTag.AsNoTracking(), page ?? 1, perPage),
+                    Collections = await collections.ToListAsync()
+                });
+            }
+
+            if (user != null && collection != null)
+            {
+                var itemsByCollection = source
+                    .Where(i => i.Collection.Name == collection && i.Collection.User.Name == user)
+                    .OrderByDescending(i => i.CreatedAt);
+
+                return View(new HomePageViewModel
+                {
+                    Items = await PaginatedList<Item>.CreateAsync(itemsByCollection.AsNoTracking(), page ?? 1, perPage),
+                    Collections = await collections.ToListAsync()
+                });
             }
 
             var items = source
                 .OrderByDescending(i => i.CreatedAt);
 
-            return View(await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), page ?? 1, perPage));
+            return View(new HomePageViewModel
+            {
+                Items = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), page ?? 1, perPage),
+                Collections = await collections.ToListAsync()
+            });
         }
 
         public async Task<IActionResult> Show(string slug)

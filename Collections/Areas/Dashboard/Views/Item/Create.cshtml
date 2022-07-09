@@ -207,7 +207,7 @@
 		// Tags autocomplete
 		const tagsInput = document.getElementById('tags')
 		const matchList = document.getElementById('matchList')
-		const userChosenTags = new Set()
+		let userChosenTags = new Set()
 
 		const outputHtml = (matches) => {
 			matchList.innerHTML = matches.map(x => {
@@ -228,6 +228,8 @@
 						matchList.removeChild(e.target)
 					})
 				})
+			} else {
+				userChosenTags = new Set()
 			}
 		}
 
@@ -240,11 +242,6 @@
 					return t.name.match(regex)
 				})
 
-				if (searchText.length === 0) {
-					matches = []
-					matchList.innerHTML = ''
-				}
-
 				outputHtml(matches)
 			} catch(e) {
 				console.log(e.message)
@@ -252,7 +249,9 @@
 		}
 
 		tagsInput.addEventListener('input', (e) => {
-			searchTags(e.target.value)
+			const arr = e.target.value.split(',')
+			console.log(arr[arr.length - 1].trim())
+			searchTags(arr[arr.length - 1].trim())
 		})
 	</script>
 }

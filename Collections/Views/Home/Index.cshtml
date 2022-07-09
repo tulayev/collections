@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
-@model Collections.Utils.PaginatedList<Item>
+@model HomePageViewModel
 
 @{
     ViewData["Title"] = @Localizer["Title"];
@@ -13,9 +13,9 @@
     </h2>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-12 border-gray-800 pb-16">
-        @if (Model.Count > 0)
+        @if (Model.Items.Count > 0)
         {
-            foreach (var item in Model)
+            foreach (var item in Model.Items)
             {
                 <div class="mt-8">
                     <div class="relative inline-block">
@@ -46,7 +46,21 @@
                     <div class="mt-2">
                         <div class="dark:text-white text-sm text-gray-900">
                             <span class="text-blue-500">@Localizer["Collection"]:</span>
-                            @item.Collection.Name
+                            <a
+                                asp-action="Index"
+                                asp-route-collection="@item.Collection.Name"
+                                asp-route-user="@item.Collection.User.Name"
+                                class="hover:text-red-500"
+                             >
+                                @item.Collection.Name
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-2">
+                        <div class="dark:text-white text-sm text-gray-900">
+                            <span class="text-blue-500">@Localizer["Author"]:</span>
+                            @item.Collection.User.Name
                         </div>
                     </div>
 
@@ -70,18 +84,53 @@
             <h3 class="mt-10 text-red-500 uppercase font-medium">@Localizer["NoItems"]</h3>
         }
     </div>
+
+    <div class="w-full">
+
+        <h2 class="text-blue-500 uppercase tracking-wide font-semibold">
+            @Localizer["TopCollections"]
+        </h2>
+                    
+        <div class="recently-reviewed-container space-y-12 mt-8">
+
+            @if (Model.Collections.Count > 0)
+            {
+                foreach (var collection in Model.Collections)
+                {
+                     <a
+                        asp-action="Index"
+                        asp-route-collection="@collection.Name"
+                        asp-route-user="@collection.Author"
+                     >
+                        <div class="bg-gray-800 w-full md:w-1/2 rounded-lg shadow-md my-2 p-6">
+                            <p class="dark:text-white text-gray-900">
+                                <span class="text-blue-500">@Localizer["Collection"]:</span>
+                                @collection.Name
+                            </p>
+                            <p class="dark:text-white text-gray-900">
+                                 <span class="text-blue-500">@Localizer["Author"]:</span>
+                                @collection.Author
+                            </p>
+                        </div>   
+                    </a>
+                }
+            }
+
+        </div>
+
+    </div>
     
     <div class="flex justify-center">
         @{
-			var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-			var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+			var prevDisabled = !Model.Items.HasPreviousPage ? "disabled" : "";
+			var nextDisabled = !Model.Items.HasNextPage ? "disabled" : "";
 		}
 
-        @if (Model.HasNextPage || Model.HasPreviousPage)
+        @if (Model.Items.HasNextPage || Model.Items.HasPreviousPage)
         {
             <a 
 			    asp-action="Index"
-			    asp-route-page="@(Model.PageIndex - 1)"
+			    asp-route-page="@(Model.Items.PageIndex - 1)"
 			    class="text-white px-4 mx-4 rounded bg-blue-500 @prevDisabled"
 		    >
 			     <img src="~/images/arrow-left.svg" class="w-10" />
@@ -89,7 +138,7 @@
 
 		    <a 
 			    asp-action="Index"
-			    asp-route-page="@(Model.PageIndex + 1)"
+			    asp-route-page="@(Model.Items.PageIndex + 1)"
 			    class="text-white px-4 mx-4 rounded bg-blue-500 @nextDisabled"
 		    >
 			    <img src="~/images/arrow-right.svg" class="w-10" />
