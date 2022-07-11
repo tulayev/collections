@@ -112,13 +112,15 @@
 	<script>
 		const textareas = document.querySelectorAll('textarea')
 		if (textareas) {
-			ClassicEditor
-				.create(textareas[textareas.length - 1], {
+			textareas.forEach(t => {
+				ClassicEditor
+				.create(t, {
 					removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed'],
 				})
 				.catch(error => {
 					console.error(error)
 				})
+			})
 		}
 	</script>
 }
