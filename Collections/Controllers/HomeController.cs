@@ -16,7 +16,7 @@ namespace Collections.Controllers
             _db = db;
         }
 
-        public async Task<IActionResult> Index(string? tag, string? collection, string? user, int? page)
+        public async Task<IActionResult> Index(string? tag, int? collection, string? user, int? page)
         {
             var source = _db.Items
                 .Include(i => i.Tags)
@@ -28,8 +28,8 @@ namespace Collections.Controllers
             var collections = _db.Collections
                 .Include(c => c.User)
                 .Include(c => c.Items)
-                .GroupBy(c => new { Name = c.Name, Author = c.User.Name, Total = c.Items.Count })
-                .Select(c => new AppCollectionViewModel { Name = c.Key.Name, Author = c.Key.Author, Total = c.Key.Total })
+                .GroupBy(c => new { Id = c.Id, Name = c.Name, Author = c.User.Name, Total = c.Items.Count })
+                .Select(c => new AppCollectionViewModel { Id = c.Key.Id, Name = c.Key.Name, Author = c.Key.Author, Total = c.Key.Total })
                 .OrderByDescending(x => x.Total)
                 .Take(5);
 
@@ -51,7 +51,7 @@ namespace Collections.Controllers
             if (user != null && collection != null)
             {
                 var itemsByCollection = source
-                    .Where(i => i.Collection.Name == collection && i.Collection.User.Name == user)
+                    .Where(i => i.Collection.Id == collection && i.Collection.User.Name == user)
                     .OrderByDescending(i => i.CreatedAt);
 
                 return View(new HomePageViewModel

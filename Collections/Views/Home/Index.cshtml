@@ -48,7 +48,7 @@
                             <span class="text-blue-500">@Localizer["Collection"]:</span>
                             <a
                                 asp-action="Index"
-                                asp-route-collection="@item.Collection.Name"
+                                asp-route-collection="@item.Collection.Id"
                                 asp-route-user="@item.Collection.User.Name"
                                 class="hover:text-red-500"
                              >
@@ -99,7 +99,7 @@
                 {
                      <a
                         asp-action="Index"
-                        asp-route-collection="@collection.Name"
+                        asp-route-collection="@collection.Id"
                         asp-route-user="@collection.Author"
                      >
                         <div class="bg-gray-800 w-full md:w-1/2 rounded-lg shadow-md my-2 p-6">
