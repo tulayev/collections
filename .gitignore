@@ -220,6 +220,9 @@ project.lock.json
 #AWS S3 credentials
 **/credentials
 
+# Migrations
+**/Migrations
+
 # SpecFlow specific
 *.feature.cs
 *.feature.xlsx.*
