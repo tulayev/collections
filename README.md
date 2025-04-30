@@ -6,11 +6,11 @@
 - ASP.NET Core 6.0
 - EF Core
 - PostgreSQL
-- JS (no external libs)
+- Vanilla JS (no external libs)
 
 ## Features implemented:
 - Elasticsearch
-- File upload (local disk and AWS S3)
+- File upload (Cloudinary)
 - Auth system
 - Dashboard 
 - Roles (Admin and User)
