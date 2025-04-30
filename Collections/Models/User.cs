@@ -15,11 +15,8 @@ namespace Collections.Models
                     );
             }
         }
-
         public Status Status { get; set; }
-
         public int? FileId { get; set; }
-
         public AppFile File { get; set; }
     }
 

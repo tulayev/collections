@@ -6,22 +6,16 @@ namespace Collections.Models.ViewModels
     {
         [Required]
         public string Name { get; set; }
-
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email address")]
         public string Email { get; set; }
-
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
-
-#nullable enable
-        public IFormFile? Image { get; set; }
-#nullable disable
+        public IFormFile Image { get; set; }
     }
 }

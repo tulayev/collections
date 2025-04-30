@@ -3,9 +3,7 @@
     public class FieldGroup
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
-
         public FieldType FieldType { get; set; }
     }
 
