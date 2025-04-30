@@ -1,12 +1,11 @@
 ﻿using Collections.Data;
+using Collections.Extensions;
 using Collections.Models;
 using Collections.Models.ViewModels;
-using Collections.Services;
-using Collections.Utils;
+using Collections.Services.Elastic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Nest;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -15,16 +14,17 @@ namespace Collections.Areas.Dashboard.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
-
         private readonly UserManager<User> _userManager;
+        private readonly IElasticClientService _elasticClientService;
 
-        private readonly AppElasticClient _elasticClient;
-
-        public CommentController(ApplicationDbContext db, UserManager<User> userManager, IElasticClient client)
+        public CommentController(
+            ApplicationDbContext db, 
+            UserManager<User> userManager,
+            IElasticClientService elasticClientService)
         {
             _db = db;
             _userManager = userManager;
-            _elasticClient = new AppElasticClient(client);
+            _elasticClientService = elasticClientService;
         }
 
         [HttpGet]
@@ -63,9 +63,10 @@ namespace Collections.Areas.Dashboard.Controllers
             };
 
             _db.Comments.Add(comment);
+            
             await _db.SaveChangesAsync();
 
-            await _elasticClient.UpdateElasticItem(itemId, new ElasticItemViewModel
+            await _elasticClientService.UpdateElasticItemAsync(itemId, new ElasticItemViewModel
             {
                 Comments = await _db.Comments.Where(c => c.ItemId == itemId)
                                     .Select(c => new CommentDto { Body = c.Body })

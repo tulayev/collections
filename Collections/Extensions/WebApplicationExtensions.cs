@@ -1,18 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Collections.Data;
+using Microsoft.EntityFrameworkCore;
 
-namespace Collections.Utils
+namespace Collections.Extensions
 {
     public static class WebApplicationExtensions
     {
-        public static WebApplication MigrateDatabase<T>(this WebApplication app) where T : DbContext
+        public static async Task<WebApplication> MigrateDatabaseAsync<T>(this WebApplication app)
         {
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                
                 try
                 {
-                    var db = services.GetRequiredService<T>();
-                    db.Database.Migrate();
+                    var db = services.GetRequiredService<ApplicationDbContext>();
+                    await db.Database.MigrateAsync();
                 }
                 catch (Exception ex)
                 {
@@ -20,6 +22,7 @@ namespace Collections.Utils
                     logger.LogError(ex, "An error occurred while migrating the database.");
                 }
             }
+
             return app;
         }
     }

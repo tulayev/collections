@@ -1,5 +1,5 @@
-﻿using Collections.Models;
-using Collections.Utils;
+﻿using Collections.Constants;
+using Collections.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,15 +17,13 @@ namespace Collections.Data.Seeders
 
             modelBuilder.Entity<IdentityRole>().HasData(new List<IdentityRole>
             {
-                new IdentityRole
-                {
+                new() {
                     Id = adminRoleId,
                     Name = Roles.RoleAdmin,
                     NormalizedName = Roles.RoleAdmin.ToUpper(),
                     ConcurrencyStamp = adminRoleId
                 },
-                new IdentityRole
-                {
+                new() {
                     Id = userRoleId,
                     Name = Roles.RoleUser,
                     NormalizedName = Roles.RoleUser.ToUpper(),
@@ -59,8 +57,7 @@ namespace Collections.Data.Seeders
 
             modelBuilder.Entity<IdentityUserClaim<string>>().HasData(new IdentityUserClaim<string>[]
             {
-                new IdentityUserClaim<string>
-                {
+                new() {
                     Id = 1,
                     UserId = superAdminId,
                     ClaimType = "Name",

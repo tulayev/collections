@@ -1,8 +1,8 @@
-﻿using Collections.Data;
+﻿using Collections.Constants;
+using Collections.Data;
 using Collections.Models;
 using Collections.Models.ViewModels;
-using Collections.Services;
-using Collections.Utils;
+using Collections.Services.Image;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,33 +13,32 @@ namespace Collections.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _db;
-
         private readonly UserManager<User> _userManager;
-        
         private readonly SignInManager<User> _signInManager;
-
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IImageService _imageService;
 
-        private readonly IFileHandler _fileHandler;
-        
-        private readonly IS3Handler _s3Handler;
-
-        public AccountController(ApplicationDbContext db, UserManager<User> userManager, SignInManager<User> signInManager, 
-            RoleManager<IdentityRole> roleManager, IFileHandler fileHandler, IS3Handler s3Handler)
+        public AccountController(
+            ApplicationDbContext db, 
+            UserManager<User> userManager, 
+            SignInManager<User> signInManager, 
+            RoleManager<IdentityRole> roleManager,
+            IImageService imageService)
         {
             _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-            _fileHandler = fileHandler;
-            _s3Handler = s3Handler;
+            _imageService = imageService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
-        
+
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
@@ -59,18 +58,19 @@ namespace Collections.Controllers
 
             if (model.Image != null)
             {
-                string filename = await _fileHandler.UploadAsync(model.Image);
-                string s3Key = await _s3Handler.UploadFileAsync(model.Image);
+                var uploadResult = await _imageService.UploadImageAsync(model.Image);
+
                 file = new AppFile
                 {
-                    Name = filename,
-                    Path = _fileHandler.GeneratePath(filename),
-                    S3Key = s3Key,
-                    S3Path = await _s3Handler.GetPathAsync(s3Key)
+                    PublicId = uploadResult.PublicId,
+                    Url = uploadResult.Url.AbsoluteUri
                 };
+
                 _db.Files.Add(file);    
+                
                 await _db.SaveChangesAsync();
-                imageClaim = new Claim("Image", file.S3Path);
+                
+                imageClaim = new Claim("Image", file.Url);
             }
 
             var user = new User
@@ -91,11 +91,13 @@ namespace Collections.Controllers
                 }
                 await _userManager.AddClaimsAsync(user, new Claim[]
                 {
-                    new Claim("Name", user.Name)
+                    new("Name", user.Name)
                 });
 
                 var userRole = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == Roles.RoleUser);
+                
                 await _userManager.AddToRoleAsync(user, userRole.Name);
+                
                 return RedirectToAction("Login");
             }
             else
@@ -109,6 +111,7 @@ namespace Collections.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return View();

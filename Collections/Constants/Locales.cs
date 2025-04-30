@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Collections.Utils
+namespace Collections.Constants
 {
     public class Locales
     {
@@ -8,8 +8,8 @@ namespace Collections.Utils
 
         public static CultureInfo[] GetCultures { get; } = new CultureInfo[]
         {
-            new CultureInfo(Languages[0]),
-            new CultureInfo(Languages[1])
+            new(Languages[0]),
+            new(Languages[1])
         };
     }
 }

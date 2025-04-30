@@ -1,64 +1,19 @@
-using Amazon.S3;
+using Collections.Constants;
 using Collections.Data;
-using Collections.Models;
-using Collections.Services;
-using Collections.Utils;
-using Microsoft.AspNetCore.Identity;
+using Collections.Extensions;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddControllersWithViews()
-    .AddViewLocalization()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    }); 
+builder.Services.AddAppServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    options.UseNpgsql(Heroku.GetHerokuConnectionString(builder.Configuration))
-);
 
-builder.Services.AddIdentity<User, IdentityRole>(options =>
-{
-    options.Password.RequiredLength = 4;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredUniqueChars = 0;
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-    options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedEmail = false;
-})
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+var app = builder.Build();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Error/AccessDenied";
-});
-
-builder.Services.Configure<SecurityStampValidatorOptions>(options =>
-{
-    options.ValidationInterval = TimeSpan.Zero;
-});
-
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-builder.Services.AddSingleton<IFileHandler, FileHandler>();
-
-builder.Services.AddElasticSearch(builder.Configuration);
-
-builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-builder.Services.AddAWSService<IAmazonS3>();
-builder.Services.AddSingleton<IS3Handler, S3Handler>();
-
-var app = builder.Build().MigrateDatabase<ApplicationDbContext>();
+await app.MigrateDatabaseAsync<ApplicationDbContext>();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -85,11 +40,13 @@ app.Use(async (context, next) =>
 });
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>

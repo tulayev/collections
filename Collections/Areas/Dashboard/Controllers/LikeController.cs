@@ -10,7 +10,6 @@ namespace Collections.Areas.Dashboard.Controllers
     public class LikeController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
-        
         private readonly UserManager<User> _userManager;
 
         public LikeController(ApplicationDbContext db, UserManager<User> userManager)
@@ -72,6 +71,7 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             await _db.SaveChangesAsync();
+            
             return Ok(new { message = "ok" });
         }
     }

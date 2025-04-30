@@ -1,6 +1,6 @@
-﻿using Collections.Models;
+﻿using Collections.Constants;
+using Collections.Models;
 using Collections.Models.ViewModels;
-using Collections.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,28 +12,28 @@ namespace Collections.Areas.Admin.Controllers
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-
         private readonly UserManager<User> _userManager;
-        
-        private readonly SignInManager<User> _signManager;
 
-        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, SignInManager<User> signManager)
+        public RoleController(
+            RoleManager<IdentityRole> roleManager, 
+            UserManager<User> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
-            _signManager = signManager;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user is not null)
+            if (user != null)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var allRoles = _roleManager.Roles.ToList();
@@ -55,7 +55,7 @@ namespace Collections.Areas.Admin.Controllers
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user is not null)
+            if (user != null)
             {
                 var rolesToBeRemoved = await _userManager.GetRolesAsync(user);
 

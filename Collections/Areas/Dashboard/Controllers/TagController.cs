@@ -17,6 +17,9 @@ namespace Collections.Areas.Dashboard.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Tag>> Get() => await _db.Tags.ToListAsync();
+        public async Task<List<Tag>> Get()
+        {
+            return await _db.Tags.ToListAsync();
+        }
     }
 }

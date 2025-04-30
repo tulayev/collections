@@ -8,22 +8,23 @@ namespace Collections.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        public DbSet<AppCollection> Collections { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<FieldGroup> FieldGroups { get; set; }
+        public DbSet<Field> Fields { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<AppFile> Files { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            InitialSeeder.SeedAdmin(modelBuilder);
-            InitialSeeder.SeedFieldGrups(modelBuilder);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             this.ChangeTracker.DetectChanges();
+
             var entities = this.ChangeTracker.Entries()
                         .Where(t => t.State == EntityState.Deleted)
                         .Select(t => t.Entity)
@@ -34,9 +35,10 @@ namespace Collections.Data
                 if (entity is AppFile appFile)
                 {
                     var file = entity as AppFile;
-                    if (!String.IsNullOrWhiteSpace(file.Path) && System.IO.File.Exists(file.Path))
+
+                    if (!string.IsNullOrWhiteSpace(file.Path) && File.Exists(file.Path))
                     {
-                        System.IO.File.Delete(file.Path);
+                        File.Delete(file.Path);
                     }
                 }
             }
@@ -44,20 +46,13 @@ namespace Collections.Data
             return base.SaveChangesAsync(cancellationToken);
         }
 
-        public DbSet<AppCollection> Collections { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        public DbSet<Item> Items { get; set; }
-        
-        public DbSet<Tag> Tags { get; set; }
-
-        public DbSet<FieldGroup> FieldGroups { get; set; }
-        
-        public DbSet<Field> Fields { get; set; }
-
-        public DbSet<Like> Likes { get; set; }
-
-        public DbSet<Comment> Comments { get; set; }
-
-        public DbSet<AppFile> Files { get; set; }
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            InitialSeeder.SeedAdmin(modelBuilder);
+            InitialSeeder.SeedFieldGrups(modelBuilder);
+        }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Collections.Data;
+﻿using Collections.Constants;
+using Collections.Data;
 using Collections.Models;
-using Collections.Services;
-using Collections.Utils;
+using Collections.Services.Image;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +14,20 @@ namespace Collections.Areas.Dashboard.Controllers
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
-
         private readonly ApplicationDbContext _db;
+        private readonly IImageService _imageService;
 
-        private readonly IS3Handler _s3Handler;
-
-        public UserController(UserManager<User> userManager, ApplicationDbContext db, IS3Handler s3Handler)
+        public UserController(
+            UserManager<User> userManager, 
+            ApplicationDbContext db, 
+            IImageService imageService)
         {
             _userManager = userManager;
             _db = db;
-            _s3Handler = s3Handler;
+            _imageService = imageService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -44,8 +46,11 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             user.Status = (Status)status;
+            
             await _userManager.UpdateSecurityStampAsync(user);
+            
             _db.SaveChanges();  
+            
             return RedirectToAction("Index");
         }
         
@@ -65,11 +70,13 @@ namespace Collections.Areas.Dashboard.Controllers
             if (user.File != null)
             {
                 _db.Files.Remove(user.File);
-                await _s3Handler.DeleteFileAsync(user.File.S3Key);
+                await _imageService.DeleteImageAsync(user.File.PublicId);
             }
 
             await _db.SaveChangesAsync();   
+            
             await _userManager.DeleteAsync(user);
+            
             return RedirectToAction("Index");
         }
     }

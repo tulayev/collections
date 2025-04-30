@@ -1,12 +1,13 @@
 ﻿using Collections.Data;
 using Collections.Models;
 using Collections.Models.ViewModels;
-using Collections.Services;
+using Collections.Services.Image;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Transactions;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -15,21 +16,20 @@ namespace Collections.Areas.Dashboard.Controllers
     public class ProfileController : Controller
     {
         private readonly ApplicationDbContext _db;
-
         private readonly UserManager<User> _userManager;
+        private readonly IImageService _imageService;
 
-        private readonly IFileHandler _fileHandler;
-        
-        private readonly IS3Handler _s3Handler;
-
-        public ProfileController(ApplicationDbContext db, UserManager<User> userManager, IFileHandler fileHandler, IS3Handler s3Handler)
+        public ProfileController(
+            ApplicationDbContext db, 
+            UserManager<User> userManager,
+            IImageService imageService)
         {
             _db = db;
             _userManager = userManager;
-            _fileHandler = fileHandler;
-            _s3Handler = s3Handler;
+            _imageService = imageService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit()
         {
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
@@ -56,34 +56,41 @@ namespace Collections.Areas.Dashboard.Controllers
                 .FirstOrDefaultAsync(u => u.Id == model.Id);
 
             var file = user.File;
+
             Claim imageClaim = null;
 
             if (model.Image != null)
             {
                 if (file != null)
                 {
-                    string filename = await _fileHandler.UploadAsync(model.Image, file.Path);
-                    string s3Key = await _s3Handler.UploadFileAsync(model.Image, file.S3Key);
-                    file.Name = filename;
-                    file.Path = _fileHandler.GeneratePath(filename);
-                    file.S3Key = s3Key;
-                    file.S3Path = await _s3Handler.GetPathAsync(s3Key);
+                    using (var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                    {
+                        await _imageService.DeleteImageAsync(file.PublicId);
+
+                        var uploadResult = await _imageService.UploadImageAsync(model.Image);
+
+                        file.PublicId = uploadResult.PublicId;
+                        file.Url = uploadResult.Url.AbsoluteUri;
+
+                        ts.Complete();
+                    }
                 }
                 else
                 {
-                    string filename = await _fileHandler.UploadAsync(model.Image);
-                    string s3Key = await _s3Handler.UploadFileAsync(model.Image);
+                    var uploadResult = await _imageService.UploadImageAsync(model.Image);
+
                     file = new AppFile
                     {
-                        Name = filename,
-                        Path = _fileHandler.GeneratePath(filename),
-                        S3Key = s3Key,
-                        S3Path = await _s3Handler.GetPathAsync(s3Key)
+                        PublicId = uploadResult.PublicId,
+                        Url = uploadResult.Url.AbsoluteUri,
                     };
+
                     _db.Files.Add(file);
                 }
+
                 await _db.SaveChangesAsync();
-                imageClaim = new Claim("Image", file.S3Path);
+
+                imageClaim = new Claim("Image", file.Url);
             }
 
             var hasher = new PasswordHasher<User>();
@@ -113,6 +120,7 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             await _userManager.ReplaceClaimAsync(user, userClaims.FirstOrDefault(c => c.Type == "Name"), new Claim("Name", user.Name));
+            
             await _userManager.UpdateSecurityStampAsync(user);
 
             return RedirectToAction("Index", "Home", new { area = "" });

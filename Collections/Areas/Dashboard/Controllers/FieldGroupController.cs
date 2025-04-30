@@ -17,6 +17,9 @@ namespace Collections.Areas.Dashboard.Controllers
         }
 
         [HttpGet]
-        public async Task<List<FieldGroup>> Get() => await _db.FieldGroups.ToListAsync();
+        public async Task<List<FieldGroup>> Get()
+        {
+            return await _db.FieldGroups.ToListAsync();
+        }
     }
 }

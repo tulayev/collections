@@ -26,30 +26,40 @@ namespace Collections.Areas.Dashboard.Controllers
             _env = env;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(string userId, string sort, string filter, string search, int? page)
         {
             User user;
 
             if (userId == null)
+            {
                 user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            }
             else
+            {
                 user = await _userManager.FindByIdAsync(userId);
+            }
 
             ViewData["CurrentSort"] = sort;
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sort) ? "name_desc" : "";
 
             if (search != null)
+            {
                 page = 1;
+            }
             else
+            {
                 search = filter;
+            }
 
             ViewData["CurrentFilter"] = search;
 
             var collections = _db.Collections.Include(c => c.User).Where(c => c.UserId == user.Id);
 
-            if (!String.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(search))
+            {
                 collections = collections.Where(i => i.Name.ToLower().Contains(search.ToLower()));
-
+            }
 
             switch (sort)
             {
@@ -62,9 +72,11 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             int perPage = 10;
+
             return View(await PaginatedList<AppCollection>.CreateAsync(collections.AsNoTracking(), page ?? 1, perPage));
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -87,6 +99,7 @@ namespace Collections.Areas.Dashboard.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var collection = await _db.Collections.FirstOrDefaultAsync(c => c.Id == id);
@@ -109,10 +122,13 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             _db.Collections.Update(model);
+            
             await _db.SaveChangesAsync();
+            
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var collection = await _db.Collections.FirstOrDefaultAsync(c => c.Id == id);
@@ -123,16 +139,20 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             _db.Collections.Remove(collection);
+            
             await _db.SaveChangesAsync();
+            
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public async Task<IActionResult> Export(string userId)
         {
             List<AppCollection> collections = null;
+
             var sb = new StringBuilder();
-            string fileName = "collections.csv";
-            string path = Path.Combine(new string[] { _env.WebRootPath, "uploads", fileName });
+            var filename = "collections.csv";
+            var path = Path.Combine(new string[] { _env.WebRootPath, "uploads", filename });
 
             if (System.IO.File.Exists(path))
             {
@@ -140,19 +160,23 @@ namespace Collections.Areas.Dashboard.Controllers
             }
 
             if (userId != null)
+            {
                 collections = await _db.Collections.Where(c => c.UserId == userId).ToListAsync();
+            }
 
             if (collections != null)
             {
                 sb.AppendLine("ID,Name");
+                
                 foreach (var collection in collections)
                 {
                     string newLine = $"{collection.Id},{collection.Name}";
                     sb.AppendLine(newLine);
                 }
+
                 System.IO.File.WriteAllText(path, sb.ToString());
 
-                return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName);
+                return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", filename);
             }
 
             return RedirectToAction("Index");

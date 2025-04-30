@@ -6,6 +6,8 @@ namespace Collections.Utils
     {
         public int PageIndex { get; private set; }
         public int TotalPages { get; private set; }
+        public bool HasPreviousPage => PageIndex > 1;
+        public bool HasNextPage => PageIndex < TotalPages;
 
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
@@ -14,10 +16,6 @@ namespace Collections.Utils
 
             this.AddRange(items);
         }
-
-        public bool HasPreviousPage => PageIndex > 1;
-
-        public bool HasNextPage => PageIndex < TotalPages;
 
         public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int page, int perPage)
         {
