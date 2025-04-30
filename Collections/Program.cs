@@ -8,6 +8,7 @@ using System.Globalization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAppServices(builder.Configuration);
+
 builder.Services.AddIdentityServices(builder.Configuration);
 
 
@@ -17,8 +18,7 @@ await app.MigrateDatabaseAsync<ApplicationDbContext>();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    string port = Environment.GetEnvironmentVariable("PORT");
+    var port = Environment.GetEnvironmentVariable("PORT");
     app.Urls.Add($"http://*:{port}");
     app.UseExceptionHandler("/Error");
     app.UseHsts();
