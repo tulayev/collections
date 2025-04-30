@@ -1,5 +1,6 @@
 ﻿using Collections.Data.Seeders;
 using Collections.Models;
+using Collections.Services.Image;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -16,12 +17,16 @@ namespace Collections.Data
         public DbSet<Like> Likes { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<AppFile> Files { get; set; }
+        private readonly IImageService _imageService;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options,
+            IImageService imageService) : base(options)
         {
+            _imageService = imageService;
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             this.ChangeTracker.DetectChanges();
 
@@ -36,14 +41,14 @@ namespace Collections.Data
                 {
                     var file = entity as AppFile;
 
-                    if (!string.IsNullOrWhiteSpace(file.Path) && File.Exists(file.Path))
+                    if (!string.IsNullOrWhiteSpace(file.PublicId))
                     {
-                        File.Delete(file.Path);
+                        await _imageService.DeleteImageAsync(file.PublicId);
                     }
                 }
             }
 
-            return base.SaveChangesAsync(cancellationToken);
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

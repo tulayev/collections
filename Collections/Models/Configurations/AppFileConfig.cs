@@ -7,10 +7,8 @@ namespace Collections.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<AppFile> builder)
         {
-            builder.Property(p => p.Name).HasMaxLength(255).IsRequired();
-            builder.Property(p => p.Path).HasMaxLength(255).IsRequired();
-            builder.Property(p => p.S3Key).HasMaxLength(255);
-            builder.Property(p => p.S3Path).HasMaxLength(500);
+            builder.Property(p => p.PublicId).HasMaxLength(255).IsRequired();
+            builder.Property(p => p.Url).HasMaxLength(255).IsRequired();
         }
     }
 }

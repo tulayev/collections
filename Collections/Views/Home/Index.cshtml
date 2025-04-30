@@ -20,10 +20,10 @@
                 <div class="mt-8">
                     <div class="relative inline-block">
                         <a asp-action="Show" asp-route-slug="@item.Slug">
-                            @if (!String.IsNullOrWhiteSpace(item.File?.S3Path))
+                            @if (!String.IsNullOrWhiteSpace(item.File?.Url))
                             {
                                 <img 
-                                    src="@item.File.S3Path" 
+                                    src="@item.File.Url" 
                                     alt="@item.Name" 
                                     class="object-cover hover:opacity-75 transition ease-in-out duration-150 w-44 h-64"
                                 />

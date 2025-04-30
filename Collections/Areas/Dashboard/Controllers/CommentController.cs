@@ -37,8 +37,12 @@ namespace Collections.Areas.Dashboard.Controllers
                 .Select(c => new CommentViewModel
                 {
                     Body = c.Body,
-                    User = new CommentUserViewModel { Name = c.User.Name, Image = c.User.File.S3Path },
-                    CreatedAt = c.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                    CreatedAt = c.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
+                    User = new CommentUserViewModel
+                    {
+                        Name = c.User.Name,
+                        Image = c.User.File.Url,
+                    },
                 })
                 .ToListAsync()
         });
