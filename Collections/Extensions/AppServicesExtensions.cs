@@ -7,6 +7,11 @@ using Collections.Services.Image;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Collections.Services.Admin.UserManagement;
+using Collections.Services.Admin.Items;
+using Collections.Services.Admin.Likes;
+using Collections.Services.Admin.ProfileManagement;
+using Collections.Services.Admin.Roles;
+using Collections.Services.Admin.Tags;
 
 namespace Collections.Extensions
 {
@@ -32,6 +37,11 @@ namespace Collections.Extensions
 
             services.AddSingleton<IAccountService, AccountService>();
 
+            services.AddSingleton<IItemService, ItemService>();
+            services.AddSingleton<ILikeService, LikeService>();
+            services.AddSingleton<IProfileService, ProfileService>();
+            services.AddSingleton<IRoleService, RoleService>();
+            services.AddSingleton<ITagService, TagService>();
             services.AddSingleton<IUserService, UserService>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
