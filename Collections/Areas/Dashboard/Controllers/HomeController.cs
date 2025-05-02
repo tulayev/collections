@@ -1,5 +1,4 @@
-﻿using Collections.Utils;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Collections.Areas.Admin.Controllers
