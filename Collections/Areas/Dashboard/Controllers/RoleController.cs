@@ -1,8 +1,6 @@
 ﻿using Collections.Constants;
-using Collections.Models;
-using Collections.Models.ViewModels;
+using Collections.Services.Admin.Roles;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Collections.Areas.Admin.Controllers
@@ -11,15 +9,11 @@ namespace Collections.Areas.Admin.Controllers
     [Authorize(Roles = Roles.RoleAdmin)]
     public class RoleController : Controller
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<User> _userManager;
+        private readonly IRoleService _roleService;
 
-        public RoleController(
-            RoleManager<IdentityRole> roleManager, 
-            UserManager<User> userManager)
+        public RoleController(IRoleService roleService)
         {
-            _roleManager = roleManager;
-            _userManager = userManager;
+            _roleService = roleService;
         }
 
         [HttpGet]
@@ -31,44 +25,22 @@ namespace Collections.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user != null)
-            {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                var allRoles = _roleManager.Roles.ToList();
-                var model = new RoleEditViewModel
-                {
-                    UserId = user.Id,
-                    UserEmail = user.Email,
-                    UserRoles = userRoles,
-                    AllRoles = allRoles
-                };
-                return View(model);
-            }
-
-            return NotFound();
+            var model = await _roleService.GetEditModelAsync(userId);
+            return View(model);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user != null)
+            var success = await _roleService.UpdateUserRolesAsync(userId, roles);
+            
+            if (!success)
             {
-                var rolesToBeRemoved = await _userManager.GetRolesAsync(user);
-
-                await _userManager.AddToRoleAsync(user, roles[0]);
-
-                await _userManager.RemoveFromRoleAsync(user, rolesToBeRemoved[0]);
-
-                await _userManager.UpdateSecurityStampAsync(user);
-
-                return RedirectToAction("Index", "User");
+                return BadRequest();
             }
 
-            return NotFound();
+            return RedirectToAction("Index", "User", new { area = "Dashboard" });
         }
     }
 }

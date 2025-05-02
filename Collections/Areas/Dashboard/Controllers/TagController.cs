@@ -1,7 +1,6 @@
-﻿using Collections.Data;
-using Collections.Models;
+﻿using Collections.Models;
+using Collections.Services.Admin.Tags;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -9,17 +8,17 @@ namespace Collections.Areas.Dashboard.Controllers
     [Route("api/tags")]
     public class TagController : ControllerBase
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ITagService _tagService;
 
-        public TagController(ApplicationDbContext db)
+        public TagController(ITagService tagService)
         {
-            _db = db;
+            _tagService = tagService;
         }
 
         [HttpGet]
-        public async Task<List<Tag>> Get()
+        public async Task<List<Tag>> GetAll()
         {
-            return await _db.Tags.ToListAsync();
+            return await _tagService.GetAllTagsAsync();
         }
     }
 }
