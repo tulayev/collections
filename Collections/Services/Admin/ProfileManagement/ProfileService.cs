@@ -9,7 +9,7 @@ using System.Transactions;
 
 namespace Collections.Services.Admin.ProfileManagement
 {
-    public class ProfileService
+    public class ProfileService : IProfileService
     {
         private readonly UserManager<User> _userManager;
         private readonly IImageService _imageService;
