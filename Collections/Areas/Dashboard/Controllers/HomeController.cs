@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Collections.Areas.Admin.Controllers
+namespace Collections.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
     [Authorize]
