@@ -49,7 +49,7 @@ namespace Collections.Services.Admin.ProfileManagement
                 return false;
             }
 
-            AppFile file = user.File;
+            var file = user.File;
             Claim imageClaim = null;
 
             if (model.Image != null)
@@ -71,6 +71,8 @@ namespace Collections.Services.Admin.ProfileManagement
                 }
                 else
                 {
+                    using var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
                     var uploadResult = await _imageService.UploadImageAsync(model.Image);
                     
                     file = new AppFile
@@ -83,6 +85,8 @@ namespace Collections.Services.Admin.ProfileManagement
                     await _unitOfWork.SaveChangesAsync(); 
                     
                     user.FileId = file.Id;
+
+                    ts.Complete();
                 }
 
                 imageClaim = new Claim("Image", file.Url);
