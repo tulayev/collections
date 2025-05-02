@@ -3,7 +3,7 @@ using Collections.Services.Admin.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Collections.Areas.Admin.Controllers
+namespace Collections.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
     [Authorize(Roles = Roles.RoleAdmin)]
@@ -34,7 +34,7 @@ namespace Collections.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
             var success = await _roleService.UpdateUserRolesAsync(userId, roles);
-            
+
             if (!success)
             {
                 return BadRequest();
