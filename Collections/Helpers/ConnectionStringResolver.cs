@@ -1,8 +1,8 @@
 ﻿namespace Collections.Helpers
 {
-    public static class HerokuUrlResolver
+    public static class ConnectionStringResolver
     {
-        public static string GetHerokuConnectionString(IConfiguration config)
+        public static string GetConnectionString(IConfiguration config)
         {
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
             {

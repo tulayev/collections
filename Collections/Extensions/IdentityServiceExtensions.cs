@@ -1,4 +1,5 @@
 ﻿using Collections.Data;
+using Collections.Data.Repositories;
 using Collections.Helpers;
 using Collections.Models;
 using Microsoft.AspNetCore.Identity;
@@ -11,8 +12,10 @@ namespace Collections.Extensions
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(HerokuUrlResolver.GetHerokuConnectionString(config))
+                options.UseNpgsql(ConnectionStringResolver.GetConnectionString(config))
             );
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
