@@ -1,13 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Collections.Data.Repositories
+﻿namespace Collections.Data.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly Dictionary<string, object> _repositories = new();
 
-        public UnitOfWork(DbContext context)
+        public UnitOfWork(ApplicationDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

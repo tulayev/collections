@@ -19,6 +19,8 @@ namespace Collections.Extensions
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services, IConfiguration config)
         {
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+
             services.AddControllersWithViews()
                 .AddViewLocalization()
                 .AddJsonOptions(options =>
@@ -27,22 +29,18 @@ namespace Collections.Extensions
                 });
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(ConnectionStringResolver.GetConnectionString(config)));
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
-            services.AddSingleton<IImageService, ImageService>();
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IElasticClientService, ElasticClientService>();
+            services.AddScoped<IAccountService, AccountService>();
 
-            services.AddSingleton<IElasticClientService, ElasticClientService>();
-
-            services.AddSingleton<IAccountService, AccountService>();
-
-            services.AddSingleton<IItemService, ItemService>();
-            services.AddSingleton<ILikeService, LikeService>();
-            services.AddSingleton<IProfileService, ProfileService>();
-            services.AddSingleton<IRoleService, RoleService>();
-            services.AddSingleton<ITagService, TagService>();
-            services.AddSingleton<IUserService, UserService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<ILikeService, LikeService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 

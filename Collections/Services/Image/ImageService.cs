@@ -4,7 +4,12 @@ using Microsoft.Extensions.Options;
 
 namespace Collections.Services.Image
 {
-    public record CloudinarySettings(string CloudName, string ApiKey, string ApiSecret);
+    public class CloudinarySettings
+    {
+        public string CloudName { get; set; }
+        public string ApiKey { get; set; }
+        public string ApiSecret { get; set; }
+    }
 
     public class ImageService : IImageService
     {

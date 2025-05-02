@@ -31,13 +31,21 @@ namespace Collections.Data.Repositories
 
         public async Task AddAsync(TEntity entity)
         {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             await _dbSet.AddAsync(entity);
         }
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-            if (entities == null) throw new ArgumentNullException(nameof(entities));
+            if (entities == null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
             await _dbSet.AddRangeAsync(entities);
         }
 
