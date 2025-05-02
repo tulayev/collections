@@ -1,6 +1,10 @@
-﻿using Collections.Services.Account;
+﻿using Collections.Data.Repositories;
+using Collections.Data;
+using Collections.Helpers;
+using Collections.Services.Account;
 using Collections.Services.Elastic;
 using Collections.Services.Image;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 namespace Collections.Extensions
@@ -15,12 +19,15 @@ namespace Collections.Extensions
                 {
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
-            
+
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(ConnectionStringResolver.GetConnectionString(config)));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
-            
-            services.AddSingleton<IElasticClientService, ElasticClientService>();
-            
             services.AddSingleton<IImageService, ImageService>();
+
+            services.AddSingleton<IElasticClientService, ElasticClientService>();
 
             services.AddSingleton<IUserService, UserService>();
 

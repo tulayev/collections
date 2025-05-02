@@ -12,8 +12,9 @@ namespace Collections.Services.Image
 
         public ImageService(IOptions<CloudinarySettings> config)
         {
-            var account = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
-            _cloudinary = new Cloudinary(account);
+            _cloudinary = new Cloudinary(
+                new CloudinaryDotNet.Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret)
+            );
         }
 
         public async Task<ImageUploadResult> UploadImageAsync(IFormFile file)
@@ -23,11 +24,13 @@ namespace Collections.Services.Image
             if (file.Length > 0)
             {
                 using var stream = file.OpenReadStream();
+
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
                     Transformation = new Transformation().Height(1000).Width(1000).Crop("fill").Gravity("face")
                 };
+
                 uploadResult = await _cloudinary.UploadAsync(uploadParams);
             }
 
