@@ -8,7 +8,7 @@ namespace Collections.Models.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.Property(p => p.Name).HasMaxLength(50).IsRequired();
-            builder.Property(p => p.Status).HasDefaultValue(Status.Default);
+            builder.Property(p => p.Status).HasDefaultValue(UserStatus.Default);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Collections.Areas.Dashboard.Controllers
                 return BadRequest();
             }
 
-            user.Status = (Status)status;
+            user.Status = (UserStatus)status;
             
             await _userManager.UpdateSecurityStampAsync(user);
             

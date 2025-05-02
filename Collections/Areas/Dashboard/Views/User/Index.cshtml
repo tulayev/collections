@@ -39,9 +39,9 @@
 											method="post"
 										>
 											<input type="hidden" name="userId" value="@user.Id" />
-											@if (user.Status == Status.Default)
+											@if (user.Status == UserStatus.Default)
 											{
-												<input type="hidden" name="status" value="@((int)Status.Blocked)" />
+												<input type="hidden" name="status" value="@((int)UserStatus.Blocked)" />
 												<button
 													type="submit"
 													class="ml-2 px-4 py-1 rounded bg-red-500 text-white"
@@ -52,7 +52,7 @@
 											}
 											else
 											{
-												<input type="hidden" name="status" value="@((int)Status.Default)" />
+												<input type="hidden" name="status" value="@((int)UserStatus.Default)" />
 												<button
 													type="submit"
 													class="ml-2 px-4 py-1 rounded bg-green-500 text-white"

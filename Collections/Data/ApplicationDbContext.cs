@@ -17,6 +17,7 @@ namespace Collections.Data
         public DbSet<Like> Likes { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<AppFile> Files { get; set; }
+
         private readonly IImageService _imageService;
 
         public ApplicationDbContext(
