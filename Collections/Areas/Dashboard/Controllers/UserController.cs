@@ -1,11 +1,8 @@
 ﻿using Collections.Constants;
-using Collections.Data;
 using Collections.Models;
-using Collections.Services.Image;
+using Collections.Services.Admin.UserManagement;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -13,24 +10,17 @@ namespace Collections.Areas.Dashboard.Controllers
     [Authorize(Roles = Roles.RoleAdmin)]
     public class UserController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly ApplicationDbContext _db;
-        private readonly IImageService _imageService;
+        private readonly IUserService _userService;
 
-        public UserController(
-            UserManager<User> userManager, 
-            ApplicationDbContext db, 
-            IImageService imageService)
+        public UserController(IUserService userService)
         {
-            _userManager = userManager;
-            _db = db;
-            _imageService = imageService;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await _userService.GetAllUsersAsync();
             return View(users);
         }
 
@@ -38,46 +28,28 @@ namespace Collections.Areas.Dashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUserStatus(string userId, int status)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var success = await _userService.ChangeUserStatusAsync(userId, (UserStatus)status);
 
-            if (user == null)
+            if (!success)
             {
                 return BadRequest();
             }
 
-            user.Status = (UserStatus)status;
-            
-            await _userManager.UpdateSecurityStampAsync(user);
-            
-            _db.SaveChanges();  
-            
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string userId)
         {
-            var user = await _userManager.Users
-                .Include(u => u.File)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+            var success = await _userService.DeleteUserAsync(userId);
 
-            if (user == null)
+            if (!success)
             {
                 return BadRequest();
             }
 
-            if (user.File != null)
-            {
-                _db.Files.Remove(user.File);
-                await _imageService.DeleteImageAsync(user.File.PublicId);
-            }
-
-            await _db.SaveChangesAsync();   
-            
-            await _userManager.DeleteAsync(user);
-            
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

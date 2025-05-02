@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Collections.Services.Account
 {
-    public class UserService : IUserService
+    public class AccountService : IAccountService
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -16,7 +16,7 @@ namespace Collections.Services.Account
         private readonly IImageService _imageService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(
+        public AccountService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             RoleManager<IdentityRole> roleManager,

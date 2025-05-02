@@ -6,11 +6,11 @@ namespace Collections.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IAccountService accountService)
         {
-            _userService = userService;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -34,7 +34,7 @@ namespace Collections.Controllers
                 return View(model);
             }
 
-            var result = await _userService.RegisterAsync(model);
+            var result = await _accountService.RegisterAsync(model);
 
             if (result.Succeeded)
             {
@@ -64,7 +64,7 @@ namespace Collections.Controllers
                 return View(model);
             }
 
-            var result = await _userService.LoginAsync(model);
+            var result = await _accountService.LoginAsync(model);
 
             if (result.Succeeded)
             {
@@ -78,7 +78,7 @@ namespace Collections.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await _userService.LogoutAsync();
+            await _accountService.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
     }
