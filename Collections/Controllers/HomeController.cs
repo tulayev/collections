@@ -16,7 +16,8 @@ namespace Collections.Controllers
             _db = db;
         }
 
-        public async Task<IActionResult> Index(string? tag, int? collection, string? user, int? page)
+        [HttpGet]
+        public async Task<IActionResult> Index(string tag, int? collection, string user, int? page)
         {
             var source = _db.Items
                 .Include(i => i.Tags)
@@ -33,7 +34,7 @@ namespace Collections.Controllers
                 .OrderByDescending(x => x.Total)
                 .Take(5);
 
-            int perPage = 12;
+            const int perPage = 12;
 
             if (tag != null)
             {
@@ -71,6 +72,7 @@ namespace Collections.Controllers
             });
         }
 
+        [HttpGet]
         public async Task<IActionResult> Show(string slug)
         {
             var item = await _db.Items

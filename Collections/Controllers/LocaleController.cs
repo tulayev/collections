@@ -4,7 +4,8 @@ namespace Collections.Controllers
 {
     public class LocaleController : Controller
     {
-        public IActionResult ChangeLocale(string page, string segment, string culture, string? slug)
+        [HttpGet]
+        public IActionResult ChangeLocale(string page, string segment, string culture, string slug)
         {
             Response.Cookies.Append("Locale", culture, 
                 new CookieOptions

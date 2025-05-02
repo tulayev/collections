@@ -1,6 +1,6 @@
 ﻿using Collections.Models.ViewModels;
+using Collections.Services.Elastic;
 using Microsoft.AspNetCore.Mvc;
-using Nest;
 
 namespace Collections.Controllers
 {
@@ -8,32 +8,26 @@ namespace Collections.Controllers
     [Route("api/search")]
     public class SearchController : ControllerBase
     {
-        private readonly IElasticClient _client;
+        private readonly IElasticClientService _elasticClientService;
 
-        public SearchController(IElasticClient client)
+        public SearchController(IElasticClientService elasticClientService)
         {
-            _client = client;
+            _elasticClientService = elasticClientService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(string keyword)
         {
-            var results = await _client.SearchAsync<ElasticItemViewModel>(
-                s => s.Query(
-                    q => q.QueryString(
-                        d => d.Query('*' + keyword + '*')
-                    )
-                ).Size(1000)
-            );
+            var results = await _elasticClientService.SearchAsync<ElasticItemViewModel>(keyword);
 
             return Ok(results.Documents.ToList());
         }
 
         [Route("test")]
         [HttpGet]
-        public void Remove(int id)
+        public async Task Remove(int id)
         {
-            _client.Delete<ElasticItemViewModel>(id);
+            await _elasticClientService.RemoveFromElasticIndexAsync<ElasticItemViewModel>(id);
         }
     }
 }
