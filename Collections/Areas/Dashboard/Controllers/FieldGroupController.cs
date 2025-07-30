@@ -1,7 +1,6 @@
-﻿using Collections.Data;
-using Collections.Models;
+﻿using Collections.Models;
+using Collections.Services.Admin.FieldGroup;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -9,17 +8,17 @@ namespace Collections.Areas.Dashboard.Controllers
     [Route("api/fieldgroups")]
     public class FieldGroupController : ControllerBase
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IFieldGroupService _fieldGroupService;
 
-        public FieldGroupController(ApplicationDbContext db)
+        public FieldGroupController(IFieldGroupService fieldGroupService)
         {
-            _db = db;
+            _fieldGroupService = fieldGroupService;
         }
 
         [HttpGet]
         public async Task<List<FieldGroup>> Get()
         {
-            return await _db.FieldGroups.ToListAsync();
+            return await _fieldGroupService.GetAllFieldGroupsAsync();
         }
     }
 }

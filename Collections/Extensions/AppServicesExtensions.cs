@@ -12,6 +12,7 @@ using Collections.Services.Admin.Likes;
 using Collections.Services.Admin.ProfileManagement;
 using Collections.Services.Admin.Roles;
 using Collections.Services.Admin.Tags;
+using Collections.Services.Admin.FieldGroup;
 
 namespace Collections.Extensions
 {
@@ -41,6 +42,7 @@ namespace Collections.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFieldGroupService, FieldGroupService>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
