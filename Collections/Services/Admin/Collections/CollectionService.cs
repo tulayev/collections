@@ -1,5 +1,6 @@
 ﻿using Collections.Data;
 using Collections.Models;
+using Collections.Models.ViewModels;
 using Collections.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace Collections.Services.Admin.Collections
 {
-    public class CollectionService : ICollectionService
+    public partial class CollectionService : ICollectionService
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<User> _userManager;

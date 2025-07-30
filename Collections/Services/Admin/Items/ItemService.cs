@@ -11,7 +11,7 @@ using System.Transactions;
 
 namespace Collections.Services.Admin.Items
 {
-    public class ItemService : IItemService
+    public partial class ItemService : IItemService
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<User> _userManager;

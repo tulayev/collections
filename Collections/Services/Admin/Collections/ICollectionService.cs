@@ -1,4 +1,5 @@
 ﻿using Collections.Models;
+using Collections.Models.ViewModels;
 using Collections.Utils;
 
 namespace Collections.Services.Admin.Collections
@@ -11,5 +12,7 @@ namespace Collections.Services.Admin.Collections
         Task<bool> UpdateCollectionAsync(AppCollection model);
         Task<bool> DeleteCollectionAsync(int id);
         Task<(byte[] content, string filename)> ExportCollectionsAsync(string userId, string wwwRootPath);
+
+        Task<List<AppCollectionViewModel>> GetTopCollectionsAsync();
     }
 }

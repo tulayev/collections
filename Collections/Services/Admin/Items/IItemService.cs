@@ -12,5 +12,10 @@ namespace Collections.Services.Admin.Items
         Task<ItemEditViewModel> GetItemForEditAsync(int id);
         Task<bool> EditItemAsync(ItemEditViewModel model, string[] keys, string[] values, int[] types);
         Task<bool> DeleteItemAsync(int id);
+
+        IQueryable<Item> GetLatestItems();
+        IQueryable<Item> GetItemsByTag(string tag);
+        IQueryable<Item> GetItemsByCollection(int collectionId, string username);
+        Task<Item> GetItemBySlugAsync(string slug);
     }
 }
