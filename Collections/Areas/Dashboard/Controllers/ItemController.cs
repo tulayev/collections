@@ -1,8 +1,6 @@
-﻿using Collections.Models;
-using Collections.Models.ViewModels;
+﻿using Collections.Models.ViewModels;
 using Collections.Services.Admin.Items;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Collections.Areas.Dashboard.Controllers
@@ -12,12 +10,10 @@ namespace Collections.Areas.Dashboard.Controllers
     public class ItemController : Controller
     {
         private readonly IItemService _itemService;
-        private readonly UserManager<User> _userManager;
 
-        public ItemController(IItemService itemService, UserManager<User> userManager)
+        public ItemController(IItemService itemService)
         {
             _itemService = itemService;
-            _userManager = userManager;
         }
 
         [HttpGet]
