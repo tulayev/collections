@@ -1,11 +1,5 @@
-﻿using Collections.Data;
-using Collections.Extensions;
-using Collections.Models;
-using Collections.Models.ViewModels;
-using Collections.Services.Elastic;
-using Microsoft.AspNetCore.Identity;
+﻿using Collections.Services.Admin.Comments;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Collections.Areas.Dashboard.Controllers
 {
@@ -13,71 +7,31 @@ namespace Collections.Areas.Dashboard.Controllers
     [Route("api/comments")]
     public class CommentController : ControllerBase
     {
-        private readonly ApplicationDbContext _db;
-        private readonly UserManager<User> _userManager;
-        private readonly IElasticClientService _elasticClientService;
+        private readonly ICommentService _commentService;
 
-        public CommentController(
-            ApplicationDbContext db, 
-            UserManager<User> userManager,
-            IElasticClientService elasticClientService)
+        public CommentController(ICommentService commentService)
         {
-            _db = db;
-            _userManager = userManager;
-            _elasticClientService = elasticClientService;
+            _commentService = commentService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int itemId) => Ok(new
+        public async Task<IActionResult> Get(int itemId)
         {
-            comments = await _db.Comments
-                .Include(c => c.User)
-                    .ThenInclude(u => u.File)
-                .Where(c => c.ItemId == itemId)
-                .Select(c => new CommentViewModel
-                {
-                    Body = c.Body,
-                    CreatedAt = c.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
-                    User = new CommentUserViewModel
-                    {
-                        Name = c.User.Name,
-                        Image = c.User.File.Url,
-                    },
-                })
-                .ToListAsync()
-        });
+            var comments = await _commentService.GetCommentsAsync(itemId);
+            return Ok(new { comments });
+        }
 
         [HttpPost("post")]
         public async Task<IActionResult> Post(string username, int itemId, string body)
         {
-            var user = await _userManager.FindByNameAsync(username);
-            var item = await _db.Items.FirstOrDefaultAsync(i => i.Id == itemId);
+            var (success, message) = await _commentService.PostCommentAsync(username, itemId, body);
 
-            if (user == null || item == null)
+            if (!success)
             {
-                return Ok(new { error = "Error occured" });
+                return Ok(new { error = message });
             }
 
-            var comment = new Comment
-            {
-                Body = body,
-                UserId = user.Id,
-                ItemId = item.Id,
-                CreatedAt = DateTime.Now.SetKindUtc()
-            };
-
-            _db.Comments.Add(comment);
-            
-            await _db.SaveChangesAsync();
-
-            await _elasticClientService.UpdateElasticItemAsync(itemId, new ElasticItemViewModel
-            {
-                Comments = await _db.Comments.Where(c => c.ItemId == itemId)
-                                    .Select(c => new CommentDto { Body = c.Body })
-                                    .ToListAsync()
-            });
-
-            return Ok(new { message = "ok" });
+            return Ok(new { message });
         }
     }
 }
