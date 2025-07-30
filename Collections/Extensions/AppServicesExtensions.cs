@@ -13,6 +13,7 @@ using Collections.Services.Admin.ProfileManagement;
 using Collections.Services.Admin.Roles;
 using Collections.Services.Admin.Tags;
 using Collections.Services.Admin.FieldGroup;
+using Collections.Services.Admin.Collections;
 
 namespace Collections.Extensions
 {
@@ -36,6 +37,7 @@ namespace Collections.Extensions
             services.AddScoped<IElasticClientService, ElasticClientService>();
             services.AddScoped<IAccountService, AccountService>();
 
+            services.AddScoped<ICollectionService, CollectionService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ILikeService, LikeService>();
             services.AddScoped<IProfileService, ProfileService>();
