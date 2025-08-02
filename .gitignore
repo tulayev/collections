@@ -214,15 +214,6 @@ project.lock.json
 **/node_modules/*
 #**/wwwroot/*
 
-# Development settings
-**/appsettings.Development.json
-
-#AWS S3 credentials
-**/credentials
-
-# Migrations
-**/Migrations
-
 # SpecFlow specific
 *.feature.cs
 *.feature.xlsx.*
